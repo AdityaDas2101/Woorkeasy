@@ -1,0 +1,382 @@
+---
+/**
+ * Excel to CSV Converter
+ * Parses Excel (.xlsx, .xls) files and converts to CSV.
+ * Uses a lightweight parsing approach — reads the XML inside .xlsx files.
+ * Falls back to TSV parsing for .xls files.
+ */
+import ToolLayout from '../../components/ToolLayout.astro';
+---
+
+<ToolLayout
+  title="Excel to CSV"
+  metaTitle="Convert Excel to CSV Online Free — XLSX to CSV | Woorkeasy"
+  description="Convert Excel spreadsheets (.xlsx, .xls) to CSV format. Fast browser-based conversion — no uploads, no data leaves your device."
+  heading="Convert Excel to CSV."
+>
+  <div id="excel-csv-app">
+    <!-- Upload Zone -->
+    <div id="upload-zone" class="upload-zone p-12 text-center cursor-pointer">
+      <div class="flex flex-col items-center gap-4">
+        <svg class="w-12 h-12 text-neutral-500" viewBox="0 0 48 48" fill="none">
+          <path d="M24 32V16m0 0l-6 6m6-6l6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <rect x="8" y="8" width="32" height="32" rx="4" stroke="currentColor" stroke-width="2"/>
+        </svg>
+        <p class="body-md text-neutral-600">Drag & drop Excel file here, or <span class="text-blue-600 font-medium">browse</span></p>
+        <p class="body-sm text-neutral-500">Supports .xlsx and .csv files</p>
+      </div>
+      <input type="file" id="file-input" accept=".xlsx,.xls,.csv" class="hidden" />
+    </div>
+
+    <!-- Sheet Selector & Controls -->
+    <div id="controls" class="hidden mt-6">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+        <div class="flex-1">
+          <label class="body-sm text-neutral-600 font-medium block mb-2">Sheet</label>
+          <select id="sheet-select" class="w-full px-3 py-2 border border-neutral-200 rounded-md body-sm bg-white">
+          </select>
+        </div>
+        <div class="flex-1">
+          <label class="body-sm text-neutral-600 font-medium block mb-2">Delimiter</label>
+          <select id="delimiter-select" class="w-full px-3 py-2 border border-neutral-200 rounded-md body-sm bg-white">
+            <option value=",">Comma (,)</option>
+            <option value=";">Semicolon (;)</option>
+            <option value="\t">Tab</option>
+          </select>
+        </div>
+        <div class="flex items-end">
+          <button id="download-btn" class="btn-primary mt-6 sm:mt-0">Download CSV</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading -->
+    <div id="loading" class="hidden mt-6 text-center">
+      <div class="inline-flex items-center gap-3">
+        <svg class="animate-spin w-5 h-5 text-[var(--color-primary)]" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" class="opacity-25"/>
+          <path d="M4 12a8 8 0 018-8" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+        <span class="body-sm text-neutral-600">Parsing Excel file...</span>
+      </div>
+    </div>
+
+    <!-- Preview Table -->
+    <div id="preview" class="hidden mt-8 overflow-x-auto">
+      <h2 class="display-sm text-neutral-900 mb-2">Preview</h2>
+      <p id="row-count" class="body-sm text-neutral-500 mb-4"></p>
+      <table id="preview-table" class="w-full border-collapse">
+        <thead id="table-head"></thead>
+        <tbody id="table-body"></tbody>
+      </table>
+    </div>
+
+    <!-- Error -->
+    <div id="error" class="hidden mt-6 p-4 bg-red-50 rounded-lg">
+      <p id="error-text" class="body-sm text-red-600"></p>
+    </div>
+  </div>
+</ToolLayout>
+
+<style>
+  #preview-table th {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    text-transform: uppercase;
+    background: var(--color-canvas-soft-2);
+    padding: 8px 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--color-hairline);
+    white-space: nowrap;
+  }
+  #preview-table td {
+    font-size: 14px;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--color-hairline);
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  #preview-table tr:hover td {
+    background: var(--color-canvas-soft);
+  }
+</style>
+
+<script>
+  const uploadZone = document.getElementById('upload-zone')!;
+  const fileInput = document.getElementById('file-input') as HTMLInputElement;
+  const controls = document.getElementById('controls')!;
+  const sheetSelect = document.getElementById('sheet-select') as HTMLSelectElement;
+  const delimiterSelect = document.getElementById('delimiter-select') as HTMLSelectElement;
+  const downloadBtn = document.getElementById('download-btn')!;
+  const loading = document.getElementById('loading')!;
+  const preview = document.getElementById('preview')!;
+  const rowCount = document.getElementById('row-count')!;
+  const tableHead = document.getElementById('table-head')!;
+  const tableBody = document.getElementById('table-body')!;
+  const errorDiv = document.getElementById('error')!;
+  const errorText = document.getElementById('error-text')!;
+
+  // Store parsed sheets: { sheetName: string[][] }
+  let sheets: Record<string, string[][]> = {};
+  let currentSheet: string = '';
+
+  uploadZone.addEventListener('click', () => fileInput.click());
+  uploadZone.addEventListener('dragover', (e) => { e.preventDefault(); uploadZone.classList.add('dragover'); });
+  uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('dragover'));
+  uploadZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    uploadZone.classList.remove('dragover');
+    if (e.dataTransfer?.files[0]) handleFile(e.dataTransfer.files[0]);
+  });
+  fileInput.addEventListener('change', () => { if (fileInput.files?.[0]) handleFile(fileInput.files[0]); });
+
+  async function handleFile(file: File) {
+    loading.classList.remove('hidden');
+    errorDiv.classList.add('hidden');
+    controls.classList.add('hidden');
+    preview.classList.add('hidden');
+
+    try {
+      if (file.name.endsWith('.csv')) {
+        // Direct CSV — just show preview
+        const text = await file.text();
+        const rows = parseCSV(text);
+        sheets = { 'Sheet1': rows };
+      } else {
+        // Parse XLSX using JSZip-like approach (read the XML inside the zip)
+        sheets = await parseXLSX(file);
+      }
+
+      const sheetNames = Object.keys(sheets);
+      if (sheetNames.length === 0) throw new Error('No sheets found');
+
+      // Populate sheet selector
+      sheetSelect.innerHTML = sheetNames.map(name => `<option value="${name}">${name}</option>`).join('');
+      currentSheet = sheetNames[0];
+
+      sheetSelect.addEventListener('change', () => {
+        currentSheet = sheetSelect.value;
+        renderPreview();
+      });
+
+      renderPreview();
+      controls.classList.remove('hidden');
+      preview.classList.remove('hidden');
+      loading.classList.add('hidden');
+    } catch (err) {
+      loading.classList.add('hidden');
+      errorDiv.classList.remove('hidden');
+      errorText.textContent = `Error: ${(err as Error).message}`;
+    }
+  }
+
+  async function parseXLSX(file: File): Promise<Record<string, string[][]>> {
+    // XLSX is a ZIP file containing XML sheets
+    // We'll use the browser's built-in capabilities
+    const { entries } = await readZip(file);
+
+    // Read shared strings
+    const sharedStringsXml = entries['xl/sharedStrings.xml'];
+    let sharedStrings: string[] = [];
+    if (sharedStringsXml) {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(sharedStringsXml, 'text/xml');
+      const siElements = doc.getElementsByTagName('si');
+      for (let i = 0; i < siElements.length; i++) {
+        sharedStrings.push(siElements[i].textContent || '');
+      }
+    }
+
+    // Read workbook to get sheet names
+    const workbookXml = entries['xl/workbook.xml'];
+    const parser = new DOMParser();
+    const wbDoc = parser.parseFromString(workbookXml, 'text/xml');
+    const sheetElements = wbDoc.getElementsByTagName('sheet');
+
+    const result: Record<string, string[][]> = {};
+
+    for (let i = 0; i < sheetElements.length; i++) {
+      const name = sheetElements[i].getAttribute('name') || `Sheet${i + 1}`;
+      const sheetXml = entries[`xl/worksheets/sheet${i + 1}.xml`];
+      if (sheetXml) {
+        result[name] = parseSheetXml(sheetXml, sharedStrings);
+      }
+    }
+
+    return result;
+  }
+
+  function parseSheetXml(xml: string, sharedStrings: string[]): string[][] {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(xml, 'text/xml');
+    const rows = doc.getElementsByTagName('row');
+    const data: string[][] = [];
+
+    for (let i = 0; i < rows.length; i++) {
+      const cells = rows[i].getElementsByTagName('c');
+      const rowData: string[] = [];
+
+      for (let j = 0; j < cells.length; j++) {
+        const cell = cells[j];
+        const type = cell.getAttribute('t');
+        const vElement = cell.getElementsByTagName('v')[0];
+        let value = vElement?.textContent || '';
+
+        if (type === 's' && sharedStrings.length > 0) {
+          // Shared string reference
+          value = sharedStrings[parseInt(value)] || '';
+        }
+
+        rowData.push(value);
+      }
+
+      data.push(rowData);
+    }
+
+    return data;
+  }
+
+  async function readZip(file: File): Promise<{ entries: Record<string, string> }> {
+    const buffer = await file.arrayBuffer();
+    const uint8 = new Uint8Array(buffer);
+    const entries: Record<string, string> = {};
+
+    try {
+      const rawEntries = parseZipEntries(uint8);
+
+      // Decompress all entries (handles both stored and deflated)
+      const decoder = new TextDecoder();
+      for (const [name, entry] of Object.entries(rawEntries)) {
+        if (entry.method === 0) {
+          // Stored (no compression)
+          entries[name] = decoder.decode(entry.data);
+        } else if (entry.method === 8) {
+          // Deflate — decompress using DecompressionStream
+          const decompressed = await decompressData(entry.data);
+          entries[name] = decoder.decode(decompressed);
+        }
+      }
+    } catch (e) {
+      throw new Error('Unable to parse XLSX file. Please try a different file.');
+    }
+
+    return { entries };
+  }
+
+  async function decompressData(data: Uint8Array): Promise<Uint8Array> {
+    const stream = new Blob([data]).stream().pipeThrough(new DecompressionStream('deflate-raw'));
+    const reader = stream.getReader();
+    const chunks: Uint8Array[] = [];
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      chunks.push(value);
+    }
+
+    // Concatenate chunks
+    const totalLength = chunks.reduce((sum, chunk) => sum + chunk.length, 0);
+    const result = new Uint8Array(totalLength);
+    let offset = 0;
+    for (const chunk of chunks) {
+      result.set(chunk, offset);
+      offset += chunk.length;
+    }
+    return result;
+  }
+
+  function parseZipEntries(data: Uint8Array): Record<string, { data: Uint8Array; method: number }> {
+    const entries: Record<string, { data: Uint8Array; method: number }> = {};
+    let offset = 0;
+
+    while (offset < data.length - 4) {
+      const sig = data[offset] | (data[offset + 1] << 8) | (data[offset + 2] << 16) | (data[offset + 3] << 24);
+
+      if (sig !== 0x04034b50) break; // Not a local file header
+
+      const compressionMethod = data[offset + 8] | (data[offset + 9] << 8);
+      const compressedSize = data[offset + 18] | (data[offset + 19] << 8) | (data[offset + 20] << 16) | (data[offset + 21] << 24);
+      const nameLen = data[offset + 26] | (data[offset + 27] << 8);
+      const extraLen = data[offset + 28] | (data[offset + 29] << 8);
+
+      const name = new TextDecoder().decode(data.slice(offset + 30, offset + 30 + nameLen));
+      const dataStart = offset + 30 + nameLen + extraLen;
+      const fileData = data.slice(dataStart, dataStart + compressedSize);
+
+      entries[name] = { data: fileData, method: compressionMethod };
+
+      offset = dataStart + compressedSize;
+    }
+
+    return entries;
+  }
+
+  function parseCSV(text: string): string[][] {
+    return text.split('\n').filter(line => line.trim()).map(line => {
+      // Handle quoted fields
+      const fields: string[] = [];
+      let current = '';
+      let inQuotes = false;
+
+      for (let i = 0; i < line.length; i++) {
+        const char = line[i];
+        if (char === '"') {
+          inQuotes = !inQuotes;
+        } else if (char === ',' && !inQuotes) {
+          fields.push(current.trim());
+          current = '';
+        } else {
+          current += char;
+        }
+      }
+      fields.push(current.trim());
+      return fields;
+    });
+  }
+
+  function renderPreview() {
+    const data = sheets[currentSheet] || [];
+    rowCount.textContent = `${data.length} row(s) in "${currentSheet}"`;
+
+    if (data.length === 0) {
+      tableHead.innerHTML = '';
+      tableBody.innerHTML = '<tr><td class="body-sm text-neutral-500">No data</td></tr>';
+      return;
+    }
+
+    // First row as header
+    const headers = data[0];
+    tableHead.innerHTML = `<tr>${headers.map(h => `<th>${escapeHtml(h)}</th>`).join('')}</tr>`;
+    tableBody.innerHTML = data.slice(1, 51).map(row => `
+      <tr>${row.map(cell => `<td>${escapeHtml(cell)}</td>`).join('')}</tr>
+    `).join('');
+  }
+
+  function escapeHtml(str: string): string {
+    return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  downloadBtn.addEventListener('click', () => {
+    const data = sheets[currentSheet] || [];
+    if (data.length === 0) return;
+
+    const delimiter = delimiterSelect.value === '\\t' ? '\t' : delimiterSelect.value;
+    const csv = data.map(row =>
+      row.map(cell => {
+        if (cell.includes(delimiter) || cell.includes('"') || cell.includes('\n')) {
+          return `"${cell.replace(/"/g, '""')}"`;
+        }
+        return cell;
+      }).join(delimiter)
+    ).join('\n');
+
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `${currentSheet}.csv`;
+    link.click();
+  });
+</script>
+

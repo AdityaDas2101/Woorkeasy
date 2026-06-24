@@ -1,0 +1,202 @@
+---
+/**
+ * JPG to PDF Converter
+ * Uses jsPDF to convert one or more images into a PDF document.
+ */
+import ToolLayout from '../../components/ToolLayout.astro';
+---
+
+<ToolLayout
+  title="JPG to PDF"
+  metaTitle="Convert JPG to PDF Online Free — Images to PDF | Woorkeasy"
+  description="Convert JPG, PNG, and WebP images to PDF. Combine multiple images into a single PDF document — entirely in your browser."
+  heading="Convert Images to PDF."
+>
+  <div id="jpg-pdf-app">
+    <!-- Upload Zone -->
+    <div id="upload-zone" class="upload-zone p-12 text-center cursor-pointer">
+      <div class="flex flex-col items-center gap-4">
+        <svg class="w-12 h-12 text-neutral-500" viewBox="0 0 48 48" fill="none">
+          <path d="M24 32V16m0 0l-6 6m6-6l6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <rect x="8" y="8" width="32" height="32" rx="4" stroke="currentColor" stroke-width="2"/>
+        </svg>
+        <p class="body-md text-neutral-600">Drag & drop images here, or <span class="text-blue-600 font-medium">browse</span></p>
+        <p class="body-sm text-neutral-500">Supports JPG, PNG, WebP — each image = one PDF page</p>
+      </div>
+      <input type="file" id="file-input" accept="image/jpeg,image/png,image/webp" multiple class="hidden" />
+    </div>
+
+    <!-- Controls -->
+    <div id="controls" class="hidden mt-6">
+      <div class="flex flex-col sm:flex-row gap-6">
+        <div class="flex-1">
+          <label class="body-sm text-neutral-600 font-medium block mb-2">Page Size</label>
+          <select id="page-size" class="w-full px-3 py-2 border border-neutral-200 rounded-md body-sm bg-white">
+            <option value="a4">A4</option>
+            <option value="letter">Letter</option>
+            <option value="fit">Fit to Image</option>
+          </select>
+        </div>
+        <div class="flex-1">
+          <label class="body-sm text-neutral-600 font-medium block mb-2">Orientation</label>
+          <select id="orientation" class="w-full px-3 py-2 border border-neutral-200 rounded-md body-sm bg-white">
+            <option value="portrait">Portrait</option>
+            <option value="landscape">Landscape</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- File list preview -->
+      <div id="file-list" class="mt-4 flex flex-col gap-2"></div>
+
+      <button id="convert-btn" class="btn-primary mt-6">
+        Create PDF
+      </button>
+    </div>
+
+    <!-- Loading -->
+    <div id="loading" class="hidden mt-6 text-center">
+      <div class="inline-flex items-center gap-3">
+        <svg class="animate-spin w-5 h-5 text-[var(--color-primary)]" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" class="opacity-25"/>
+          <path d="M4 12a8 8 0 018-8" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+        <span class="body-sm text-neutral-600">Creating PDF...</span>
+      </div>
+    </div>
+
+    <!-- Result -->
+    <div id="result" class="hidden mt-8">
+      <h2 class="display-sm text-neutral-900 mb-4">PDF Ready</h2>
+      <div class="flex items-center justify-between p-4 bg-neutral-50 rounded-lg">
+        <div>
+          <p id="result-name" class="body-sm text-neutral-900 font-medium"></p>
+          <p id="result-info" class="caption-mono text-neutral-500"></p>
+        </div>
+        <a id="download-btn" class="btn-primary text-sm no-underline" style="padding: 6px 16px;" download="images.pdf">Download PDF</a>
+      </div>
+    </div>
+  </div>
+</ToolLayout>
+
+<script>
+  import { jsPDF } from 'jspdf';
+
+  const uploadZone = document.getElementById('upload-zone')!;
+  const fileInput = document.getElementById('file-input') as HTMLInputElement;
+  const controls = document.getElementById('controls')!;
+  const fileList = document.getElementById('file-list')!;
+  const pageSizeSelect = document.getElementById('page-size') as HTMLSelectElement;
+  const orientationSelect = document.getElementById('orientation') as HTMLSelectElement;
+  const convertBtn = document.getElementById('convert-btn')!;
+  const loading = document.getElementById('loading')!;
+  const result = document.getElementById('result')!;
+  const resultName = document.getElementById('result-name')!;
+  const resultInfo = document.getElementById('result-info')!;
+  const downloadBtn = document.getElementById('download-btn') as HTMLAnchorElement;
+
+  let files: File[] = [];
+
+  uploadZone.addEventListener('click', () => fileInput.click());
+  uploadZone.addEventListener('dragover', (e) => { e.preventDefault(); uploadZone.classList.add('dragover'); });
+  uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('dragover'));
+  uploadZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    uploadZone.classList.remove('dragover');
+    if (e.dataTransfer?.files) handleFiles(Array.from(e.dataTransfer.files));
+  });
+  fileInput.addEventListener('change', () => { if (fileInput.files) handleFiles(Array.from(fileInput.files)); });
+
+  function handleFiles(newFiles: File[]) {
+    files = newFiles.filter(f => f.type.startsWith('image/'));
+    if (files.length > 0) {
+      controls.classList.remove('hidden');
+      fileList.innerHTML = files.map((f, i) => `
+        <div class="flex items-center gap-2 body-sm text-neutral-600">
+          <span class="caption-mono text-neutral-500">${i + 1}.</span> ${f.name}
+        </div>
+      `).join('');
+    }
+  }
+
+  convertBtn.addEventListener('click', async () => {
+    if (files.length === 0) return;
+    loading.classList.remove('hidden');
+    result.classList.add('hidden');
+
+    try {
+      const pageSize = pageSizeSelect.value;
+      const orientation = orientationSelect.value as 'portrait' | 'landscape';
+
+      const doc = new jsPDF({
+        orientation,
+        unit: 'mm',
+        format: pageSize === 'fit' ? undefined : pageSize,
+      });
+
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const imgData = await fileToDataURL(file);
+        const img = await loadImage(imgData);
+
+        if (i > 0) doc.addPage();
+
+        const pageW = doc.internal.pageSize.getWidth();
+        const pageH = doc.internal.pageSize.getHeight();
+
+        // Fit image within page with margins
+        const margin = 10;
+        const maxW = pageW - margin * 2;
+        const maxH = pageH - margin * 2;
+        const ratio = Math.min(maxW / img.width, maxH / img.height);
+        const w = img.width * ratio;
+        const h = img.height * ratio;
+        const x = (pageW - w) / 2;
+        const y = (pageH - h) / 2;
+
+        const format = file.type === 'image/png' ? 'PNG' : 'JPEG';
+        doc.addImage(imgData, format, x, y, w, h);
+      }
+
+      const pdfBlob = doc.output('blob');
+      const url = URL.createObjectURL(pdfBlob);
+
+      resultName.textContent = 'images.pdf';
+      resultInfo.textContent = `${files.length} page(s) • ${formatBytes(pdfBlob.size)}`;
+      downloadBtn.href = url;
+
+      loading.classList.add('hidden');
+      result.classList.remove('hidden');
+    } catch (err) {
+      loading.classList.add('hidden');
+      alert(`Error: ${(err as Error).message}`);
+    }
+  });
+
+  function fileToDataURL(file: File): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = () => reject(new Error('Failed to read file'));
+      reader.readAsDataURL(file);
+    });
+  }
+
+  function loadImage(src: string): Promise<HTMLImageElement> {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => resolve(img);
+      img.onerror = () => reject(new Error('Failed to load image'));
+      img.src = src;
+    });
+  }
+
+  function formatBytes(bytes: number): string {
+    if (bytes === 0) return '0 B';
+    const k = 1024;
+    const sizes = ['B', 'KB', 'MB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+  }
+</script>
+

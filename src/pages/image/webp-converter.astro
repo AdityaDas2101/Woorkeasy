@@ -1,0 +1,393 @@
+---
+/**
+ * WebP Converter Tool
+ * Convert WebP images to JPG, PNG, or PDF format.
+ * Uses Canvas API for format conversion and jsPDF for PDF export.
+ */
+import ToolLayout from '../../components/ToolLayout.astro';
+---
+
+<ToolLayout
+  title="WebP Converter"
+  metaTitle="WebP to JPG, PNG & PDF Free Online Converter | Woorkeasy"
+  description="Convert WebP images to JPG, PNG, or PDF format instantly. Free browser-based tool — no upload, no sign-up, unlimited conversions."
+  heading="WebP to JPG / PNG / PDF."
+>
+  <div id="webp-app" class="flex flex-col gap-6">
+    <!-- Upload Zone -->
+    <div
+      id="upload-zone"
+      class="upload-zone flex flex-col items-center justify-center gap-3 p-12 border-2 border-dashed border-neutral-300 rounded-lg cursor-pointer hover:border-neutral-400 transition-colors"
+    >
+      <span class="text-4xl">🖼️</span>
+      <p class="body-md text-neutral-600 text-center">
+        Drop WebP files here or <span class="text-neutral-900 font-medium underline">browse</span>
+      </p>
+      <p class="body-sm text-neutral-500">Supports multiple files • WebP only</p>
+      <input id="file-input" type="file" accept=".webp,image/webp" multiple class="hidden" />
+    </div>
+
+    <!-- Options -->
+    <div id="options-panel" class="hidden p-4 bg-neutral-50 rounded-lg border border-neutral-200">
+      <div class="flex flex-wrap items-center gap-6">
+        <!-- Output Format -->
+        <div class="flex items-center gap-3">
+          <span class="body-sm font-medium text-neutral-700">Convert to:</span>
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="radio" name="output-format" value="jpeg" checked class="accent-neutral-900" />
+            <span class="body-sm text-neutral-700">JPG</span>
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="radio" name="output-format" value="png" class="accent-neutral-900" />
+            <span class="body-sm text-neutral-700">PNG</span>
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="radio" name="output-format" value="pdf" class="accent-neutral-900" />
+            <span class="body-sm text-neutral-700">PDF</span>
+          </label>
+        </div>
+
+        <!-- Quality (JPG only) -->
+        <div id="quality-group" class="flex items-center gap-3">
+          <label for="quality-slider" class="body-sm text-neutral-600">Quality:</label>
+          <input id="quality-slider" type="range" min="10" max="100" value="92" class="w-24 accent-neutral-900" />
+          <span id="quality-value" class="body-sm text-neutral-700 font-medium w-10">92%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- File List -->
+    <div id="file-list" class="hidden flex flex-col gap-3"></div>
+
+    <!-- Action Buttons -->
+    <div id="action-bar" class="hidden flex flex-wrap items-center gap-3">
+      <button id="convert-btn" class="btn-primary">Convert All</button>
+      <button id="download-all-btn" class="btn-secondary hidden">Download All</button>
+      <button id="clear-btn" class="btn-secondary ml-auto">Clear</button>
+    </div>
+
+    <!-- Status -->
+    <div id="status" class="hidden body-sm text-neutral-600 flex items-center gap-2">
+      <svg class="animate-spin h-4 w-4 text-neutral-500" viewBox="0 0 24 24" fill="none">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+      </svg>
+      <span id="status-text">Converting...</span>
+    </div>
+
+    <!-- Results -->
+    <div id="results" class="hidden flex flex-col gap-4"></div>
+  </div>
+
+  <!-- Info Section -->
+  <div class="mt-10 p-6 bg-neutral-50 rounded-lg border border-neutral-200">
+    <h3 class="body-md font-semibold text-neutral-900 mb-3">About WebP Conversion</h3>
+    <ul class="list-disc pl-5 flex flex-col gap-2 body-sm text-neutral-600">
+      <li><strong>JPG</strong> — smaller file size, ideal for photos and web use. Adjustable quality.</li>
+      <li><strong>PNG</strong> — lossless format, preserves transparency. Best for graphics and screenshots.</li>
+      <li><strong>PDF</strong> — each image becomes a page. Great for sharing or printing.</li>
+      <li>All conversion happens in your browser. No files are uploaded anywhere.</li>
+      <li>Batch convert — drop multiple WebP files at once.</li>
+    </ul>
+  </div>
+</ToolLayout>
+
+<script>
+  // Load jsPDF for PDF export
+  const jsPDFScript = document.createElement('script');
+  jsPDFScript.src = 'https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js';
+  document.head.appendChild(jsPDFScript);
+
+  // Elements
+  const uploadZone = document.getElementById('upload-zone')!;
+  const fileInput = document.getElementById('file-input') as HTMLInputElement;
+  const optionsPanel = document.getElementById('options-panel')!;
+  const qualityGroup = document.getElementById('quality-group')!;
+  const qualitySlider = document.getElementById('quality-slider') as HTMLInputElement;
+  const qualityValue = document.getElementById('quality-value')!;
+  const fileList = document.getElementById('file-list')!;
+  const actionBar = document.getElementById('action-bar')!;
+  const convertBtn = document.getElementById('convert-btn') as HTMLButtonElement;
+  const downloadAllBtn = document.getElementById('download-all-btn') as HTMLButtonElement;
+  const clearBtn = document.getElementById('clear-btn') as HTMLButtonElement;
+  const statusEl = document.getElementById('status')!;
+  const statusText = document.getElementById('status-text')!;
+  const results = document.getElementById('results')!;
+
+  interface FileEntry {
+    file: File;
+    dataUrl?: string;
+    canvas?: HTMLCanvasElement;
+    converted: boolean;
+  }
+
+  let files: FileEntry[] = [];
+
+  // Quality slider
+  qualitySlider.addEventListener('input', () => {
+    qualityValue.textContent = qualitySlider.value + '%';
+  });
+
+  // Format change — show/hide quality
+  document.querySelectorAll('input[name="output-format"]').forEach(radio => {
+    radio.addEventListener('change', () => {
+      const format = getFormat();
+      qualityGroup.classList.toggle('hidden', format !== 'jpeg');
+    });
+  });
+
+  function getFormat(): string {
+    const checked = document.querySelector('input[name="output-format"]:checked') as HTMLInputElement;
+    return checked?.value || 'jpeg';
+  }
+
+  function getQuality(): number {
+    return parseInt(qualitySlider.value) / 100;
+  }
+
+  // Upload handling
+  uploadZone.addEventListener('click', () => fileInput.click());
+  uploadZone.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    uploadZone.classList.add('border-neutral-500');
+  });
+  uploadZone.addEventListener('dragleave', () => {
+    uploadZone.classList.remove('border-neutral-500');
+  });
+  uploadZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    uploadZone.classList.remove('border-neutral-500');
+    const dt = e.dataTransfer;
+    if (dt?.files) addFiles(dt.files);
+  });
+  fileInput.addEventListener('change', () => {
+    if (fileInput.files) addFiles(fileInput.files);
+  });
+
+  function addFiles(fileListInput: FileList) {
+    const webpFiles = Array.from(fileListInput).filter(f =>
+      f.type === 'image/webp' || f.name.toLowerCase().endsWith('.webp')
+    );
+
+    if (webpFiles.length === 0) {
+      alert('Please select WebP files only.');
+      return;
+    }
+
+    webpFiles.forEach(f => files.push({ file: f, converted: false }));
+    renderFileList();
+    optionsPanel.classList.remove('hidden');
+    actionBar.classList.remove('hidden');
+    results.classList.add('hidden');
+    downloadAllBtn.classList.add('hidden');
+  }
+
+  function renderFileList() {
+    fileList.classList.remove('hidden');
+    fileList.innerHTML = files.map((entry, i) => `
+      <div class="flex items-center gap-3 p-3 bg-white border border-neutral-200 rounded-lg">
+        <span class="text-lg">🖼️</span>
+        <div class="flex-1 min-w-0">
+          <p class="body-sm font-medium text-neutral-900 truncate">${entry.file.name}</p>
+          <p class="caption-mono text-neutral-500">${(entry.file.size / 1024).toFixed(1)} KB</p>
+        </div>
+        <button data-remove="${i}" class="text-neutral-400 hover:text-red-500 transition-colors text-lg leading-none">&times;</button>
+      </div>
+    `).join('');
+
+    // Remove buttons
+    fileList.querySelectorAll('[data-remove]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const idx = parseInt((btn as HTMLElement).dataset.remove!);
+        files.splice(idx, 1);
+        if (files.length === 0) {
+          resetUI();
+        } else {
+          renderFileList();
+        }
+      });
+    });
+  }
+
+  function resetUI() {
+    files = [];
+    fileList.classList.add('hidden');
+    fileList.innerHTML = '';
+    optionsPanel.classList.add('hidden');
+    actionBar.classList.add('hidden');
+    results.classList.add('hidden');
+    results.innerHTML = '';
+    downloadAllBtn.classList.add('hidden');
+    fileInput.value = '';
+  }
+
+  clearBtn.addEventListener('click', resetUI);
+
+  // Convert
+  convertBtn.addEventListener('click', async () => {
+    if (files.length === 0) return;
+
+    const format = getFormat();
+    const quality = getQuality();
+
+    statusEl.classList.remove('hidden');
+    statusText.textContent = `Converting ${files.length} file(s)...`;
+    results.classList.add('hidden');
+    results.innerHTML = '';
+    convertBtn.disabled = true;
+
+    for (let i = 0; i < files.length; i++) {
+      statusText.textContent = `Converting ${i + 1} of ${files.length}...`;
+      const entry = files[i];
+
+      try {
+        const canvas = await loadImageToCanvas(entry.file);
+        entry.canvas = canvas;
+        entry.converted = true;
+
+        if (format === 'pdf') {
+          // We'll handle PDF as a batch at the end
+          entry.dataUrl = canvas.toDataURL('image/jpeg', quality);
+        } else {
+          const mimeType = format === 'jpeg' ? 'image/jpeg' : 'image/png';
+          entry.dataUrl = canvas.toDataURL(mimeType, format === 'jpeg' ? quality : undefined);
+        }
+      } catch (err: any) {
+        entry.converted = false;
+        console.error('Failed to convert:', entry.file.name, err);
+      }
+    }
+
+    statusEl.classList.add('hidden');
+    convertBtn.disabled = false;
+    showResults(format);
+  });
+
+  function loadImageToCanvas(file: File): Promise<HTMLCanvasElement> {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = img.naturalWidth;
+        canvas.height = img.naturalHeight;
+        const ctx = canvas.getContext('2d')!;
+        // For JPG, fill white background (no transparency)
+        const format = getFormat();
+        if (format === 'jpeg' || format === 'pdf') {
+          ctx.fillStyle = '#ffffff';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+        ctx.drawImage(img, 0, 0);
+        resolve(canvas);
+        URL.revokeObjectURL(img.src);
+      };
+      img.onerror = () => {
+        URL.revokeObjectURL(img.src);
+        reject(new Error('Failed to load image'));
+      };
+      img.src = URL.createObjectURL(file);
+    });
+  }
+
+  function showResults(format: string) {
+    results.classList.remove('hidden');
+    const convertedFiles = files.filter(f => f.converted);
+
+    if (format === 'pdf' && convertedFiles.length > 0) {
+      // Single PDF with all images as pages
+      results.innerHTML = `
+        <div class="flex items-center gap-3 p-4 bg-green-50 border border-green-200 rounded-lg">
+          <span class="text-lg">✅</span>
+          <div class="flex-1">
+            <p class="body-sm font-medium text-neutral-900">${convertedFiles.length} image(s) ready as PDF</p>
+            <p class="caption-mono text-neutral-500">Each image will be a separate page</p>
+          </div>
+          <button id="download-pdf-btn" class="btn-primary text-sm">Download PDF</button>
+        </div>
+      `;
+      document.getElementById('download-pdf-btn')!.addEventListener('click', downloadAsPdf);
+    } else {
+      // Individual image results
+      results.innerHTML = convertedFiles.map((entry, i) => {
+        const ext = format === 'jpeg' ? 'jpg' : 'png';
+        const newName = entry.file.name.replace(/\.webp$/i, `.${ext}`);
+        const originalSize = (entry.file.size / 1024).toFixed(1);
+        // Estimate new size from data URL
+        const newSize = entry.dataUrl ? ((entry.dataUrl.length * 3 / 4) / 1024).toFixed(1) : '?';
+        return `
+          <div class="flex items-center gap-3 p-3 bg-white border border-neutral-200 rounded-lg">
+            <img src="${entry.dataUrl}" alt="${newName}" class="w-12 h-12 object-cover rounded border border-neutral-200" />
+            <div class="flex-1 min-w-0">
+              <p class="body-sm font-medium text-neutral-900 truncate">${newName}</p>
+              <p class="caption-mono text-neutral-500">${originalSize} KB → ~${newSize} KB</p>
+            </div>
+            <button data-dl="${i}" class="btn-secondary text-sm">Download</button>
+          </div>
+        `;
+      }).join('');
+
+      // Individual download buttons
+      results.querySelectorAll('[data-dl]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const idx = parseInt((btn as HTMLElement).dataset.dl!);
+          const entry = convertedFiles[idx];
+          if (!entry.dataUrl) return;
+          const ext = format === 'jpeg' ? 'jpg' : 'png';
+          const newName = entry.file.name.replace(/\.webp$/i, `.${ext}`);
+          downloadDataUrl(entry.dataUrl, newName);
+        });
+      });
+
+      // Show Download All if multiple
+      if (convertedFiles.length > 1) {
+        downloadAllBtn.classList.remove('hidden');
+      }
+    }
+  }
+
+  // Download All (individual images)
+  downloadAllBtn.addEventListener('click', () => {
+    const format = getFormat();
+    const ext = format === 'jpeg' ? 'jpg' : 'png';
+    const convertedFiles = files.filter(f => f.converted);
+    convertedFiles.forEach((entry, i) => {
+      setTimeout(() => {
+        if (!entry.dataUrl) return;
+        const newName = entry.file.name.replace(/\.webp$/i, `.${ext}`);
+        downloadDataUrl(entry.dataUrl, newName);
+      }, i * 300); // Stagger downloads
+    });
+  });
+
+  function downloadDataUrl(dataUrl: string, filename: string) {
+    const a = document.createElement('a');
+    a.href = dataUrl;
+    a.download = filename;
+    a.click();
+  }
+
+  function downloadAsPdf() {
+    const convertedFiles = files.filter(f => f.converted && f.canvas);
+    if (convertedFiles.length === 0) return;
+
+    // @ts-ignore
+    const { jsPDF } = window.jspdf;
+
+    // Use first image dimensions for initial page
+    const first = convertedFiles[0].canvas!;
+    const orientation = first.width > first.height ? 'landscape' : 'portrait';
+    const pdf = new jsPDF({ orientation, unit: 'px', format: [first.width, first.height] });
+
+    convertedFiles.forEach((entry, i) => {
+      const canvas = entry.canvas!;
+      if (i > 0) {
+        const orient = canvas.width > canvas.height ? 'landscape' : 'portrait';
+        pdf.addPage([canvas.width, canvas.height], orient);
+      }
+      const imgData = canvas.toDataURL('image/jpeg', getQuality());
+      pdf.addImage(imgData, 'JPEG', 0, 0, canvas.width, canvas.height);
+    });
+
+    pdf.save('webp-converted.pdf');
+  }
+</script>

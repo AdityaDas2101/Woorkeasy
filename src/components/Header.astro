@@ -1,0 +1,218 @@
+---
+/**
+ * Header Component
+ * Sticky nav bar with logo, dropdown navigation, and CTA.
+ * Follows Vercel-style design: 64px height, clean links, black CTA.
+ */
+import LanguageSwitcher from './LanguageSwitcher.astro';
+
+const navDropdowns = [
+  {
+    label: 'Image Tools',
+    i18nKey: 'nav.imageTools',
+    items: [
+      // Convert
+      { name: 'JPG to PNG', href: '/image/jpg-to-png' },
+      { name: 'PNG to JPG', href: '/image/png-to-jpg' },
+      { name: 'Convert to WebP', href: '/image/to-webp' },
+      { name: 'WebP to JPG/PNG', href: '/image/webp-converter' },
+      { name: 'HEIC to JPG', href: '/image/heic-to-jpg' },
+      // Edit
+      { name: 'Compress Image', href: '/image/compress' },
+      { name: 'Crop Image', href: '/image/crop' },
+      { name: 'Rotate & Flip', href: '/image/rotate' },
+      { name: 'Add Watermark', href: '/image/watermark' },
+      // AI
+      { name: 'Remove Background', href: '/image/background-remover' },
+    ],
+  },
+  {
+    label: 'PDF Tools',
+    i18nKey: 'nav.pdfTools',
+    items: [
+      { name: 'JPG to PDF', href: '/pdf/jpg-to-pdf' },
+      { name: 'PDF to Image', href: '/pdf/pdf-to-image' },
+      { name: 'Merge PDF', href: '/pdf/merge-pdf' },
+      { name: 'Split PDF', href: '/pdf/split-pdf' },
+      { name: 'Rotate PDF', href: '/pdf/rotate-pdf' },
+    ],
+  },
+  {
+    label: 'Finance',
+    i18nKey: 'nav.finance',
+    items: [
+      { name: 'OFX to Excel', href: '/finance/ofx-to-excel' },
+      { name: 'QFX to Excel', href: '/finance/qfx-to-excel' },
+      { name: 'Excel to CSV', href: '/finance/excel-to-csv' },
+      { name: 'CSV to Excel', href: '/finance/csv-to-excel' },
+    ],
+  },
+  {
+    label: 'Dev Tools',
+    i18nKey: 'nav.devTools',
+    items: [
+      { name: 'Base64 Encode/Decode', href: '/dev/base64' },
+      { name: 'URL Encode/Decode', href: '/dev/url-encode' },
+      { name: 'JSON Formatter', href: '/dev/json-formatter' },
+    ],
+  },
+  {
+    label: 'Utility',
+    i18nKey: 'nav.utility',
+    items: [
+      { name: 'Character Counter', href: '/utility/character-counter' },
+      { name: 'Web to Image / PDF', href: '/utility/web-to-image' },
+    ],
+  },
+];
+---
+
+<header class="sticky top-0 z-50 bg-white/80 dark:bg-neutral-950/80 backdrop-blur-md border-b border-neutral-200 dark:border-neutral-800 h-16">
+  <nav class="max-w-5xl mx-auto h-full flex items-center justify-between px-6">
+    <!-- Logo -->
+    <a href="/" class="flex items-center gap-2 no-underline">
+      <span class="text-xl font-semibold text-neutral-900 dark:text-neutral-100 tracking-tight">Woorkeasy</span>
+    </a>
+
+    <!-- Desktop Nav with Dropdowns -->
+    <div class="hidden md:flex items-center gap-1">
+      {navDropdowns.map((dropdown) => (
+        <div class="relative group">
+          <button
+            class="text-sm text-neutral-600 dark:text-neutral-400 px-3 py-2 rounded-full no-underline hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors inline-flex items-center gap-1 cursor-pointer"
+            data-i18n={dropdown.i18nKey}
+          >
+            {dropdown.label}
+            <svg class="w-3 h-3 opacity-50 group-hover:opacity-100 transition-opacity" viewBox="0 0 12 12" fill="none">
+              <path d="M3 5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <!-- Dropdown Panel -->
+          <div class="absolute top-full left-0 pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150">
+            <div class="bg-white dark:bg-neutral-900 rounded-lg border border-neutral-200 dark:border-neutral-700 shadow-level-4 py-2 min-w-[200px]">
+              {dropdown.items.map((item) => (
+                <a
+                  href={item.href}
+                  class="block px-4 py-2 text-sm text-neutral-600 dark:text-neutral-400 no-underline hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors"
+                >
+                  {item.name}
+                </a>
+              ))}
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <!-- Right side: Language + Dark Mode Toggle + CTA + Mobile Menu -->
+    <div class="flex items-center gap-2">
+      <!-- Language Switcher -->
+      <LanguageSwitcher />
+
+      <!-- Dark Mode Toggle -->
+      <button
+        id="theme-toggle"
+        class="flex items-center justify-center w-8 h-8 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+        aria-label="Toggle dark mode"
+      >
+        <!-- Sun icon (shown in dark mode) -->
+        <svg id="sun-icon" class="w-4 h-4 hidden dark:block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="5"></circle>
+          <line x1="12" y1="1" x2="12" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="23"></line>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+          <line x1="1" y1="12" x2="3" y2="12"></line>
+          <line x1="21" y1="12" x2="23" y2="12"></line>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <!-- Moon icon (shown in light mode) -->
+        <svg id="moon-icon" class="w-4 h-4 block dark:hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+      </button>
+
+      <a
+        href="mailto:woorkeasy@gmail.com"
+        class="hidden sm:inline-flex items-center text-sm text-neutral-600 dark:text-neutral-400 px-3 py-1.5 rounded-md border border-neutral-200 dark:border-neutral-700 no-underline hover:border-neutral-900 dark:hover:border-neutral-300 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors"
+        data-i18n="nav.requestTool"
+      >
+        Request a Tool
+      </a>
+
+      <!-- Mobile hamburger -->
+      <button
+        id="mobile-menu-btn"
+        class="md:hidden flex items-center justify-center w-8 h-8 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+        aria-label="Open menu"
+      >
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M2 4h12M2 8h12M2 12h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+  </nav>
+
+</header>
+
+<!-- Mobile Menu Overlay (outside header to avoid backdrop-filter containing block) -->
+<div id="mobile-menu" class="hidden fixed inset-0 top-16 bg-white dark:bg-neutral-950 z-40 p-4 overflow-y-auto md:hidden">
+  <div class="flex flex-col gap-0">
+    {navDropdowns.map((dropdown) => (
+      <div class="mobile-dropdown">
+        <button class="mobile-dropdown-btn w-full flex items-center justify-between text-sm font-medium text-neutral-900 dark:text-neutral-100 py-2 border-b border-neutral-100 dark:border-neutral-800 cursor-pointer" data-i18n={dropdown.i18nKey}>
+          {dropdown.label}
+          <svg class="w-3.5 h-3.5 text-neutral-400 transition-transform" viewBox="0 0 16 16" fill="none">
+            <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <div class="mobile-dropdown-content hidden pl-2 pb-1 pt-1">
+          <div class="grid grid-cols-2 gap-x-2 gap-y-0">
+            {dropdown.items.map((item) => (
+              <a
+                href={item.href}
+                class="block text-xs text-neutral-600 dark:text-neutral-400 py-1.5 no-underline hover:text-neutral-900 dark:hover:text-neutral-100"
+              >
+                {item.name}
+              </a>
+            ))}
+          </div>
+        </div>
+      </div>
+    ))}
+    <a
+      href="mailto:woorkeasy@gmail.com"
+      class="btn-primary text-center text-sm mt-3 no-underline"
+      data-i18n="nav.requestTool"
+    >
+      Request a Tool
+    </a>
+  </div>
+</div>
+
+<script>
+  // Mobile menu toggle
+  const btn = document.getElementById('mobile-menu-btn');
+  const menu = document.getElementById('mobile-menu');
+  btn?.addEventListener('click', () => {
+    menu?.classList.toggle('hidden');
+  });
+
+  // Mobile accordion dropdowns
+  document.querySelectorAll('.mobile-dropdown-btn').forEach((button) => {
+    button.addEventListener('click', () => {
+      const content = button.nextElementSibling as HTMLElement;
+      const arrow = button.querySelector('svg');
+      content?.classList.toggle('hidden');
+      arrow?.classList.toggle('rotate-180');
+    });
+  });
+
+  // Dark mode toggle
+  const themeToggle = document.getElementById('theme-toggle');
+  themeToggle?.addEventListener('click', () => {
+    const isDark = document.documentElement.classList.toggle('dark');
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+  });
+</script>

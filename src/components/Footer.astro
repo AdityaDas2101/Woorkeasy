@@ -1,0 +1,104 @@
+---
+/**
+ * Footer Component
+ * Clean 4-column footer with tool links, email contact, and branding.
+ * Follows Vercel-style: caption-mono eyebrows, body-sm links.
+ */
+
+const toolLinks = [
+  {
+    category: 'Image Tools',
+    i18nKey: 'nav.imageTools',
+    links: [
+      { label: 'JPG to PNG', href: '/image/jpg-to-png' },
+      { label: 'PNG to JPG', href: '/image/png-to-jpg' },
+      { label: 'Convert to WebP', href: '/image/to-webp' },
+      { label: 'WebP to JPG/PNG', href: '/image/webp-converter' },
+      { label: 'HEIC to JPG', href: '/image/heic-to-jpg' },
+      { label: 'Compress Image', href: '/image/compress' },
+      { label: 'Crop Image', href: '/image/crop' },
+      { label: 'Rotate & Flip', href: '/image/rotate' },
+      { label: 'Add Watermark', href: '/image/watermark' },
+      { label: 'Remove Background', href: '/image/background-remover' },
+    ],
+  },
+  {
+    category: 'PDF Tools',
+    i18nKey: 'nav.pdfTools',
+    links: [
+      { label: 'JPG to PDF', href: '/pdf/jpg-to-pdf' },
+      { label: 'PDF to Image', href: '/pdf/pdf-to-image' },
+      { label: 'Merge PDF', href: '/pdf/merge-pdf' },
+      { label: 'Split PDF', href: '/pdf/split-pdf' },
+      { label: 'Rotate PDF', href: '/pdf/rotate-pdf' },
+    ],
+  },
+  {
+    category: 'Finance',
+    i18nKey: 'nav.finance',
+    links: [
+      { label: 'OFX to Excel', href: '/finance/ofx-to-excel' },
+      { label: 'QFX to Excel', href: '/finance/qfx-to-excel' },
+      { label: 'Excel to CSV', href: '/finance/excel-to-csv' },
+      { label: 'CSV to Excel', href: '/finance/csv-to-excel' },
+    ],
+  },
+  {
+    category: 'Dev Tools',
+    i18nKey: 'nav.devTools',
+    links: [
+      { label: 'Base64 Encode/Decode', href: '/dev/base64' },
+      { label: 'URL Encode/Decode', href: '/dev/url-encode' },
+      { label: 'JSON Formatter', href: '/dev/json-formatter' },
+      { label: 'Character Counter', href: '/utility/character-counter' },
+      { label: 'Web to Image / PDF', href: '/utility/web-to-image' },
+    ],
+  },
+];
+---
+
+<footer class="bg-white dark:bg-neutral-950 border-t border-neutral-200 dark:border-neutral-800 mt-auto">
+  <div class="max-w-5xl mx-auto px-6 py-16">
+    <!-- Link Columns -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+      {toolLinks.map((section) => (
+        <div>
+          <h3 class="caption-mono text-neutral-500 uppercase tracking-wider mb-4" data-i18n={section.i18nKey}>
+            {section.category}
+          </h3>
+          <ul class="list-none p-0 m-0 flex flex-col gap-2">
+            {section.links.map(link => (
+              <li>
+                <a
+                  href={link.href}
+                  class="text-sm text-neutral-600 dark:text-neutral-400 no-underline hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors"
+                >
+                  {link.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+
+    <!-- Bottom Bar -->
+    <div class="mt-16 pt-6 border-t border-neutral-200 dark:border-neutral-800 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <span class="text-base font-semibold tracking-tight">Woorkeasy</span>
+        <span class="text-sm text-neutral-500">— All Tools, Zero Hassle.</span>
+      </div>
+      <div class="flex items-center gap-4">
+        <a
+          href="mailto:woorkeasy@gmail.com"
+          class="text-sm text-neutral-600 dark:text-neutral-400 no-underline hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors"
+        >
+          woorkeasy@gmail.com
+        </a>
+      </div>
+    </div>
+    <p class="text-sm text-neutral-500 text-center mt-6">
+      &copy; {new Date().getFullYear()} Woorkeasy. Free online tools for everyone.
+    </p>
+  </div>
+</footer>

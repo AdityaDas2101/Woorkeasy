@@ -1,0 +1,118 @@
+---
+/**
+ * Base Layout for Woorkeasy
+ * Provides consistent HTML structure, SEO meta, header, and footer.
+ */
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import '../styles/global.css';
+
+export interface Props {
+  title: string;
+  description: string;
+  canonicalURL?: string;
+}
+
+const { title, description, canonicalURL } = Astro.props;
+const siteURL = 'https://woorkeasy.com';
+const canonical = canonicalURL || new URL(Astro.url.pathname, siteURL).href;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href={canonical} />
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- Dark mode: apply before paint to prevent flash -->
+    <script is:inline>
+      (function() {
+        const stored = localStorage.getItem('theme');
+        if (stored === 'dark' || (!stored && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+          document.documentElement.classList.add('dark');
+        }
+      })();
+    </script>
+
+    <!-- Open Graph -->
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Woorkeasy" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+
+    <title>{title}</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  </head>
+  <body class="min-h-screen flex flex-col bg-neutral-50 dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 font-sans antialiased transition-colors duration-200">
+    <Header />
+    <main class="flex-1">
+      <slot />
+    </main>
+    <Footer />
+
+    <!-- i18n Translation Engine -->
+    <script>
+      import { translations } from '../i18n/translations.js';
+
+      function applyTranslations(lang) {
+        const t = translations[lang];
+        if (!t) return;
+
+        // Translate all elements with data-i18n attribute
+        document.querySelectorAll('[data-i18n]').forEach((el) => {
+          const key = el.getAttribute('data-i18n');
+          if (key && t[key]) {
+            // For elements with child nodes (like buttons with SVGs), only update text nodes
+            const childNodes = el.childNodes;
+            let textNodeFound = false;
+            for (let i = 0; i < childNodes.length; i++) {
+              if (childNodes[i].nodeType === Node.TEXT_NODE && childNodes[i].textContent.trim()) {
+                childNodes[i].textContent = t[key];
+                textNodeFound = true;
+                break;
+              }
+            }
+            // If no text node was found, and it has no child elements, set textContent
+            if (!textNodeFound && el.children.length === 0) {
+              el.textContent = t[key];
+            }
+          }
+        });
+
+        // Update HTML lang attribute
+        document.documentElement.setAttribute('lang', lang);
+
+        // Add RTL support for Arabic
+        if (lang === 'ar') {
+          document.documentElement.setAttribute('dir', 'rtl');
+        } else {
+          document.documentElement.setAttribute('dir', 'ltr');
+        }
+      }
+
+      // Apply on page load
+      const savedLang = localStorage.getItem('woorkeasy-lang') || 'en';
+      if (savedLang !== 'en') {
+        applyTranslations(savedLang);
+      }
+
+      // Listen for language changes
+      window.addEventListener('language-changed', (e) => {
+        const lang = (e as CustomEvent).detail.lang;
+        applyTranslations(lang);
+      });
+    </script>
+  </body>
+</html>

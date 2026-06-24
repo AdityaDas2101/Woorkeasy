@@ -1,0 +1,149 @@
+---
+/**
+ * HEIC to JPG Converter
+ * Uses heic2any library to convert Apple HEIC/HEIF images to JPG.
+ * Library is loaded only when processing begins.
+ */
+import ToolLayout from '../../components/ToolLayout.astro';
+---
+
+<ToolLayout
+  title="HEIC to JPG"
+  metaTitle="Convert HEIC to JPG Online Free — Apple Photos to JPEG | Woorkeasy"
+  description="Convert HEIC and HEIF images from iPhone/iPad to universally compatible JPG format. Fast, free, browser-based conversion."
+  heading="Convert HEIC to JPG."
+>
+  <div id="heic-app">
+    <!-- Upload Zone -->
+    <div id="upload-zone" class="upload-zone p-12 text-center cursor-pointer">
+      <div class="flex flex-col items-center gap-4">
+        <svg class="w-12 h-12 text-neutral-500" viewBox="0 0 48 48" fill="none">
+          <path d="M24 32V16m0 0l-6 6m6-6l6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <rect x="8" y="8" width="32" height="32" rx="4" stroke="currentColor" stroke-width="2"/>
+        </svg>
+        <p class="body-md text-neutral-600">Drag & drop HEIC files here, or <span class="text-blue-600 font-medium">browse</span></p>
+        <p class="body-sm text-neutral-500">Supports .heic and .heif files from iPhone/iPad</p>
+      </div>
+      <input type="file" id="file-input" accept=".heic,.heif,image/heic,image/heif" multiple class="hidden" />
+    </div>
+
+    <!-- Quality Control -->
+    <div id="controls" class="hidden mt-6">
+      <label class="body-sm text-neutral-600 font-medium block mb-2">
+        Quality: <span id="quality-value">90</span>%
+      </label>
+      <input type="range" id="quality-slider" min="10" max="100" value="90" class="w-full accent-neutral-900" />
+      <button id="convert-btn" class="btn-primary mt-6">
+        Convert to JPG
+      </button>
+    </div>
+
+    <!-- Loading -->
+    <div id="loading" class="hidden mt-6 text-center">
+      <div class="inline-flex items-center gap-3">
+        <svg class="animate-spin w-5 h-5 text-[var(--color-primary)]" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" class="opacity-25"/>
+          <path d="M4 12a8 8 0 018-8" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+        <span class="body-sm text-neutral-600">Converting HEIC files...</span>
+      </div>
+    </div>
+
+    <!-- Results -->
+    <div id="results" class="hidden mt-8">
+      <h2 class="display-sm text-neutral-900 mb-4">Converted Files</h2>
+      <div id="results-list" class="flex flex-col gap-4"></div>
+    </div>
+  </div>
+</ToolLayout>
+
+<script>
+  const uploadZone = document.getElementById('upload-zone')!;
+  const fileInput = document.getElementById('file-input') as HTMLInputElement;
+  const controls = document.getElementById('controls')!;
+  const qualitySlider = document.getElementById('quality-slider') as HTMLInputElement;
+  const qualityValue = document.getElementById('quality-value')!;
+  const convertBtn = document.getElementById('convert-btn')!;
+  const loading = document.getElementById('loading')!;
+  const results = document.getElementById('results')!;
+  const resultsList = document.getElementById('results-list')!;
+
+  let files: File[] = [];
+
+  uploadZone.addEventListener('click', () => fileInput.click());
+  uploadZone.addEventListener('dragover', (e) => { e.preventDefault(); uploadZone.classList.add('dragover'); });
+  uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('dragover'));
+  uploadZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    uploadZone.classList.remove('dragover');
+    if (e.dataTransfer?.files) handleFiles(Array.from(e.dataTransfer.files));
+  });
+  fileInput.addEventListener('change', () => { if (fileInput.files) handleFiles(Array.from(fileInput.files)); });
+  qualitySlider.addEventListener('input', () => { qualityValue.textContent = qualitySlider.value; });
+
+  function handleFiles(newFiles: File[]) {
+    files = newFiles.filter(f => f.name.match(/\.(heic|heif)$/i));
+    if (files.length > 0) {
+      controls.classList.remove('hidden');
+      uploadZone.querySelector('p')!.textContent = `${files.length} HEIC file(s) selected`;
+    }
+  }
+
+  convertBtn.addEventListener('click', async () => {
+    if (files.length === 0) return;
+    loading.classList.remove('hidden');
+    results.classList.add('hidden');
+    resultsList.innerHTML = '';
+
+    // Lazy-load heic2any
+    const heic2any = (await import('heic2any')).default;
+    const quality = parseInt(qualitySlider.value) / 100;
+
+    for (const file of files) {
+      try {
+        const blob = await heic2any({
+          blob: file,
+          toType: 'image/jpeg',
+          quality: quality,
+        }) as Blob;
+        addResult(file, blob);
+      } catch (err) {
+        addError(file, (err as Error).message);
+      }
+    }
+
+    loading.classList.add('hidden');
+    results.classList.remove('hidden');
+  });
+
+  function addResult(original: File, converted: Blob) {
+    const fileName = original.name.replace(/\.(heic|heif)$/i, '.jpg');
+    const div = document.createElement('div');
+    div.className = 'flex items-center justify-between p-4 bg-neutral-50 rounded-lg';
+    div.innerHTML = `
+      <div>
+        <p class="body-sm text-neutral-900 font-medium">${fileName}</p>
+        <p class="caption-mono text-neutral-500">${formatBytes(converted.size)}</p>
+      </div>
+      <a class="btn-primary text-sm no-underline" style="padding: 6px 16px;" download="${fileName}">Download JPG</a>
+    `;
+    div.querySelector('a')!.href = URL.createObjectURL(converted);
+    resultsList.appendChild(div);
+  }
+
+  function addError(file: File, message: string) {
+    const div = document.createElement('div');
+    div.className = 'p-4 bg-red-50 rounded-lg';
+    div.innerHTML = `<p class="body-sm text-red-600">${file.name}: ${message}</p>`;
+    resultsList.appendChild(div);
+  }
+
+  function formatBytes(bytes: number): string {
+    if (bytes === 0) return '0 B';
+    const k = 1024;
+    const sizes = ['B', 'KB', 'MB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+  }
+</script>
+

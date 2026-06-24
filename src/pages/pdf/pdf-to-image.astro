@@ -1,0 +1,279 @@
+---
+/**
+ * PDF to Image Tool
+ * Convert PDF pages to JPG or PNG images using PDF.js (CDN).
+ * Each page is rendered to a canvas and exported.
+ */
+import ToolLayout from '../../components/ToolLayout.astro';
+---
+
+<ToolLayout
+  title="PDF to Image"
+  metaTitle="PDF to JPG & PNG Converter Free Online | Woorkeasy"
+  description="Convert PDF pages to JPG or PNG images. Each page becomes a separate image. Free, browser-based, no upload needed."
+  heading="PDF to Image."
+>
+  <div id="pdf-to-img-app" class="flex flex-col gap-6">
+    <!-- Upload Zone -->
+    <div
+      id="upload-zone"
+      class="upload-zone flex flex-col items-center justify-center gap-3 p-12 border-2 border-dashed border-neutral-300 rounded-lg cursor-pointer hover:border-neutral-400 transition-colors"
+    >
+      <span class="text-4xl">📄</span>
+      <p class="body-md text-neutral-600 dark:text-neutral-400 text-center">
+        Drop a PDF file here or <span class="text-neutral-900 dark:text-neutral-100 font-medium underline">browse</span>
+      </p>
+      <p class="body-sm text-neutral-500">Single PDF file</p>
+      <input id="file-input" type="file" accept=".pdf,application/pdf" class="hidden" />
+    </div>
+
+    <!-- Options -->
+    <div id="options-panel" class="hidden p-4 bg-neutral-50 dark:bg-neutral-800 rounded-lg border border-neutral-200 dark:border-neutral-700">
+      <div class="flex flex-wrap items-center gap-6">
+        <div class="flex items-center gap-3">
+          <span class="body-sm font-medium text-neutral-700 dark:text-neutral-300">Format:</span>
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="radio" name="img-format" value="png" checked class="accent-neutral-900" />
+            <span class="body-sm text-neutral-700 dark:text-neutral-300">PNG</span>
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="radio" name="img-format" value="jpeg" class="accent-neutral-900" />
+            <span class="body-sm text-neutral-700 dark:text-neutral-300">JPG</span>
+          </label>
+        </div>
+        <div class="flex items-center gap-3">
+          <label for="scale-input" class="body-sm text-neutral-600 dark:text-neutral-400">Scale:</label>
+          <select id="scale-input" class="px-3 py-1.5 border border-neutral-200 dark:border-neutral-700 rounded-md text-sm bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 focus:outline-none focus:border-neutral-900">
+            <option value="1">1x (72 DPI)</option>
+            <option value="2" selected>2x (144 DPI)</option>
+            <option value="3">3x (216 DPI)</option>
+          </select>
+        </div>
+        <div id="quality-group" class="hidden flex items-center gap-3">
+          <label for="quality-slider" class="body-sm text-neutral-600 dark:text-neutral-400">Quality:</label>
+          <input id="quality-slider" type="range" min="10" max="100" value="92" class="w-24 accent-neutral-900" />
+          <span id="quality-value" class="body-sm text-neutral-700 dark:text-neutral-300 font-medium w-10">92%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- File Info -->
+    <div id="file-info" class="hidden p-4 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg">
+      <div class="flex items-center gap-3">
+        <span class="text-lg">📄</span>
+        <div class="flex-1 min-w-0">
+          <p id="file-name" class="body-sm font-medium text-neutral-900 dark:text-neutral-100 truncate"></p>
+          <p id="file-pages" class="caption-mono text-neutral-500"></p>
+        </div>
+        <button id="clear-btn" class="text-neutral-400 hover:text-red-500 transition-colors text-lg leading-none">&times;</button>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div id="action-bar" class="hidden flex flex-wrap items-center gap-3">
+      <button id="convert-btn" class="btn-primary">Convert All Pages</button>
+      <button id="download-all-btn" class="btn-secondary hidden">Download All</button>
+    </div>
+
+    <!-- Status -->
+    <div id="status" class="hidden body-sm text-neutral-600 dark:text-neutral-400 flex items-center gap-2">
+      <svg class="animate-spin h-4 w-4 text-neutral-500" viewBox="0 0 24 24" fill="none">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+      </svg>
+      <span id="status-text">Converting...</span>
+    </div>
+
+    <!-- Results Grid -->
+    <div id="results" class="hidden grid grid-cols-2 md:grid-cols-3 gap-4"></div>
+  </div>
+
+  <!-- Info -->
+  <div class="mt-10 p-6 bg-neutral-50 dark:bg-neutral-800 rounded-lg border border-neutral-200 dark:border-neutral-700">
+    <h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100 mb-3">About PDF to Image</h3>
+    <ul class="list-disc pl-5 flex flex-col gap-2 body-sm text-neutral-600 dark:text-neutral-400">
+      <li><strong>Each page = one image</strong> — every PDF page is converted to a separate image file.</li>
+      <li><strong>High resolution</strong> — use 2x or 3x scale for crisp, print-quality images.</li>
+      <li><strong>PNG vs JPG</strong> — PNG is lossless (larger files), JPG is compressed (smaller files).</li>
+      <li>Processing happens entirely in your browser using PDF.js.</li>
+    </ul>
+  </div>
+</ToolLayout>
+
+<script>
+  // Load PDF.js from CDN
+  const pdfjsScript = document.createElement('script');
+  pdfjsScript.src = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@4.4.168/build/pdf.min.mjs';
+  pdfjsScript.type = 'module';
+  document.head.appendChild(pdfjsScript);
+
+  // Also load as classic script for global access
+  const pdfjsScriptClassic = document.createElement('script');
+  pdfjsScriptClassic.src = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@4.4.168/build/pdf.min.js';
+  document.head.appendChild(pdfjsScriptClassic);
+
+  const uploadZone = document.getElementById('upload-zone')!;
+  const fileInput = document.getElementById('file-input') as HTMLInputElement;
+  const optionsPanel = document.getElementById('options-panel')!;
+  const qualityGroup = document.getElementById('quality-group')!;
+  const qualitySlider = document.getElementById('quality-slider') as HTMLInputElement;
+  const qualityValue = document.getElementById('quality-value')!;
+  const scaleInput = document.getElementById('scale-input') as HTMLSelectElement;
+  const fileInfo = document.getElementById('file-info')!;
+  const fileName = document.getElementById('file-name')!;
+  const filePages = document.getElementById('file-pages')!;
+  const clearBtn = document.getElementById('clear-btn') as HTMLButtonElement;
+  const actionBar = document.getElementById('action-bar')!;
+  const convertBtn = document.getElementById('convert-btn') as HTMLButtonElement;
+  const downloadAllBtn = document.getElementById('download-all-btn') as HTMLButtonElement;
+  const statusEl = document.getElementById('status')!;
+  const statusText = document.getElementById('status-text')!;
+  const results = document.getElementById('results')!;
+
+  let pdfDoc: any = null;
+  let pageImages: { dataUrl: string; name: string }[] = [];
+
+  qualitySlider.addEventListener('input', () => { qualityValue.textContent = qualitySlider.value + '%'; });
+
+  document.querySelectorAll('input[name="img-format"]').forEach(r => {
+    r.addEventListener('change', () => {
+      const fmt = (document.querySelector('input[name="img-format"]:checked') as HTMLInputElement)?.value;
+      qualityGroup.classList.toggle('hidden', fmt !== 'jpeg');
+    });
+  });
+
+  uploadZone.addEventListener('click', () => fileInput.click());
+  uploadZone.addEventListener('dragover', e => { e.preventDefault(); uploadZone.classList.add('border-neutral-500'); });
+  uploadZone.addEventListener('dragleave', () => { uploadZone.classList.remove('border-neutral-500'); });
+  uploadZone.addEventListener('drop', e => { e.preventDefault(); uploadZone.classList.remove('border-neutral-500'); if (e.dataTransfer?.files[0]) loadPDF(e.dataTransfer.files[0]); });
+  fileInput.addEventListener('change', () => { if (fileInput.files?.[0]) loadPDF(fileInput.files[0]); });
+
+  async function loadPDF(file: File) {
+    if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
+      alert('Please select a PDF file.'); return;
+    }
+
+    // Wait for PDF.js to load
+    await waitForPDFJS();
+
+    const arrayBuffer = await file.arrayBuffer();
+    // @ts-ignore
+    const pdfjsLib = window['pdfjs-dist/build/pdf'] || window.pdfjsLib;
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@4.4.168/build/pdf.worker.min.js';
+
+    try {
+      pdfDoc = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+      fileName.textContent = file.name;
+      filePages.textContent = `${pdfDoc.numPages} page${pdfDoc.numPages > 1 ? 's' : ''}`;
+      fileInfo.classList.remove('hidden');
+      optionsPanel.classList.remove('hidden');
+      actionBar.classList.remove('hidden');
+      uploadZone.classList.add('hidden');
+      results.classList.add('hidden');
+      downloadAllBtn.classList.add('hidden');
+    } catch (err: any) {
+      alert('Failed to read PDF: ' + (err.message || 'Unknown error'));
+    }
+  }
+
+  function waitForPDFJS(): Promise<void> {
+    return new Promise((resolve) => {
+      const check = () => {
+        // @ts-ignore
+        if (window['pdfjs-dist/build/pdf'] || window.pdfjsLib) { resolve(); return; }
+        setTimeout(check, 100);
+      };
+      check();
+    });
+  }
+
+  clearBtn.addEventListener('click', () => {
+    pdfDoc = null;
+    pageImages = [];
+    fileInfo.classList.add('hidden');
+    optionsPanel.classList.add('hidden');
+    actionBar.classList.add('hidden');
+    results.classList.add('hidden');
+    results.innerHTML = '';
+    uploadZone.classList.remove('hidden');
+    downloadAllBtn.classList.add('hidden');
+    fileInput.value = '';
+  });
+
+  convertBtn.addEventListener('click', async () => {
+    if (!pdfDoc) return;
+
+    const format = (document.querySelector('input[name="img-format"]:checked') as HTMLInputElement)?.value || 'png';
+    const scale = parseInt(scaleInput.value) || 2;
+    const quality = parseInt(qualitySlider.value) / 100;
+    const mimeType = format === 'jpeg' ? 'image/jpeg' : 'image/png';
+    const ext = format === 'jpeg' ? 'jpg' : 'png';
+
+    statusEl.classList.remove('hidden');
+    results.classList.add('hidden');
+    results.innerHTML = '';
+    pageImages = [];
+    convertBtn.disabled = true;
+
+    for (let i = 1; i <= pdfDoc.numPages; i++) {
+      statusText.textContent = `Rendering page ${i} of ${pdfDoc.numPages}...`;
+      const page = await pdfDoc.getPage(i);
+      const viewport = page.getViewport({ scale });
+      const canvas = document.createElement('canvas');
+      canvas.width = viewport.width;
+      canvas.height = viewport.height;
+      const ctx = canvas.getContext('2d')!;
+
+      if (format === 'jpeg') {
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+      }
+
+      await page.render({ canvasContext: ctx, viewport }).promise;
+      const dataUrl = canvas.toDataURL(mimeType, format === 'jpeg' ? quality : undefined);
+      const pageName = `page-${String(i).padStart(3, '0')}.${ext}`;
+      pageImages.push({ dataUrl, name: pageName });
+    }
+
+    statusEl.classList.add('hidden');
+    convertBtn.disabled = false;
+    showResults();
+  });
+
+  function showResults() {
+    results.classList.remove('hidden');
+    results.innerHTML = pageImages.map((img, i) => `
+      <div class="flex flex-col gap-2 p-3 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg">
+        <img src="${img.dataUrl}" alt="${img.name}" class="w-full rounded border border-neutral-200 dark:border-neutral-700" />
+        <div class="flex items-center justify-between">
+          <span class="caption-mono text-neutral-500">${img.name}</span>
+          <button data-dl="${i}" class="text-sm text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 underline">Download</button>
+        </div>
+      </div>
+    `).join('');
+
+    results.querySelectorAll('[data-dl]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const idx = parseInt((btn as HTMLElement).dataset.dl!);
+        const img = pageImages[idx];
+        const a = document.createElement('a');
+        a.href = img.dataUrl;
+        a.download = img.name;
+        a.click();
+      });
+    });
+
+    if (pageImages.length > 1) downloadAllBtn.classList.remove('hidden');
+  }
+
+  downloadAllBtn.addEventListener('click', () => {
+    pageImages.forEach((img, i) => {
+      setTimeout(() => {
+        const a = document.createElement('a');
+        a.href = img.dataUrl;
+        a.download = img.name;
+        a.click();
+      }, i * 300);
+    });
+  });
+</script>

@@ -1,0 +1,257 @@
+---
+/**
+ * Base64 Encode/Decode Tool
+ * Encode text or files to Base64, or decode Base64 back to text/file.
+ */
+import ToolLayout from '../../components/ToolLayout.astro';
+---
+
+<ToolLayout
+  title="Base64 Encode/Decode"
+  metaTitle="Base64 Encoder & Decoder Free Online | Woorkeasy"
+  description="Encode text or files to Base64, or decode Base64 strings back to text or downloadable files. Free developer tool — runs in your browser."
+  heading="Base64 Encode / Decode."
+>
+  <div id="base64-app" class="flex flex-col gap-6">
+    <!-- Mode Tabs -->
+    <div class="flex gap-2 border-b border-neutral-200 dark:border-neutral-700 pb-0">
+      <button id="tab-encode" class="px-4 py-2 body-sm font-medium text-neutral-900 dark:text-neutral-100 border-b-2 border-neutral-900 dark:border-neutral-100 -mb-px transition-colors">Encode</button>
+      <button id="tab-decode" class="px-4 py-2 body-sm font-medium text-neutral-500 border-b-2 border-transparent -mb-px hover:text-neutral-700 dark:hover:text-neutral-300 transition-colors">Decode</button>
+    </div>
+
+    <!-- Encode Panel -->
+    <div id="encode-panel">
+      <div class="flex flex-col gap-4">
+        <!-- Input type toggle -->
+        <div class="flex items-center gap-4">
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="radio" name="encode-source" value="text" checked class="accent-neutral-900" />
+            <span class="body-sm text-neutral-700 dark:text-neutral-300">Text</span>
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="radio" name="encode-source" value="file" class="accent-neutral-900" />
+            <span class="body-sm text-neutral-700 dark:text-neutral-300">File</span>
+          </label>
+        </div>
+
+        <!-- Text input -->
+        <div id="encode-text-group">
+          <textarea
+            id="encode-input"
+            class="w-full min-h-[150px] p-4 border border-neutral-200 dark:border-neutral-700 rounded-lg font-mono text-sm text-neutral-900 dark:text-neutral-100 bg-white dark:bg-neutral-900 resize-y focus:outline-none focus:border-neutral-900 dark:focus:border-neutral-400"
+            placeholder="Enter text to encode..."
+          ></textarea>
+        </div>
+
+        <!-- File input -->
+        <div id="encode-file-group" class="hidden">
+          <div class="upload-zone flex flex-col items-center justify-center gap-2 p-8 border-2 border-dashed border-neutral-300 rounded-lg cursor-pointer hover:border-neutral-400 transition-colors">
+            <span class="text-2xl">📁</span>
+            <p class="body-sm text-neutral-600 dark:text-neutral-400">Drop a file or <span class="underline">browse</span></p>
+            <input id="encode-file-input" type="file" class="hidden" />
+            <p id="encode-file-name" class="body-sm text-neutral-500 hidden"></p>
+          </div>
+        </div>
+
+        <button id="encode-btn" class="btn-primary self-start">Encode to Base64</button>
+
+        <!-- Output -->
+        <div id="encode-output-group" class="hidden">
+          <div class="flex items-center justify-between mb-2">
+            <span class="body-sm font-medium text-neutral-700 dark:text-neutral-300">Result:</span>
+            <button id="copy-encode-btn" class="text-sm text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 underline">Copy</button>
+          </div>
+          <textarea
+            id="encode-output"
+            class="w-full min-h-[120px] p-4 border border-neutral-200 dark:border-neutral-700 rounded-lg font-mono text-sm text-neutral-900 dark:text-neutral-100 bg-neutral-50 dark:bg-neutral-800 resize-y focus:outline-none"
+            readonly
+          ></textarea>
+          <p id="encode-stats" class="caption-mono text-neutral-500 mt-1"></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Decode Panel -->
+    <div id="decode-panel" class="hidden">
+      <div class="flex flex-col gap-4">
+        <textarea
+          id="decode-input"
+          class="w-full min-h-[150px] p-4 border border-neutral-200 dark:border-neutral-700 rounded-lg font-mono text-sm text-neutral-900 dark:text-neutral-100 bg-white dark:bg-neutral-900 resize-y focus:outline-none focus:border-neutral-900 dark:focus:border-neutral-400"
+          placeholder="Paste Base64 string to decode..."
+        ></textarea>
+
+        <div class="flex items-center gap-3">
+          <button id="decode-btn" class="btn-primary">Decode</button>
+          <button id="decode-file-btn" class="btn-secondary">Decode as File</button>
+        </div>
+
+        <!-- Output -->
+        <div id="decode-output-group" class="hidden">
+          <div class="flex items-center justify-between mb-2">
+            <span class="body-sm font-medium text-neutral-700 dark:text-neutral-300">Result:</span>
+            <button id="copy-decode-btn" class="text-sm text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 underline">Copy</button>
+          </div>
+          <textarea
+            id="decode-output"
+            class="w-full min-h-[120px] p-4 border border-neutral-200 dark:border-neutral-700 rounded-lg font-mono text-sm text-neutral-900 dark:text-neutral-100 bg-neutral-50 dark:bg-neutral-800 resize-y focus:outline-none"
+            readonly
+          ></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Info -->
+  <div class="mt-10 p-6 bg-neutral-50 dark:bg-neutral-800 rounded-lg border border-neutral-200 dark:border-neutral-700">
+    <h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100 mb-3">About Base64</h3>
+    <ul class="list-disc pl-5 flex flex-col gap-2 body-sm text-neutral-600 dark:text-neutral-400">
+      <li><strong>Encode</strong> — converts text or binary files into a safe ASCII string for embedding or transmitting.</li>
+      <li><strong>Decode</strong> — converts Base64 strings back to the original text or file.</li>
+      <li>Common uses: data URIs, email attachments (MIME), API payloads, JWT tokens.</li>
+      <li>Everything runs in your browser. No data leaves your machine.</li>
+    </ul>
+  </div>
+</ToolLayout>
+
+<script>
+  // Tab switching
+  const tabEncode = document.getElementById('tab-encode')!;
+  const tabDecode = document.getElementById('tab-decode')!;
+  const encodePanel = document.getElementById('encode-panel')!;
+  const decodePanel = document.getElementById('decode-panel')!;
+
+  tabEncode.addEventListener('click', () => {
+    tabEncode.classList.add('text-neutral-900', 'dark:text-neutral-100', 'border-neutral-900', 'dark:border-neutral-100');
+    tabEncode.classList.remove('text-neutral-500', 'border-transparent');
+    tabDecode.classList.add('text-neutral-500', 'border-transparent');
+    tabDecode.classList.remove('text-neutral-900', 'dark:text-neutral-100', 'border-neutral-900', 'dark:border-neutral-100');
+    encodePanel.classList.remove('hidden');
+    decodePanel.classList.add('hidden');
+  });
+
+  tabDecode.addEventListener('click', () => {
+    tabDecode.classList.add('text-neutral-900', 'dark:text-neutral-100', 'border-neutral-900', 'dark:border-neutral-100');
+    tabDecode.classList.remove('text-neutral-500', 'border-transparent');
+    tabEncode.classList.add('text-neutral-500', 'border-transparent');
+    tabEncode.classList.remove('text-neutral-900', 'dark:text-neutral-100', 'border-neutral-900', 'dark:border-neutral-100');
+    decodePanel.classList.remove('hidden');
+    encodePanel.classList.add('hidden');
+  });
+
+  // Encode source toggle
+  const encodeTextGroup = document.getElementById('encode-text-group')!;
+  const encodeFileGroup = document.getElementById('encode-file-group')!;
+  document.querySelectorAll('input[name="encode-source"]').forEach(r => {
+    r.addEventListener('change', () => {
+      const val = (document.querySelector('input[name="encode-source"]:checked') as HTMLInputElement)?.value;
+      encodeTextGroup.classList.toggle('hidden', val !== 'text');
+      encodeFileGroup.classList.toggle('hidden', val !== 'file');
+    });
+  });
+
+  // File upload for encode
+  const encodeFileInput = document.getElementById('encode-file-input') as HTMLInputElement;
+  const encodeFileName = document.getElementById('encode-file-name')!;
+  const encodeFileZone = encodeFileGroup.querySelector('.upload-zone')!;
+  encodeFileZone.addEventListener('click', () => encodeFileInput.click());
+  encodeFileInput.addEventListener('change', () => {
+    if (encodeFileInput.files?.[0]) {
+      encodeFileName.textContent = encodeFileInput.files[0].name;
+      encodeFileName.classList.remove('hidden');
+    }
+  });
+
+  // Encode
+  const encodeInput = document.getElementById('encode-input') as HTMLTextAreaElement;
+  const encodeBtn = document.getElementById('encode-btn') as HTMLButtonElement;
+  const encodeOutputGroup = document.getElementById('encode-output-group')!;
+  const encodeOutput = document.getElementById('encode-output') as HTMLTextAreaElement;
+  const encodeStats = document.getElementById('encode-stats')!;
+  const copyEncodeBtn = document.getElementById('copy-encode-btn')!;
+
+  encodeBtn.addEventListener('click', async () => {
+    const source = (document.querySelector('input[name="encode-source"]:checked') as HTMLInputElement)?.value;
+
+    let result = '';
+    let inputSize = 0;
+
+    if (source === 'text') {
+      const text = encodeInput.value;
+      if (!text) { alert('Please enter text to encode.'); return; }
+      inputSize = new TextEncoder().encode(text).length;
+      result = btoa(unescape(encodeURIComponent(text)));
+    } else {
+      const file = encodeFileInput.files?.[0];
+      if (!file) { alert('Please select a file.'); return; }
+      inputSize = file.size;
+      const buffer = await file.arrayBuffer();
+      const bytes = new Uint8Array(buffer);
+      let binary = '';
+      for (let i = 0; i < bytes.length; i++) {
+        binary += String.fromCharCode(bytes[i]);
+      }
+      result = btoa(binary);
+    }
+
+    encodeOutput.value = result;
+    encodeOutputGroup.classList.remove('hidden');
+    encodeStats.textContent = `Input: ${formatBytes(inputSize)} → Output: ${formatBytes(result.length)} (${Math.round(result.length / inputSize * 100)}% of original)`;
+  });
+
+  copyEncodeBtn.addEventListener('click', () => {
+    navigator.clipboard.writeText(encodeOutput.value);
+    copyEncodeBtn.textContent = 'Copied!';
+    setTimeout(() => { copyEncodeBtn.textContent = 'Copy'; }, 2000);
+  });
+
+  // Decode
+  const decodeInput = document.getElementById('decode-input') as HTMLTextAreaElement;
+  const decodeBtn = document.getElementById('decode-btn') as HTMLButtonElement;
+  const decodeFileBtn = document.getElementById('decode-file-btn') as HTMLButtonElement;
+  const decodeOutputGroup = document.getElementById('decode-output-group')!;
+  const decodeOutput = document.getElementById('decode-output') as HTMLTextAreaElement;
+  const copyDecodeBtn = document.getElementById('copy-decode-btn')!;
+
+  decodeBtn.addEventListener('click', () => {
+    const input = decodeInput.value.trim();
+    if (!input) { alert('Please paste a Base64 string.'); return; }
+    try {
+      const decoded = decodeURIComponent(escape(atob(input)));
+      decodeOutput.value = decoded;
+      decodeOutputGroup.classList.remove('hidden');
+    } catch {
+      alert('Invalid Base64 string. Please check your input.');
+    }
+  });
+
+  decodeFileBtn.addEventListener('click', () => {
+    const input = decodeInput.value.trim();
+    if (!input) { alert('Please paste a Base64 string.'); return; }
+    try {
+      const binary = atob(input);
+      const bytes = new Uint8Array(binary.length);
+      for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+      const blob = new Blob([bytes]);
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'decoded-file';
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch {
+      alert('Invalid Base64 string. Please check your input.');
+    }
+  });
+
+  copyDecodeBtn.addEventListener('click', () => {
+    navigator.clipboard.writeText(decodeOutput.value);
+    copyDecodeBtn.textContent = 'Copied!';
+    setTimeout(() => { copyDecodeBtn.textContent = 'Copy'; }, 2000);
+  });
+
+  function formatBytes(bytes: number): string {
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+    return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+  }
+</script>

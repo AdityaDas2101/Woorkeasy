@@ -1,0 +1,44 @@
+---
+/**
+ * ToolLayout Component
+ * Wraps every tool page with consistent structure: heading, description,
+ * upload zone, action area, and output/download area.
+ */
+import Layout from '../layouts/Layout.astro';
+
+export interface Props {
+  title: string;
+  metaTitle: string;
+  description: string;
+  heading: string;
+}
+
+const { title, metaTitle, description, heading } = Astro.props;
+---
+
+<Layout title={metaTitle} description={description}>
+  <div class="max-w-4xl mx-auto px-6 py-12 md:py-16">
+    <!-- Breadcrumb -->
+    <nav aria-label="Breadcrumb" class="mb-6">
+      <ol class="flex items-center gap-2 list-none p-0 m-0">
+        <li><a href="/" class="text-sm text-neutral-500 no-underline hover:text-neutral-900 dark:hover:text-neutral-100">Home</a></li>
+        <li class="text-sm text-neutral-400">/</li>
+        <li class="text-sm text-neutral-900 dark:text-neutral-100">{title}</li>
+      </ol>
+    </nav>
+
+    <!-- Page Header -->
+    <header class="mb-8">
+      <h1 class="display-lg text-neutral-900 dark:text-neutral-100">{heading}</h1>
+      <p class="body-lg text-neutral-600 dark:text-neutral-400 mt-2 max-w-2xl">{description}</p>
+    </header>
+
+    <!-- Tool Content (slot) -->
+    <div class="bg-white dark:bg-neutral-900 rounded-xl p-6 md:p-8 shadow-level-3 dark:border dark:border-neutral-800">
+      <slot />
+    </div>
+
+    <!-- Tips / Info -->
+    <slot name="info" />
+  </div>
+</Layout>

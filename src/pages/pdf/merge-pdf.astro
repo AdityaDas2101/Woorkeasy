@@ -1,0 +1,144 @@
+---
+/**
+ * Merge PDF Tool
+ * Uses pdf-lib to combine multiple PDF files into one.
+ */
+import ToolLayout from '../../components/ToolLayout.astro';
+---
+
+<ToolLayout
+  title="Merge PDF"
+  metaTitle="Merge PDF Files Online Free — Combine PDFs | Woorkeasy"
+  description="Combine multiple PDF files into a single document. Reorder pages, merge instantly — all processing happens in your browser."
+  heading="Merge PDF Files."
+>
+  <div id="merge-app">
+    <!-- Upload Zone -->
+    <div id="upload-zone" class="upload-zone p-12 text-center cursor-pointer">
+      <div class="flex flex-col items-center gap-4">
+        <svg class="w-12 h-12 text-neutral-500" viewBox="0 0 48 48" fill="none">
+          <path d="M24 32V16m0 0l-6 6m6-6l6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <rect x="8" y="8" width="32" height="32" rx="4" stroke="currentColor" stroke-width="2"/>
+        </svg>
+        <p class="body-md text-neutral-600">Drag & drop PDF files here, or <span class="text-blue-600 font-medium">browse</span></p>
+        <p class="body-sm text-neutral-500">Select 2 or more PDF files to merge</p>
+      </div>
+      <input type="file" id="file-input" accept="application/pdf" multiple class="hidden" />
+    </div>
+
+    <!-- File List / Reorder -->
+    <div id="file-list-section" class="hidden mt-6">
+      <p class="body-sm text-neutral-600 font-medium mb-2">Files to merge (drag to reorder):</p>
+      <div id="file-list" class="flex flex-col gap-2"></div>
+      <button id="merge-btn" class="btn-primary mt-6">
+        Merge PDFs
+      </button>
+    </div>
+
+    <!-- Loading -->
+    <div id="loading" class="hidden mt-6 text-center">
+      <div class="inline-flex items-center gap-3">
+        <svg class="animate-spin w-5 h-5 text-[var(--color-primary)]" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" class="opacity-25"/>
+          <path d="M4 12a8 8 0 018-8" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+        <span class="body-sm text-neutral-600">Merging PDFs...</span>
+      </div>
+    </div>
+
+    <!-- Result -->
+    <div id="result" class="hidden mt-8">
+      <h2 class="display-sm text-neutral-900 mb-4">Merged PDF Ready</h2>
+      <div class="flex items-center justify-between p-4 bg-neutral-50 rounded-lg">
+        <div>
+          <p class="body-sm text-neutral-900 font-medium">merged.pdf</p>
+          <p id="result-info" class="caption-mono text-neutral-500"></p>
+        </div>
+        <a id="download-btn" class="btn-primary text-sm no-underline" style="padding: 6px 16px;" download="merged.pdf">Download PDF</a>
+      </div>
+    </div>
+  </div>
+</ToolLayout>
+
+<script>
+  import { PDFDocument } from 'pdf-lib';
+
+  const uploadZone = document.getElementById('upload-zone')!;
+  const fileInput = document.getElementById('file-input') as HTMLInputElement;
+  const fileListSection = document.getElementById('file-list-section')!;
+  const fileList = document.getElementById('file-list')!;
+  const mergeBtn = document.getElementById('merge-btn')!;
+  const loading = document.getElementById('loading')!;
+  const result = document.getElementById('result')!;
+  const resultInfo = document.getElementById('result-info')!;
+  const downloadBtn = document.getElementById('download-btn') as HTMLAnchorElement;
+
+  let files: File[] = [];
+
+  uploadZone.addEventListener('click', () => fileInput.click());
+  uploadZone.addEventListener('dragover', (e) => { e.preventDefault(); uploadZone.classList.add('dragover'); });
+  uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('dragover'));
+  uploadZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    uploadZone.classList.remove('dragover');
+    if (e.dataTransfer?.files) handleFiles(Array.from(e.dataTransfer.files));
+  });
+  fileInput.addEventListener('change', () => { if (fileInput.files) handleFiles(Array.from(fileInput.files)); });
+
+  function handleFiles(newFiles: File[]) {
+    files = newFiles.filter(f => f.type === 'application/pdf');
+    if (files.length >= 2) {
+      fileListSection.classList.remove('hidden');
+      renderFileList();
+    }
+  }
+
+  function renderFileList() {
+    fileList.innerHTML = files.map((f, i) => `
+      <div class="flex items-center gap-3 p-[var(--spacing-sm)] bg-neutral-50 rounded-md">
+        <span class="caption-mono text-neutral-500 w-6">${i + 1}.</span>
+        <span class="body-sm text-neutral-900 flex-1">${f.name}</span>
+        <span class="caption-mono text-neutral-500">${formatBytes(f.size)}</span>
+      </div>
+    `).join('');
+  }
+
+  mergeBtn.addEventListener('click', async () => {
+    if (files.length < 2) return;
+    loading.classList.remove('hidden');
+    result.classList.add('hidden');
+
+    try {
+      const mergedPdf = await PDFDocument.create();
+
+      for (const file of files) {
+        const arrayBuffer = await file.arrayBuffer();
+        const pdf = await PDFDocument.load(arrayBuffer);
+        const pages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
+        pages.forEach(page => mergedPdf.addPage(page));
+      }
+
+      const mergedBytes = await mergedPdf.save();
+      const blob = new Blob([mergedBytes], { type: 'application/pdf' });
+      const url = URL.createObjectURL(blob);
+
+      resultInfo.textContent = `${mergedPdf.getPageCount()} pages • ${formatBytes(blob.size)}`;
+      downloadBtn.href = url;
+
+      loading.classList.add('hidden');
+      result.classList.remove('hidden');
+    } catch (err) {
+      loading.classList.add('hidden');
+      alert(`Error: ${(err as Error).message}`);
+    }
+  });
+
+  function formatBytes(bytes: number): string {
+    if (bytes === 0) return '0 B';
+    const k = 1024;
+    const sizes = ['B', 'KB', 'MB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+  }
+</script>
+

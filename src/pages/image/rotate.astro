@@ -1,0 +1,200 @@
+---
+/**
+ * Rotate & Flip Image Tool
+ * Rotate images by 90°, 180°, 270° or custom degrees.
+ * Flip horizontally or vertically. Uses HTML Canvas.
+ */
+import ToolLayout from '../../components/ToolLayout.astro';
+---
+
+<ToolLayout
+  title="Rotate Image"
+  metaTitle="Rotate & Flip Image Online Free — 90°, 180°, Custom Angle | Woorkeasy"
+  description="Rotate images by any angle or flip them horizontally/vertically. Quick presets for 90°, 180°, 270° — all processing in your browser."
+  heading="Rotate & Flip Image."
+>
+  <div id="rotate-app">
+    <!-- Upload Zone -->
+    <div id="upload-zone" class="upload-zone p-12 text-center cursor-pointer">
+      <div class="flex flex-col items-center gap-4">
+        <svg class="w-12 h-12 text-neutral-400" viewBox="0 0 48 48" fill="none">
+          <path d="M24 32V16m0 0l-6 6m6-6l6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <rect x="8" y="8" width="32" height="32" rx="4" stroke="currentColor" stroke-width="2"/>
+        </svg>
+        <p class="text-base text-neutral-600">Drag & drop an image here, or <span class="text-blue-600 font-medium">browse</span></p>
+        <p class="text-sm text-neutral-500">Supports JPG, PNG, WebP</p>
+      </div>
+      <input type="file" id="file-input" accept="image/jpeg,image/png,image/webp" class="hidden" />
+    </div>
+
+    <!-- Rotate Controls -->
+    <div id="controls" class="hidden mt-6">
+      <!-- Quick Rotate Buttons -->
+      <div class="flex flex-wrap items-center gap-3 mb-4">
+        <span class="text-sm text-neutral-600 font-medium">Rotate:</span>
+        <button data-rotate="90" class="rotate-preset text-sm px-4 py-2 rounded-full border border-neutral-200 hover:border-neutral-900 hover:bg-neutral-50 transition-colors">↻ 90°</button>
+        <button data-rotate="180" class="rotate-preset text-sm px-4 py-2 rounded-full border border-neutral-200 hover:border-neutral-900 hover:bg-neutral-50 transition-colors">↻ 180°</button>
+        <button data-rotate="270" class="rotate-preset text-sm px-4 py-2 rounded-full border border-neutral-200 hover:border-neutral-900 hover:bg-neutral-50 transition-colors">↻ 270°</button>
+      </div>
+
+      <!-- Custom Angle -->
+      <div class="flex items-center gap-3 mb-4">
+        <span class="text-sm text-neutral-600 font-medium">Custom angle:</span>
+        <input type="range" id="angle-slider" min="0" max="360" value="0" class="flex-1 max-w-xs accent-neutral-900" />
+        <span id="angle-value" class="text-sm font-mono text-neutral-900 w-12 text-right">0°</span>
+      </div>
+
+      <!-- Flip Buttons -->
+      <div class="flex flex-wrap items-center gap-3 mb-6">
+        <span class="text-sm text-neutral-600 font-medium">Flip:</span>
+        <button id="flip-h" class="text-sm px-4 py-2 rounded-full border border-neutral-200 hover:border-neutral-900 hover:bg-neutral-50 transition-colors">↔ Horizontal</button>
+        <button id="flip-v" class="text-sm px-4 py-2 rounded-full border border-neutral-200 hover:border-neutral-900 hover:bg-neutral-50 transition-colors">↕ Vertical</button>
+      </div>
+
+      <!-- Preview -->
+      <div class="inline-block border border-neutral-200 rounded-lg overflow-hidden bg-neutral-100">
+        <canvas id="preview-canvas" class="block max-w-full"></canvas>
+      </div>
+
+      <!-- Download -->
+      <div class="flex items-center gap-3 mt-6">
+        <a id="download-btn" class="btn-primary inline-block no-underline" download="rotated-image.png">Download Image</a>
+        <button id="reset-btn" class="btn-secondary">Reset</button>
+      </div>
+    </div>
+  </div>
+</ToolLayout>
+
+<script>
+  const uploadZone = document.getElementById('upload-zone')!;
+  const fileInput = document.getElementById('file-input') as HTMLInputElement;
+  const controls = document.getElementById('controls')!;
+  const previewCanvas = document.getElementById('preview-canvas') as HTMLCanvasElement;
+  const downloadBtn = document.getElementById('download-btn') as HTMLAnchorElement;
+  const resetBtn = document.getElementById('reset-btn')!;
+  const angleSlider = document.getElementById('angle-slider') as HTMLInputElement;
+  const angleValue = document.getElementById('angle-value')!;
+  const flipH = document.getElementById('flip-h')!;
+  const flipV = document.getElementById('flip-v')!;
+
+  let img: HTMLImageElement | null = null;
+  let currentAngle = 0;
+  let flippedH = false;
+  let flippedV = false;
+
+  // Upload
+  uploadZone.addEventListener('click', () => fileInput.click());
+  uploadZone.addEventListener('dragover', (e) => { e.preventDefault(); uploadZone.classList.add('dragover'); });
+  uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('dragover'));
+  uploadZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    uploadZone.classList.remove('dragover');
+    if (e.dataTransfer?.files[0]) loadImage(e.dataTransfer.files[0]);
+  });
+  fileInput.addEventListener('change', () => { if (fileInput.files?.[0]) loadImage(fileInput.files[0]); });
+
+  function loadImage(file: File) {
+    img = new Image();
+    img.onload = () => {
+      currentAngle = 0;
+      flippedH = false;
+      flippedV = false;
+      angleSlider.value = '0';
+      angleValue.textContent = '0°';
+      controls.classList.remove('hidden');
+      render();
+    };
+    img.src = URL.createObjectURL(file);
+  }
+
+  // Rotate presets
+  document.querySelectorAll('.rotate-preset').forEach(btn => {
+    btn.addEventListener('click', () => {
+      currentAngle = parseInt((btn as HTMLElement).dataset.rotate!);
+      angleSlider.value = currentAngle.toString();
+      angleValue.textContent = currentAngle + '°';
+      render();
+    });
+  });
+
+  // Custom angle slider
+  angleSlider.addEventListener('input', () => {
+    currentAngle = parseInt(angleSlider.value);
+    angleValue.textContent = currentAngle + '°';
+    render();
+  });
+
+  // Flip buttons
+  flipH.addEventListener('click', () => { flippedH = !flippedH; render(); });
+  flipV.addEventListener('click', () => { flippedV = !flippedV; render(); });
+
+  // Reset
+  resetBtn.addEventListener('click', () => {
+    currentAngle = 0;
+    flippedH = false;
+    flippedV = false;
+    angleSlider.value = '0';
+    angleValue.textContent = '0°';
+    render();
+  });
+
+  function render() {
+    if (!img) return;
+
+    const radians = (currentAngle * Math.PI) / 180;
+    const sin = Math.abs(Math.sin(radians));
+    const cos = Math.abs(Math.cos(radians));
+
+    // Calculate new dimensions after rotation
+    const newW = Math.ceil(img.width * cos + img.height * sin);
+    const newH = Math.ceil(img.width * sin + img.height * cos);
+
+    // Limit display size
+    const maxDisplay = 600;
+    const displayScale = Math.min(1, maxDisplay / Math.max(newW, newH));
+
+    previewCanvas.width = newW * displayScale;
+    previewCanvas.height = newH * displayScale;
+
+    const ctx = previewCanvas.getContext('2d')!;
+    ctx.clearRect(0, 0, previewCanvas.width, previewCanvas.height);
+    ctx.save();
+
+    // Move to center
+    ctx.translate(previewCanvas.width / 2, previewCanvas.height / 2);
+
+    // Apply rotation
+    ctx.rotate(radians);
+
+    // Apply flip
+    ctx.scale(flippedH ? -1 : 1, flippedV ? -1 : 1);
+
+    // Draw image centered
+    ctx.drawImage(
+      img,
+      (-img.width * displayScale) / 2,
+      (-img.height * displayScale) / 2,
+      img.width * displayScale,
+      img.height * displayScale
+    );
+
+    ctx.restore();
+
+    // Generate download at full resolution
+    const fullCanvas = document.createElement('canvas');
+    fullCanvas.width = newW;
+    fullCanvas.height = newH;
+    const fCtx = fullCanvas.getContext('2d')!;
+    fCtx.translate(newW / 2, newH / 2);
+    fCtx.rotate(radians);
+    fCtx.scale(flippedH ? -1 : 1, flippedV ? -1 : 1);
+    fCtx.drawImage(img, -img.width / 2, -img.height / 2);
+
+    fullCanvas.toBlob((blob) => {
+      if (blob) {
+        downloadBtn.href = URL.createObjectURL(blob);
+        downloadBtn.download = `rotated-${currentAngle}deg.png`;
+      }
+    }, 'image/png');
+  }
+</script>

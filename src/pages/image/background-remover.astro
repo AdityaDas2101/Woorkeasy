@@ -1,0 +1,174 @@
+---
+/**
+ * Background Remover Tool
+ * Uses TensorFlow.js BodyPix model (lazy-loaded) to remove image backgrounds.
+ * Model is loaded only when the user triggers processing.
+ */
+import ToolLayout from '../../components/ToolLayout.astro';
+---
+
+<ToolLayout
+  title="Remove Background"
+  metaTitle="Remove Image Background Online Free — AI Powered | Woorkeasy"
+  description="Remove backgrounds from images using AI. Powered by TensorFlow.js BodyPix model — runs entirely in your browser. No uploads."
+  heading="Remove Image Background."
+>
+  <div id="bg-remover-app">
+    <!-- Upload Zone -->
+    <div id="upload-zone" class="upload-zone p-12 text-center cursor-pointer">
+      <div class="flex flex-col items-center gap-4">
+        <svg class="w-12 h-12 text-neutral-500" viewBox="0 0 48 48" fill="none">
+          <path d="M24 32V16m0 0l-6 6m6-6l6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <rect x="8" y="8" width="32" height="32" rx="4" stroke="currentColor" stroke-width="2"/>
+        </svg>
+        <p class="body-md text-neutral-600">Drag & drop an image here, or <span class="text-blue-600 font-medium">browse</span></p>
+        <p class="body-sm text-neutral-500">Works best with people/portraits • JPG, PNG, WebP</p>
+      </div>
+      <input type="file" id="file-input" accept="image/*" class="hidden" />
+    </div>
+
+    <!-- Action Button -->
+    <button id="remove-btn" class="btn-primary mt-6 hidden">
+      Remove Background
+    </button>
+
+    <!-- Loading -->
+    <div id="loading" class="hidden mt-6 text-center">
+      <div class="inline-flex items-center gap-3">
+        <svg class="animate-spin w-5 h-5 text-[var(--color-primary)]" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" class="opacity-25"/>
+          <path d="M4 12a8 8 0 018-8" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+        <span id="loading-text" class="body-sm text-neutral-600">Loading AI model...</span>
+      </div>
+    </div>
+
+    <!-- Preview -->
+    <div id="preview" class="hidden mt-8">
+      <h2 class="display-sm text-neutral-900 mb-4">Result</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <p class="caption-mono text-neutral-500 mb-2">ORIGINAL</p>
+          <img id="original-img" class="w-full rounded-lg border border-neutral-200" alt="Original" />
+        </div>
+        <div>
+          <p class="caption-mono text-neutral-500 mb-2">BACKGROUND REMOVED</p>
+          <canvas id="output-canvas" class="w-full rounded-lg border border-neutral-200" style="background: repeating-conic-gradient(#f0f0f0 0% 25%, white 0% 50%) 50% / 20px 20px;"></canvas>
+        </div>
+      </div>
+      <a id="download-btn" class="btn-primary inline-block mt-6 no-underline" download="background-removed.png">
+        Download PNG
+      </a>
+    </div>
+
+    <!-- Error -->
+    <div id="error" class="hidden mt-6 p-4 bg-red-50 rounded-lg">
+      <p id="error-text" class="body-sm text-red-600"></p>
+    </div>
+  </div>
+</ToolLayout>
+
+<script>
+  const uploadZone = document.getElementById('upload-zone')!;
+  const fileInput = document.getElementById('file-input') as HTMLInputElement;
+  const removeBtn = document.getElementById('remove-btn')!;
+  const loading = document.getElementById('loading')!;
+  const loadingText = document.getElementById('loading-text')!;
+  const preview = document.getElementById('preview')!;
+  const originalImg = document.getElementById('original-img') as HTMLImageElement;
+  const outputCanvas = document.getElementById('output-canvas') as HTMLCanvasElement;
+  const downloadBtn = document.getElementById('download-btn') as HTMLAnchorElement;
+  const errorDiv = document.getElementById('error')!;
+  const errorText = document.getElementById('error-text')!;
+
+  let selectedFile: File | null = null;
+
+  uploadZone.addEventListener('click', () => fileInput.click());
+  uploadZone.addEventListener('dragover', (e) => { e.preventDefault(); uploadZone.classList.add('dragover'); });
+  uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('dragover'));
+  uploadZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    uploadZone.classList.remove('dragover');
+    const file = e.dataTransfer?.files[0];
+    if (file && file.type.startsWith('image/')) handleFile(file);
+  });
+  fileInput.addEventListener('change', () => { if (fileInput.files?.[0]) handleFile(fileInput.files[0]); });
+
+  function handleFile(file: File) {
+    selectedFile = file;
+    removeBtn.classList.remove('hidden');
+    uploadZone.querySelector('p')!.textContent = file.name;
+    originalImg.src = URL.createObjectURL(file);
+  }
+
+  removeBtn.addEventListener('click', async () => {
+    if (!selectedFile) return;
+    loading.classList.remove('hidden');
+    preview.classList.add('hidden');
+    errorDiv.classList.add('hidden');
+
+    try {
+      // Lazy-load TensorFlow.js and BodyPix
+      loadingText.textContent = 'Loading AI model (first time may take a moment)...';
+      const tf = await import('https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.20.0/+esm');
+      const bodyPix = await import('https://cdn.jsdelivr.net/npm/@tensorflow-models/body-pix@2.2.1/+esm');
+
+      loadingText.textContent = 'Loading BodyPix model...';
+      const net = await bodyPix.load({
+        architecture: 'MobileNetV1',
+        outputStride: 16,
+        multiplier: 0.75,
+        quantBytes: 2
+      });
+
+      loadingText.textContent = 'Processing image...';
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      await new Promise<void>((resolve, reject) => {
+        img.onload = () => resolve();
+        img.onerror = () => reject(new Error('Failed to load image'));
+        img.src = URL.createObjectURL(selectedFile!);
+      });
+
+      const segmentation = await net.segmentPerson(img, {
+        flipHorizontal: false,
+        internalResolution: 'medium',
+        segmentationThreshold: 0.7
+      });
+
+      // Draw result
+      outputCanvas.width = img.width;
+      outputCanvas.height = img.height;
+      const ctx = outputCanvas.getContext('2d')!;
+      ctx.drawImage(img, 0, 0);
+
+      const imageData = ctx.getImageData(0, 0, img.width, img.height);
+      const data = imageData.data;
+
+      for (let i = 0; i < segmentation.data.length; i++) {
+        if (segmentation.data[i] === 0) {
+          // Background pixel — make transparent
+          data[i * 4 + 3] = 0;
+        }
+      }
+
+      ctx.putImageData(imageData, 0, 0);
+
+      // Set download link
+      outputCanvas.toBlob((blob) => {
+        if (blob) {
+          downloadBtn.href = URL.createObjectURL(blob);
+          const name = selectedFile!.name.replace(/\.[^.]+$/, '-no-bg.png');
+          downloadBtn.download = name;
+        }
+      }, 'image/png');
+
+      loading.classList.add('hidden');
+      preview.classList.remove('hidden');
+    } catch (err) {
+      loading.classList.add('hidden');
+      errorDiv.classList.remove('hidden');
+      errorText.textContent = `Error: ${(err as Error).message}. Please try a different image.`;
+    }
+  });
+</script>

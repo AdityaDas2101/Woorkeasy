@@ -1,0 +1,165 @@
+---
+/**
+ * Character Counter Tool
+ * Live character, word, sentence, and paragraph count.
+ * Includes reading time estimation and keyword density.
+ */
+import ToolLayout from '../../components/ToolLayout.astro';
+---
+
+<ToolLayout
+  title="Character Counter"
+  metaTitle="Character Counter Online Free — Word & Sentence Count | Woorkeasy"
+  description="Count characters, words, sentences, and paragraphs in real time. Get reading time estimates and keyword density — a free online text analysis tool."
+  heading="Character Counter."
+>
+  <div id="counter-app">
+    <!-- Text Input Area -->
+    <div class="relative">
+      <textarea
+        id="text-input"
+        class="w-full min-h-[300px] p-6 border border-neutral-200 rounded-lg body-md text-neutral-900 bg-white resize-y focus:outline-none focus:border-neutral-900 transition-colors"
+        placeholder="Start typing or paste your text here..."
+        autofocus
+      ></textarea>
+      <button
+        id="clear-btn"
+        class="absolute top-3 right-3 body-sm text-neutral-500 hover:text-neutral-900 transition-colors hidden"
+      >
+        Clear
+      </button>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-4 mt-6">
+      <div class="bg-neutral-50 rounded-lg p-4 text-center">
+        <p id="char-count" class="display-md text-neutral-900">0</p>
+        <p class="caption-mono text-neutral-500 mt-[var(--spacing-xxs)]">CHARACTERS</p>
+      </div>
+      <div class="bg-neutral-50 rounded-lg p-4 text-center">
+        <p id="char-no-space" class="display-md text-neutral-900">0</p>
+        <p class="caption-mono text-neutral-500 mt-[var(--spacing-xxs)]">NO SPACES</p>
+      </div>
+      <div class="bg-neutral-50 rounded-lg p-4 text-center">
+        <p id="word-count" class="display-md text-neutral-900">0</p>
+        <p class="caption-mono text-neutral-500 mt-[var(--spacing-xxs)]">WORDS</p>
+      </div>
+      <div class="bg-neutral-50 rounded-lg p-4 text-center">
+        <p id="sentence-count" class="display-md text-neutral-900">0</p>
+        <p class="caption-mono text-neutral-500 mt-[var(--spacing-xxs)]">SENTENCES</p>
+      </div>
+      <div class="bg-neutral-50 rounded-lg p-4 text-center">
+        <p id="para-count" class="display-md text-neutral-900">0</p>
+        <p class="caption-mono text-neutral-500 mt-[var(--spacing-xxs)]">PARAGRAPHS</p>
+      </div>
+      <div class="bg-neutral-50 rounded-lg p-4 text-center">
+        <p id="read-time" class="display-md text-neutral-900">0s</p>
+        <p class="caption-mono text-neutral-500 mt-[var(--spacing-xxs)]">READ TIME</p>
+      </div>
+    </div>
+
+    <!-- Keyword Density -->
+    <div id="keyword-section" class="hidden mt-8">
+      <h2 class="display-sm text-neutral-900 mb-4">Top Keywords</h2>
+      <div id="keyword-list" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2"></div>
+    </div>
+  </div>
+</ToolLayout>
+
+<script>
+  const textInput = document.getElementById('text-input') as HTMLTextAreaElement;
+  const clearBtn = document.getElementById('clear-btn')!;
+  const charCount = document.getElementById('char-count')!;
+  const charNoSpace = document.getElementById('char-no-space')!;
+  const wordCount = document.getElementById('word-count')!;
+  const sentenceCount = document.getElementById('sentence-count')!;
+  const paraCount = document.getElementById('para-count')!;
+  const readTime = document.getElementById('read-time')!;
+  const keywordSection = document.getElementById('keyword-section')!;
+  const keywordList = document.getElementById('keyword-list')!;
+
+  // Live counting on every input event
+  textInput.addEventListener('input', updateCounts);
+
+  clearBtn.addEventListener('click', () => {
+    textInput.value = '';
+    updateCounts();
+  });
+
+  function updateCounts() {
+    const text = textInput.value;
+
+    // Show/hide clear button
+    clearBtn.classList.toggle('hidden', text.length === 0);
+
+    // Characters
+    charCount.textContent = text.length.toLocaleString();
+
+    // Characters without spaces
+    charNoSpace.textContent = text.replace(/\s/g, '').length.toLocaleString();
+
+    // Words
+    const words = text.trim() ? text.trim().split(/\s+/) : [];
+    wordCount.textContent = words.length.toLocaleString();
+
+    // Sentences (split on . ! ?)
+    const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0);
+    sentenceCount.textContent = sentences.length.toLocaleString();
+
+    // Paragraphs
+    const paragraphs = text.split(/\n\n+/).filter(p => p.trim().length > 0);
+    paraCount.textContent = paragraphs.length.toLocaleString();
+
+    // Reading time (average 200 words per minute)
+    const minutes = words.length / 200;
+    if (minutes < 1) {
+      readTime.textContent = `${Math.ceil(minutes * 60)}s`;
+    } else {
+      readTime.textContent = `${Math.ceil(minutes)}m`;
+    }
+
+    // Keyword density
+    updateKeywords(words);
+  }
+
+  function updateKeywords(words: string[]) {
+    if (words.length < 5) {
+      keywordSection.classList.add('hidden');
+      return;
+    }
+
+    // Count word frequency (exclude common stop words)
+    const stopWords = new Set(['the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by', 'is', 'it', 'this', 'that', 'are', 'was', 'be', 'have', 'has', 'had', 'not', 'from', 'as', 'i', 'we', 'you', 'they', 'he', 'she', 'do', 'does', 'did', 'will', 'would', 'could', 'should', 'can', 'may', 'if', 'so', 'no', 'my', 'your', 'our', 'their', 'its', 'his', 'her']);
+
+    const freq: Record<string, number> = {};
+    for (const word of words) {
+      const lower = word.toLowerCase().replace(/[^a-z0-9]/g, '');
+      if (lower.length > 2 && !stopWords.has(lower)) {
+        freq[lower] = (freq[lower] || 0) + 1;
+      }
+    }
+
+    const sorted = Object.entries(freq)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 12);
+
+    if (sorted.length === 0) {
+      keywordSection.classList.add('hidden');
+      return;
+    }
+
+    keywordSection.classList.remove('hidden');
+    keywordList.innerHTML = sorted.map(([word, count]) => {
+      const density = ((count / words.length) * 100).toFixed(1);
+      return `
+        <div class="flex items-center justify-between p-[var(--spacing-xs)] bg-neutral-50 rounded-md">
+          <span class="body-sm text-neutral-900">${word}</span>
+          <span class="caption-mono text-neutral-500">${count}× (${density}%)</span>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // Initialize with empty state
+  updateCounts();
+</script>

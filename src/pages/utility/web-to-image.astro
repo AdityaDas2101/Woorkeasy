@@ -1,0 +1,353 @@
+---
+/**
+ * Web to Image/PDF Tool
+ * Paste HTML or enter a URL to capture a webpage as JPG, PNG, or PDF.
+ * Uses html2canvas (CDN) for rendering and jsPDF for PDF export.
+ */
+import ToolLayout from '../../components/ToolLayout.astro';
+---
+
+<ToolLayout
+  title="Web to Image / PDF"
+  metaTitle="Webpage to JPG, PNG & PDF Free Online Converter | Woorkeasy"
+  description="Convert any webpage or HTML content to JPG, PNG, or PDF. Paste a URL or HTML code and download a high-quality screenshot — free, browser-based, no sign-up."
+  heading="Web to Image / PDF."
+>
+  <div id="web-capture-app" class="flex flex-col gap-6">
+    <!-- Input Mode Tabs -->
+    <div class="flex gap-2 border-b border-neutral-200 pb-0">
+      <button
+        id="tab-url"
+        class="px-4 py-2 body-sm font-medium text-neutral-900 border-b-2 border-neutral-900 -mb-px transition-colors"
+      >
+        Enter URL
+      </button>
+      <button
+        id="tab-html"
+        class="px-4 py-2 body-sm font-medium text-neutral-500 border-b-2 border-transparent -mb-px hover:text-neutral-700 transition-colors"
+      >
+        Paste HTML
+      </button>
+    </div>
+
+    <!-- URL Input -->
+    <div id="url-panel">
+      <label for="url-input" class="body-sm font-medium text-neutral-700 mb-2 block">
+        Website URL
+      </label>
+      <div class="flex gap-3">
+        <input
+          id="url-input"
+          type="url"
+          placeholder="https://example.com"
+          class="flex-1 px-4 py-3 border border-neutral-200 rounded-lg body-md text-neutral-900 bg-white focus:outline-none focus:border-neutral-900 transition-colors"
+        />
+        <button
+          id="capture-url-btn"
+          class="btn-primary whitespace-nowrap"
+        >
+          Capture
+        </button>
+      </div>
+      <p class="body-sm text-neutral-500 mt-2">
+        ⚠️ Some websites block embedding. If capture fails, use the <strong>Paste HTML</strong> tab instead.
+      </p>
+    </div>
+
+    <!-- HTML Input -->
+    <div id="html-panel" class="hidden">
+      <label for="html-input" class="body-sm font-medium text-neutral-700 mb-2 block">
+        HTML Content
+      </label>
+      <textarea
+        id="html-input"
+        class="w-full min-h-[250px] p-4 border border-neutral-200 rounded-lg font-mono text-sm text-neutral-900 bg-white resize-y focus:outline-none focus:border-neutral-900 transition-colors"
+        placeholder="Paste your HTML code here..."
+      ></textarea>
+      <button
+        id="capture-html-btn"
+        class="btn-primary mt-3"
+      >
+        Render & Capture
+      </button>
+    </div>
+
+    <!-- Output Format -->
+    <div class="flex flex-wrap items-center gap-4 p-4 bg-neutral-50 rounded-lg border border-neutral-200">
+      <span class="body-sm font-medium text-neutral-700">Export as:</span>
+      <label class="flex items-center gap-2 cursor-pointer">
+        <input type="radio" name="format" value="png" checked class="accent-neutral-900" />
+        <span class="body-sm text-neutral-700">PNG</span>
+      </label>
+      <label class="flex items-center gap-2 cursor-pointer">
+        <input type="radio" name="format" value="jpeg" class="accent-neutral-900" />
+        <span class="body-sm text-neutral-700">JPG</span>
+      </label>
+      <label class="flex items-center gap-2 cursor-pointer">
+        <input type="radio" name="format" value="pdf" class="accent-neutral-900" />
+        <span class="body-sm text-neutral-700">PDF</span>
+      </label>
+      <div class="ml-auto flex items-center gap-2">
+        <label for="scale-input" class="body-sm text-neutral-600">Scale:</label>
+        <select id="scale-input" class="px-3 py-1.5 border border-neutral-200 rounded-md text-sm bg-white focus:outline-none focus:border-neutral-900">
+          <option value="1">1x</option>
+          <option value="2" selected>2x (Retina)</option>
+          <option value="3">3x</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Status -->
+    <div id="status" class="hidden body-sm text-neutral-600 flex items-center gap-2">
+      <svg class="animate-spin h-4 w-4 text-neutral-500" viewBox="0 0 24 24" fill="none">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+      </svg>
+      <span id="status-text">Capturing...</span>
+    </div>
+
+    <!-- Preview -->
+    <div id="preview-area" class="hidden">
+      <div class="flex items-center justify-between mb-3">
+        <h3 class="body-md font-semibold text-neutral-900">Preview</h3>
+        <button id="download-btn" class="btn-primary text-sm">
+          Download
+        </button>
+      </div>
+      <div class="border border-neutral-200 rounded-lg overflow-auto max-h-[500px] bg-neutral-100 p-2">
+        <img id="preview-img" alt="Captured screenshot" class="max-w-full rounded shadow-level-1" />
+      </div>
+    </div>
+  </div>
+
+  <!-- Info Section -->
+  <div class="mt-10 p-6 bg-neutral-50 rounded-lg border border-neutral-200">
+    <h3 class="body-md font-semibold text-neutral-900 mb-3">How it works</h3>
+    <ul class="list-disc pl-5 flex flex-col gap-2 body-sm text-neutral-600">
+      <li><strong>Enter URL</strong> — loads the page in a sandboxed frame and captures it as an image.</li>
+      <li><strong>Paste HTML</strong> — renders your HTML in an isolated container and screenshots it.</li>
+      <li><strong>Export formats</strong> — download as PNG (lossless), JPG (smaller file), or PDF (printable).</li>
+      <li><strong>Scale</strong> — 2x or 3x produces crisp high-DPI screenshots.</li>
+      <li>Everything runs in your browser. No data is sent to any server.</li>
+    </ul>
+  </div>
+</ToolLayout>
+
+<script>
+  // Load html2canvas from CDN
+  const html2canvasScript = document.createElement('script');
+  html2canvasScript.src = 'https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js';
+  document.head.appendChild(html2canvasScript);
+
+  // Load jsPDF from CDN
+  const jsPDFScript = document.createElement('script');
+  jsPDFScript.src = 'https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js';
+  document.head.appendChild(jsPDFScript);
+
+  // Elements
+  const tabUrl = document.getElementById('tab-url') as HTMLButtonElement;
+  const tabHtml = document.getElementById('tab-html') as HTMLButtonElement;
+  const urlPanel = document.getElementById('url-panel')!;
+  const htmlPanel = document.getElementById('html-panel')!;
+  const urlInput = document.getElementById('url-input') as HTMLInputElement;
+  const htmlInput = document.getElementById('html-input') as HTMLTextAreaElement;
+  const captureUrlBtn = document.getElementById('capture-url-btn') as HTMLButtonElement;
+  const captureHtmlBtn = document.getElementById('capture-html-btn') as HTMLButtonElement;
+  const status = document.getElementById('status')!;
+  const statusText = document.getElementById('status-text')!;
+  const previewArea = document.getElementById('preview-area')!;
+  const previewImg = document.getElementById('preview-img') as HTMLImageElement;
+  const downloadBtn = document.getElementById('download-btn') as HTMLButtonElement;
+  const scaleInput = document.getElementById('scale-input') as HTMLSelectElement;
+
+  let capturedDataUrl = '';
+  let capturedCanvas: HTMLCanvasElement | null = null;
+
+  // Tab Switching
+  tabUrl.addEventListener('click', () => {
+    tabUrl.classList.add('text-neutral-900', 'border-neutral-900');
+    tabUrl.classList.remove('text-neutral-500', 'border-transparent');
+    tabHtml.classList.add('text-neutral-500', 'border-transparent');
+    tabHtml.classList.remove('text-neutral-900', 'border-neutral-900');
+    urlPanel.classList.remove('hidden');
+    htmlPanel.classList.add('hidden');
+  });
+
+  tabHtml.addEventListener('click', () => {
+    tabHtml.classList.add('text-neutral-900', 'border-neutral-900');
+    tabHtml.classList.remove('text-neutral-500', 'border-transparent');
+    tabUrl.classList.add('text-neutral-500', 'border-transparent');
+    tabUrl.classList.remove('text-neutral-900', 'border-neutral-900');
+    htmlPanel.classList.remove('hidden');
+    urlPanel.classList.add('hidden');
+  });
+
+  function getFormat(): string {
+    const checked = document.querySelector('input[name="format"]:checked') as HTMLInputElement;
+    return checked?.value || 'png';
+  }
+
+  function getScale(): number {
+    return parseInt(scaleInput.value) || 2;
+  }
+
+  function showStatus(msg: string) {
+    statusText.textContent = msg;
+    status.classList.remove('hidden');
+  }
+
+  function hideStatus() {
+    status.classList.add('hidden');
+  }
+
+  function showPreview(dataUrl: string) {
+    previewImg.src = dataUrl;
+    previewArea.classList.remove('hidden');
+  }
+
+  // Capture URL via iframe
+  captureUrlBtn.addEventListener('click', async () => {
+    const url = urlInput.value.trim();
+    if (!url) { alert('Please enter a URL.'); return; }
+
+    showStatus('Loading page in sandboxed frame...');
+    previewArea.classList.add('hidden');
+
+    // Create a container for the iframe
+    const container = document.createElement('div');
+    container.style.cssText = 'position:fixed;top:-9999px;left:-9999px;width:1280px;height:900px;overflow:hidden;';
+    document.body.appendChild(container);
+
+    const iframe = document.createElement('iframe');
+    iframe.style.cssText = 'width:1280px;height:900px;border:none;';
+    iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin');
+
+    try {
+      await new Promise<void>((resolve, reject) => {
+        iframe.onload = () => resolve();
+        iframe.onerror = () => reject(new Error('Failed to load URL'));
+        iframe.src = url;
+        container.appendChild(iframe);
+        setTimeout(() => reject(new Error('Timeout: page took too long to load.')), 15000);
+      });
+
+      showStatus('Capturing screenshot...');
+      await new Promise(r => setTimeout(r, 1500)); // Let page settle
+
+      // Try to capture the iframe content
+      const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
+      if (!iframeDoc) {
+        throw new Error('Cannot access page content. The website blocks embedding. Try pasting the HTML instead.');
+      }
+
+      const scale = getScale();
+      // @ts-ignore
+      const canvas = await html2canvas(iframeDoc.body, {
+        scale,
+        useCORS: true,
+        allowTaint: true,
+        width: 1280,
+        windowWidth: 1280,
+      });
+
+      capturedCanvas = canvas;
+      const format = getFormat();
+      const mimeType = format === 'jpeg' ? 'image/jpeg' : 'image/png';
+      capturedDataUrl = canvas.toDataURL(mimeType, 0.92);
+      showPreview(capturedDataUrl);
+      hideStatus();
+    } catch (err: any) {
+      hideStatus();
+      alert(err.message || 'Failed to capture the page. Try pasting the HTML instead.');
+    } finally {
+      document.body.removeChild(container);
+    }
+  });
+
+  // Capture HTML
+  captureHtmlBtn.addEventListener('click', async () => {
+    const html = htmlInput.value.trim();
+    if (!html) { alert('Please paste some HTML code.'); return; }
+
+    showStatus('Rendering HTML...');
+    previewArea.classList.add('hidden');
+
+    // Create offscreen container
+    const container = document.createElement('div');
+    container.style.cssText = 'position:fixed;top:-9999px;left:-9999px;width:1280px;overflow:hidden;background:#fff;';
+    container.innerHTML = html;
+    document.body.appendChild(container);
+
+    await new Promise(r => setTimeout(r, 500)); // Let rendering settle
+
+    try {
+      showStatus('Capturing screenshot...');
+      const scale = getScale();
+      // @ts-ignore
+      const canvas = await html2canvas(container, {
+        scale,
+        useCORS: true,
+        allowTaint: true,
+        width: 1280,
+        windowWidth: 1280,
+      });
+
+      capturedCanvas = canvas;
+      const format = getFormat();
+      const mimeType = format === 'jpeg' ? 'image/jpeg' : 'image/png';
+      capturedDataUrl = canvas.toDataURL(mimeType, 0.92);
+      showPreview(capturedDataUrl);
+      hideStatus();
+    } catch (err: any) {
+      hideStatus();
+      alert('Failed to capture HTML: ' + (err.message || 'Unknown error'));
+    } finally {
+      document.body.removeChild(container);
+    }
+  });
+
+  // Download
+  downloadBtn.addEventListener('click', () => {
+    if (!capturedCanvas) return;
+
+    const format = getFormat();
+
+    if (format === 'pdf') {
+      // Export as PDF
+      // @ts-ignore
+      const { jsPDF } = window.jspdf;
+      const imgWidth = capturedCanvas.width;
+      const imgHeight = capturedCanvas.height;
+      const orientation = imgWidth > imgHeight ? 'landscape' : 'portrait';
+      const pdf = new jsPDF({ orientation, unit: 'px', format: [imgWidth, imgHeight] });
+      const imgData = capturedCanvas.toDataURL('image/jpeg', 0.92);
+      pdf.addImage(imgData, 'JPEG', 0, 0, imgWidth, imgHeight);
+      pdf.save('webpage-screenshot.pdf');
+    } else {
+      // Export as image
+      const mimeType = format === 'jpeg' ? 'image/jpeg' : 'image/png';
+      const ext = format === 'jpeg' ? 'jpg' : 'png';
+      const dataUrl = capturedCanvas.toDataURL(mimeType, 0.92);
+      const a = document.createElement('a');
+      a.href = dataUrl;
+      a.download = `webpage-screenshot.${ext}`;
+      a.click();
+    }
+  });
+
+  // Re-render preview when format changes
+  document.querySelectorAll('input[name="format"]').forEach(radio => {
+    radio.addEventListener('change', () => {
+      if (!capturedCanvas) return;
+      const format = getFormat();
+      if (format === 'pdf') {
+        // Show PNG preview for PDF
+        capturedDataUrl = capturedCanvas.toDataURL('image/png');
+      } else {
+        const mimeType = format === 'jpeg' ? 'image/jpeg' : 'image/png';
+        capturedDataUrl = capturedCanvas.toDataURL(mimeType, 0.92);
+      }
+      previewImg.src = capturedDataUrl;
+    });
+  });
+</script>

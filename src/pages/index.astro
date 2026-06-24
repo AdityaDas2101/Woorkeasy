@@ -1,0 +1,147 @@
+---
+/**
+ * Homepage — Woorkeasy
+ * Hero section with brand gradient, tool category grid, and contact CTA.
+ */
+import Layout from '../layouts/Layout.astro';
+import ToolCard from '../components/ToolCard.astro';
+
+const tools = [
+  // ─── Image: Convert ───
+  { title: 'JPG to PNG', description: 'Convert JPG images to lossless PNG format.', href: '/image/jpg-to-png', icon: '�', category: 'Image' },
+  { title: 'PNG to JPG', description: 'Convert PNG images to compressed JPG with adjustable quality.', href: '/image/png-to-jpg', icon: '🔄', category: 'Image' },
+  { title: 'Convert to WebP', description: 'Convert JPG/PNG to WebP for smaller web-optimized files.', href: '/image/to-webp', icon: '⚡', category: 'Image' },
+  { title: 'WebP to JPG/PNG', description: 'Convert WebP images to JPG, PNG, or PDF. Batch supported.', href: '/image/webp-converter', icon: '�', category: 'Image' },
+  { title: 'HEIC to JPG', description: 'Convert Apple HEIC photos to universal JPG format.', href: '/image/heic-to-jpg', icon: '�', category: 'Image' },
+  // ─── Image: Edit ───
+  { title: 'Compress Image', description: 'Reduce image file size with adjustable quality slider.', href: '/image/compress', icon: '�️', category: 'Image' },
+  { title: 'Crop Image', description: 'Crop images to exact dimensions with preset aspect ratios.', href: '/image/crop', icon: '✂️', category: 'Image' },
+  { title: 'Rotate & Flip', description: 'Rotate images by any angle or flip horizontally/vertically.', href: '/image/rotate', icon: '�', category: 'Image' },
+  { title: 'Add Watermark', description: 'Add text or image watermarks with adjustable opacity and position.', href: '/image/watermark', icon: '�', category: 'Image' },
+  { title: 'Remove Background', description: 'AI-powered background removal using TensorFlow.js.', href: '/image/background-remover', icon: '�️', category: 'Image' },
+  // ─── PDF Tools ───
+  { title: 'JPG to PDF', description: 'Convert images to PDF documents with page size options.', href: '/pdf/jpg-to-pdf', icon: '📄', category: 'PDF' },
+  { title: 'PDF to Image', description: 'Convert PDF pages to high-quality JPG or PNG images.', href: '/pdf/pdf-to-image', icon: '🖼️', category: 'PDF' },
+  { title: 'Merge PDF', description: 'Combine multiple PDF files into a single document.', href: '/pdf/merge-pdf', icon: '📎', category: 'PDF' },
+  { title: 'Split PDF', description: 'Extract pages from a PDF into separate files.', href: '/pdf/split-pdf', icon: '✂️', category: 'PDF' },
+  { title: 'Rotate PDF', description: 'Rotate PDF pages by 90°, 180°, or 270°.', href: '/pdf/rotate-pdf', icon: '🔄', category: 'PDF' },
+  // ─── Finance Tools ───
+  { title: 'OFX to Excel', description: 'Convert OFX bank statement files to Excel spreadsheets.', href: '/finance/ofx-to-excel', icon: '🏦', category: 'Finance' },
+  { title: 'QFX to Excel', description: 'Convert QFX/Quicken financial files to Excel format.', href: '/finance/qfx-to-excel', icon: '💳', category: 'Finance' },
+  { title: 'Excel to CSV', description: 'Convert Excel spreadsheets to CSV format with sheet selection.', href: '/finance/excel-to-csv', icon: '📊', category: 'Finance' },
+  { title: 'CSV to Excel', description: 'Convert CSV files to proper Excel .xlsx spreadsheets.', href: '/finance/csv-to-excel', icon: '📊', category: 'Finance' },
+  // ─── Dev Tools ───
+  { title: 'Base64 Encode/Decode', description: 'Encode text or files to Base64, or decode Base64 strings.', href: '/dev/base64', icon: '🔐', category: 'Dev' },
+  { title: 'URL Encode/Decode', description: 'Encode or decode URL strings with percent-encoding.', href: '/dev/url-encode', icon: '🔗', category: 'Dev' },
+  { title: 'JSON Formatter', description: 'Format, validate, and minify JSON with error detection.', href: '/dev/json-formatter', icon: '{ }', category: 'Dev' },
+  // ─── Utility ───
+  { title: 'Character Counter', description: 'Count characters, words, sentences, and get keyword density.', href: '/utility/character-counter', icon: '🔢', category: 'Utility' },
+  { title: 'Web to Image / PDF', description: 'Capture any webpage or HTML as a JPG, PNG, or PDF screenshot.', href: '/utility/web-to-image', icon: '🌐', category: 'Utility' },
+];
+---
+
+<Layout
+  title="Woorkeasy — All Tools, Zero Hassle. Free Online Image, PDF & Finance Tools"
+  description="Free online tools for images, PDFs, and finance. Compress images, convert formats, merge PDFs, and more — all in your browser, no upload to servers."
+>
+  <!-- Hero Section -->
+  <section class="relative overflow-hidden bg-white dark:bg-neutral-950">
+    <!-- Gradient Background -->
+    <div class="absolute inset-0 opacity-15 dark:opacity-10 brand-gradient" aria-hidden="true"></div>
+
+    <div class="relative max-w-5xl mx-auto px-6 py-24 md:py-32 text-center">
+      <!-- Eyebrow Badge -->
+      <div class="inline-flex items-center gap-2 bg-neutral-50 dark:bg-neutral-900 rounded-full px-3 py-1 mb-6 shadow-level-1">
+        <span class="caption-mono text-neutral-500" data-i18n="hero.badge">100% Free • No Sign-up • Browser-based</span>
+      </div>
+
+      <!-- Main Heading -->
+      <h1 class="display-xl text-neutral-900 dark:text-neutral-100 max-w-3xl mx-auto" data-i18n="hero.title">
+        All Tools, Zero Hassle.
+      </h1>
+
+      <!-- Subtitle -->
+      <p class="body-lg text-neutral-600 dark:text-neutral-400 mt-4 max-w-2xl mx-auto" data-i18n="hero.subtitle">
+        Free online tools for images, PDFs, and finance. We even add tools on your request.
+      </p>
+
+      <!-- CTA Buttons -->
+      <div class="flex flex-wrap items-center justify-center gap-4 mt-8">
+        <a href="#tools" class="btn-primary no-underline" data-i18n="hero.browseTools">Browse Tools</a>
+        <a href="mailto:woorkeasy@gmail.com" class="btn-secondary no-underline" data-i18n="hero.requestTool">Request a Tool</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Trust Strip -->
+  <section class="bg-white dark:bg-neutral-950 border-y border-neutral-200 dark:border-neutral-800 py-6">
+    <div class="max-w-5xl mx-auto px-6">
+      <div class="flex flex-wrap items-center justify-center gap-8 text-center">
+        <div class="flex items-center gap-2">
+          <span class="text-lg">🔒</span>
+          <span class="body-sm text-neutral-600 dark:text-neutral-400" data-i18n="trust.privacy">Files never leave your browser</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-lg">⚡</span>
+          <span class="body-sm text-neutral-600 dark:text-neutral-400" data-i18n="trust.instant">Instant processing</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-lg">♾️</span>
+          <span class="body-sm text-neutral-600 dark:text-neutral-400" data-i18n="trust.noLimits">No file limits</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-lg">📱</span>
+          <span class="body-sm text-neutral-600 dark:text-neutral-400" data-i18n="trust.mobile">Works on mobile</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tools Grid -->
+  <section id="tools" class="max-w-5xl mx-auto px-6 py-16 md:py-24">
+    <div class="text-center mb-10">
+      <span class="caption-mono text-neutral-500 uppercase" data-i18n="tools.eyebrow">All Tools</span>
+      <h2 class="display-lg text-neutral-900 dark:text-neutral-100 mt-2" data-i18n="tools.heading">Pick a tool, get it done.</h2>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      {tools.map(tool => (
+        <ToolCard
+          title={tool.title}
+          description={tool.description}
+          href={tool.href}
+          icon={tool.icon}
+          category={tool.category}
+        />
+      ))}
+    </div>
+  </section>
+
+  <!-- Privacy Section (Dark polarity-flip band) -->
+  <section class="bg-neutral-900 dark:bg-neutral-800 text-white py-20 md:py-28">
+    <div class="max-w-5xl mx-auto px-6 text-center">
+      <span class="caption-mono text-neutral-400 uppercase" data-i18n="privacy.eyebrow">Privacy First</span>
+      <h2 class="display-lg text-white mt-2" data-i18n="privacy.heading">Your files stay with you.</h2>
+      <p class="body-lg text-neutral-400 mt-4 max-w-2xl mx-auto" data-i18n="privacy.text">
+        Every tool runs entirely in your browser. Your files are never uploaded to any server.
+        No accounts, no tracking, no data collection.
+      </p>
+    </div>
+  </section>
+
+  <!-- Request / Contact Section -->
+  <section class="max-w-5xl mx-auto px-6 py-16 md:py-24 text-center">
+    <span class="caption-mono text-neutral-500 uppercase" data-i18n="contact.eyebrow">Need Something Else?</span>
+    <h2 class="display-md text-neutral-900 dark:text-neutral-100 mt-2" data-i18n="contact.heading">Request a tool.</h2>
+    <p class="body-md text-neutral-600 dark:text-neutral-400 mt-2 max-w-xl mx-auto" data-i18n="contact.text">
+      We build tools on request. Need a converter, optimizer, or formatter? Let us know.
+    </p>
+    <a
+      href="mailto:woorkeasy@gmail.com"
+      class="btn-primary inline-block mt-6 no-underline"
+    >
+      woorkeasy@gmail.com
+    </a>
+  </section>
+</Layout>
+
