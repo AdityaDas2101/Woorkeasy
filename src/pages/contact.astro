@@ -1,0 +1,79 @@
+---
+/**
+ * Contact Us
+ * Get in touch with Woorkeasy.
+ */
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout
+  title="Contact Us | Woorkeasy"
+  description="Contact Woorkeasy for support, tool requests, or feedback. Email us at woorkeasy@gmail.com or use our Request a Tool feature."
+>
+  <!-- Hero -->
+  <section class="max-w-3xl mx-auto px-6 py-16 md:py-24 text-center">
+    <h1 class="display-xl text-neutral-900 dark:text-neutral-100">Contact Us</h1>
+    <p class="body-lg text-neutral-600 dark:text-neutral-400 mt-4">We'd love to hear from you. Get in touch with any questions, suggestions, or tool requests.</p>
+  </section>
+
+  <!-- Content -->
+  <section class="max-w-3xl mx-auto px-6 pb-24">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+      <!-- Contact Info -->
+      <div class="space-y-6">
+        <div class="bg-white dark:bg-neutral-900 rounded-xl p-6 shadow-level-2 border border-neutral-100 dark:border-neutral-800">
+          <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mb-4">Get in Touch</h2>
+          <div class="space-y-4">
+            <div class="flex items-start gap-3">
+              <svg class="w-5 h-5 text-neutral-500 mt-0.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              <div>
+                <p class="body-sm font-medium text-neutral-900 dark:text-neutral-100">Email</p>
+                <a href="mailto:woorkeasy@gmail.com" class="body-sm text-blue-600 hover:underline">woorkeasy@gmail.com</a>
+              </div>
+            </div>
+            <div class="flex items-start gap-3">
+              <svg class="w-5 h-5 text-neutral-500 mt-0.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              <div>
+                <p class="body-sm font-medium text-neutral-900 dark:text-neutral-100">Location</p>
+                <p class="body-sm text-neutral-600 dark:text-neutral-400">Available Worldwide (Online)</p>
+              </div>
+            </div>
+            <div class="flex items-start gap-3">
+              <svg class="w-5 h-5 text-neutral-500 mt-0.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>
+              <div>
+                <p class="body-sm font-medium text-neutral-900 dark:text-neutral-100">Response Time</p>
+                <p class="body-sm text-neutral-600 dark:text-neutral-400">We typically respond within 7-10 days.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white dark:bg-neutral-900 rounded-xl p-6 shadow-level-2 border border-neutral-100 dark:border-neutral-800">
+          <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mb-3">Quick Links</h2>
+          <div class="flex flex-col gap-2">
+            <a href="/privacy/" class="body-sm text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors">Privacy Policy</a>
+            <a href="/terms/" class="body-sm text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors">Terms &amp; Conditions</a>
+            <a href="/about/" class="body-sm text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors">About Us</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contact Form / Alternative -->
+      <div class="bg-white dark:bg-neutral-900 rounded-xl p-6 shadow-level-2 border border-neutral-100 dark:border-neutral-800">
+        <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mb-4">Send Us a Message</h2>
+        <p class="body-md text-neutral-600 dark:text-neutral-400 mb-6">Have a tool request, feedback, or question? Email us directly and we'll get back to you.</p>
+        <a href="mailto:woorkeasy@gmail.com" class="btn-primary inline-flex items-center gap-2 no-underline">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          Email Us
+        </a>
+        <div class="mt-8 pt-6 border-t border-neutral-200 dark:border-neutral-700">
+          <h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100 mb-2">Request a Tool</h3>
+          <p class="body-sm text-neutral-600 dark:text-neutral-400">Need a tool that doesn't exist yet? We build tools on user request. Let us know what you need.</p>
+          <button data-request-tool class="btn-secondary mt-3 no-underline cursor-pointer text-sm">Request a Tool</button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</Layout>
