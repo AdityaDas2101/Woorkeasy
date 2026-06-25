@@ -52,13 +52,23 @@ const breadcrumbJsonLd = {
   })),
 };
 
+const categorySchemaMap: Record<string, string> = {
+  'Image Tools': 'Multimedia',
+  'PDF Tools': 'GraphicsApplication',
+  'Finance': 'BusinessApplication',
+  'Dev Tools': 'DeveloperApplication',
+  'Utility': 'UtilitiesApplication',
+};
+
+const applicationCategory = categorySchemaMap[category || ''] || 'Multimedia';
+
 const softwareJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'SoftwareApplication',
   name: title,
   description,
   url: fullUrl,
-  applicationCategory: 'Multimedia',
+  applicationCategory,
   operatingSystem: 'All',
   browserRequirements: 'Modern browser with JavaScript enabled',
   offers: {

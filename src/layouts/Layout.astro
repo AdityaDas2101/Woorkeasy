@@ -106,6 +106,15 @@ const jsonLdScript = jsonLd
     <!-- JSON-LD Structured Data -->
     <script type="application/ld+json" set:html={jsonLdScript}></script>
 
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-EW7GHQT4X4"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-EW7GHQT4X4');
+    </script>
+
     <!-- AdSense (lazy-loaded after first user interaction for speed) -->
     <script>
       function loadAdSense() {
