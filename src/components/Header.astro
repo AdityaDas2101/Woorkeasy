@@ -10,25 +10,24 @@ const navDropdowns = [
   {
     label: 'Image Tools',
     i18nKey: 'nav.imageTools',
+    description: 'Convert, edit, and optimize your images with ease.',
     items: [
-      // Convert
       { name: 'JPG to PNG', href: '/image/jpg-to-png' },
       { name: 'PNG to JPG', href: '/image/png-to-jpg' },
-      { name: 'Convert to WebP', href: '/image/to-webp' },
+      { name: 'JPG/PNG to WebP', href: '/image/to-webp' },
       { name: 'WebP to JPG/PNG', href: '/image/webp-converter' },
       { name: 'HEIC to JPG', href: '/image/heic-to-jpg' },
-      // Edit
       { name: 'Compress Image', href: '/image/compress' },
       { name: 'Crop Image', href: '/image/crop' },
       { name: 'Rotate & Flip', href: '/image/rotate' },
       { name: 'Add Watermark', href: '/image/watermark' },
-      // AI
       { name: 'Remove Background', href: '/image/background-remover' },
     ],
   },
   {
     label: 'PDF Tools',
     i18nKey: 'nav.pdfTools',
+    description: 'Convert, merge, split, and manage PDF documents.',
     items: [
       { name: 'JPG to PDF', href: '/pdf/jpg-to-pdf' },
       { name: 'PDF to Image', href: '/pdf/pdf-to-image' },
@@ -40,6 +39,7 @@ const navDropdowns = [
   {
     label: 'Finance',
     i18nKey: 'nav.finance',
+    description: 'Process financial statements and convert formats.',
     items: [
       { name: 'OFX to Excel', href: '/finance/ofx-to-excel' },
       { name: 'QFX to Excel', href: '/finance/qfx-to-excel' },
@@ -50,6 +50,7 @@ const navDropdowns = [
   {
     label: 'Dev Tools',
     i18nKey: 'nav.devTools',
+    description: 'Developer utilities for everyday coding tasks.',
     items: [
       { name: 'Base64 Encode/Decode', href: '/dev/base64' },
       { name: 'URL Encode/Decode', href: '/dev/url-encode' },
@@ -59,6 +60,7 @@ const navDropdowns = [
   {
     label: 'Utility',
     i18nKey: 'nav.utility',
+    description: 'Handy tools for quick everyday tasks.',
     items: [
       { name: 'Character Counter', href: '/utility/character-counter' },
       { name: 'Web to Image / PDF', href: '/utility/web-to-image' },
@@ -74,12 +76,12 @@ const navDropdowns = [
       <span class="text-xl font-semibold text-neutral-900 dark:text-neutral-100 tracking-tight">Woorkeasy</span>
     </a>
 
-    <!-- Desktop Nav with Dropdowns -->
+    <!-- Desktop Nav with Mega Dropdowns -->
     <div class="hidden md:flex items-center gap-1">
       {navDropdowns.map((dropdown) => (
         <div class="relative group">
           <button
-            class="text-sm text-neutral-600 dark:text-neutral-400 px-3 py-2 rounded-full no-underline hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors inline-flex items-center gap-1 cursor-pointer"
+            class="nav-trigger text-sm text-neutral-600 dark:text-neutral-400 px-3 py-2 rounded-full no-underline hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors inline-flex items-center gap-1 cursor-pointer"
             data-i18n={dropdown.i18nKey}
           >
             {dropdown.label}
@@ -87,17 +89,30 @@ const navDropdowns = [
               <path d="M3 5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
           </button>
-          <!-- Dropdown Panel -->
-          <div class="absolute top-full left-0 pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150">
-            <div class="bg-white dark:bg-neutral-900 rounded-lg border border-neutral-200 dark:border-neutral-700 shadow-level-4 py-2 min-w-[200px]">
-              {dropdown.items.map((item) => (
-                <a
-                  href={item.href}
-                  class="block px-4 py-2 text-sm text-neutral-600 dark:text-neutral-400 no-underline hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors"
-                >
-                  {item.name}
-                </a>
-              ))}
+          <!-- Mega Dropdown: left = description, right = links -->
+          <div class="absolute top-full left-1/2 -translate-x-1/2 pt-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-[opacity,visibility] duration-300 ease-out">
+            <div class="group-hover:translate-y-0 translate-y-3 transition-transform duration-300 ease-out">
+              <div class="flex bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200/70 dark:border-neutral-700/70 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.12),0_0_0_1px_rgba(0,0,0,0.05)] dark:shadow-[0_4px_24px_-4px_rgba(0,0,0,0.4),0_0_0_1px_rgba(255,255,255,0.06)] overflow-hidden backdrop-blur-sm w-max max-w-[90vw]">
+                <!-- Left: Description panel -->
+                <div class="w-[180px] shrink-0 p-5 flex flex-col justify-center bg-neutral-50/50 dark:bg-neutral-800/30 border-r border-neutral-100 dark:border-neutral-800">
+                  <div class="text-[11px] font-semibold text-neutral-400 dark:text-neutral-500 uppercase tracking-widest mb-2">{dropdown.label}</div>
+                  <p class="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">{dropdown.description}</p>
+                </div>
+                <!-- Right: Links grid -->
+                <div class="flex-1 p-3">
+                  <div class="grid grid-cols-2 gap-x-4 gap-y-0">
+                    {dropdown.items.map((item) => (
+                      <a
+                        href={item.href}
+                        class="flex items-center gap-2.5 px-3 py-2.5 text-sm text-neutral-600 dark:text-neutral-400 no-underline rounded-xl hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                      >
+                        <span class="w-1.5 h-1.5 rounded-full bg-neutral-300 dark:bg-neutral-600 shrink-0" />
+                        <span class="whitespace-nowrap">{item.name}</span>
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -144,50 +159,58 @@ const navDropdowns = [
       <!-- Mobile hamburger -->
       <button
         id="mobile-menu-btn"
-        class="md:hidden flex items-center justify-center w-8 h-8 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+        class="mobile-menu-btn md:hidden flex flex-col items-center justify-center w-9 h-9 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors gap-[3px]"
         aria-label="Open menu"
       >
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-          <path d="M2 4h12M2 8h12M2 12h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-        </svg>
+        <span class="hamburger-line hamburger-line-top block w-4 h-px bg-current rounded-full" />
+        <span class="hamburger-line hamburger-line-middle block w-4 h-px bg-current rounded-full" />
+        <span class="hamburger-line hamburger-line-bottom block w-4 h-px bg-current rounded-full" />
       </button>
     </div>
   </nav>
 
 </header>
 
+<!-- Backdrop overlay -->
+<div id="mobile-backdrop" class="fixed inset-0 top-16 bg-black/20 dark:bg-black/40 z-30 md:hidden" />
+
 <!-- Mobile Menu Overlay (outside header to avoid backdrop-filter containing block) -->
-<div id="mobile-menu" class="hidden fixed inset-0 top-16 bg-white dark:bg-neutral-950 z-40 p-4 overflow-y-auto md:hidden">
-  <div class="flex flex-col gap-0">
+<div id="mobile-menu" class="fixed top-16 right-0 bottom-0 w-72 max-w-[85vw] bg-white dark:bg-neutral-950 z-40 overflow-y-auto md:hidden border-l border-neutral-200 dark:border-neutral-800">
+  <div class="flex flex-col py-3">
     {navDropdowns.map((dropdown) => (
-      <div class="mobile-dropdown">
-        <button class="mobile-dropdown-btn w-full flex items-center justify-between text-sm font-medium text-neutral-900 dark:text-neutral-100 py-2 border-b border-neutral-100 dark:border-neutral-800 cursor-pointer" data-i18n={dropdown.i18nKey}>
-          {dropdown.label}
-          <svg class="w-3.5 h-3.5 text-neutral-400 transition-transform" viewBox="0 0 16 16" fill="none">
+      <div class="mobile-dropdown border-b border-neutral-100 dark:border-neutral-800 last:border-b-0">
+        <button class="mobile-dropdown-btn w-full flex items-center justify-between text-sm font-medium text-neutral-900 dark:text-neutral-100 px-5 py-3.5 cursor-pointer hover:bg-neutral-50 dark:hover:bg-neutral-900 transition-colors" data-i18n={dropdown.i18nKey}>
+          <span>{dropdown.label}</span>
+          <svg class="w-3.5 h-3.5 text-neutral-400 transition-transform duration-300" viewBox="0 0 16 16" fill="none">
             <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
         </button>
-        <div class="mobile-dropdown-content hidden pl-2 pb-1 pt-1">
-          <div class="grid grid-cols-2 gap-x-2 gap-y-0">
-            {dropdown.items.map((item) => (
-              <a
-                href={item.href}
-                class="block text-xs text-neutral-600 dark:text-neutral-400 py-1.5 no-underline hover:text-neutral-900 dark:hover:text-neutral-100"
-              >
-                {item.name}
-              </a>
-            ))}
+        <div class="mobile-dropdown-content">
+          <div class="px-5 pb-4 pt-1">
+            <div class="flex flex-col gap-0.5">
+              {dropdown.items.map((item) => (
+                <a
+                  href={item.href}
+                  class="flex items-center gap-2.5 text-sm text-neutral-600 dark:text-neutral-400 py-2 px-2.5 no-underline rounded-lg hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                >
+                  <span class="w-1.5 h-1.5 rounded-full bg-neutral-300 dark:bg-neutral-600 shrink-0" />
+                  <span>{item.name}</span>
+                </a>
+              ))}
+            </div>
           </div>
         </div>
       </div>
     ))}
-    <a
-      href="mailto:woorkeasy@gmail.com"
-      class="btn-primary text-center text-sm mt-3 no-underline"
-      data-i18n="nav.requestTool"
-    >
-      Request a Tool
-    </a>
+    <div class="px-5 pt-3">
+      <a
+        href="mailto:woorkeasy@gmail.com"
+        class="block w-full text-center text-sm font-medium text-neutral-600 dark:text-neutral-400 px-4 py-2.5 rounded-lg border border-neutral-200 dark:border-neutral-700 no-underline hover:border-neutral-900 dark:hover:border-neutral-300 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors"
+        data-i18n="nav.requestTool"
+      >
+        Request a Tool
+      </a>
+    </div>
   </div>
 </div>
 
@@ -195,18 +218,51 @@ const navDropdowns = [
   // Mobile menu toggle
   const btn = document.getElementById('mobile-menu-btn');
   const menu = document.getElementById('mobile-menu');
+  const backdrop = document.getElementById('mobile-backdrop');
+
+  function openMenu() {
+    menu?.classList.add('open');
+    backdrop?.classList.add('open');
+    btn?.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeMenu() {
+    menu?.classList.remove('open');
+    backdrop?.classList.remove('open');
+    btn?.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
   btn?.addEventListener('click', () => {
-    menu?.classList.toggle('hidden');
+    if (menu?.classList.contains('open')) {
+      closeMenu();
+    } else {
+      openMenu();
+    }
   });
 
-  // Mobile accordion dropdowns
+  backdrop?.addEventListener('click', closeMenu);
+
+  // Mobile accordion dropdowns with smooth max-height animation
   document.querySelectorAll('.mobile-dropdown-btn').forEach((button) => {
     button.addEventListener('click', () => {
       const content = button.nextElementSibling as HTMLElement;
       const arrow = button.querySelector('svg');
-      content?.classList.toggle('hidden');
-      arrow?.classList.toggle('rotate-180');
+
+      if (content.style.maxHeight && content.style.maxHeight !== '0px') {
+        content.style.maxHeight = '0px';
+        arrow?.classList.remove('rotate-180');
+      } else {
+        content.style.maxHeight = content.scrollHeight + 'px';
+        arrow?.classList.add('rotate-180');
+      }
     });
+  });
+
+  // Close menu on nav link click
+  document.querySelectorAll('#mobile-menu a').forEach((link) => {
+    link.addEventListener('click', closeMenu);
   });
 
   // Dark mode toggle

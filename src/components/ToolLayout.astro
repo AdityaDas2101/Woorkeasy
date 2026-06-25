@@ -2,7 +2,8 @@
 /**
  * ToolLayout Component
  * Wraps every tool page with consistent structure: heading, description,
- * upload zone, action area, and output/download area.
+ * breadcrumb, upload zone, action area, and output/download area.
+ * Includes SEO metadata and structured data (JSON-LD) for rich results.
  */
 import Layout from '../layouts/Layout.astro';
 
@@ -11,19 +12,74 @@ export interface Props {
   metaTitle: string;
   description: string;
   heading: string;
+  canonicalURL?: string;
+  image?: string;
+  category?: string;
 }
 
-const { title, metaTitle, description, heading } = Astro.props;
+const { title, metaTitle, description, heading, canonicalURL, image, category } = Astro.props;
+const siteURL = 'https://woorkeasy.com';
+const pathname = Astro.url.pathname;
+const fullUrl = new URL(pathname, siteURL).href;
+
+const breadcrumbItems = [
+  { position: 1, name: 'Home', item: siteURL },
+];
+
+if (category) {
+  breadcrumbItems.push({ position: 2, name: category, item: new URL('/#' + category.toLowerCase(), siteURL).href });
+}
+
+breadcrumbItems.push({ position: breadcrumbItems.length + 1, name: title, item: fullUrl });
+
+const breadcrumbJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: breadcrumbItems.map(item => ({
+    '@type': 'ListItem',
+    position: item.position,
+    name: item.name,
+    item: item.item,
+  })),
+};
+
+const softwareJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: title,
+  description,
+  url: fullUrl,
+  applicationCategory: 'Multimedia',
+  operatingSystem: 'All',
+  browserRequirements: 'Modern browser with JavaScript enabled',
+  offers: {
+    '@type': 'Offer',
+    price: '0',
+    priceCurrency: 'USD',
+  },
+};
 ---
 
-<Layout title={metaTitle} description={description}>
+<Layout
+  title={metaTitle}
+  description={description}
+  canonicalURL={canonicalURL}
+  image={image}
+  jsonLd={[breadcrumbJsonLd, softwareJsonLd]}
+>
   <div class="max-w-4xl mx-auto px-6 py-12 md:py-16">
     <!-- Breadcrumb -->
     <nav aria-label="Breadcrumb" class="mb-6">
       <ol class="flex items-center gap-2 list-none p-0 m-0">
         <li><a href="/" class="text-sm text-neutral-500 no-underline hover:text-neutral-900 dark:hover:text-neutral-100">Home</a></li>
         <li class="text-sm text-neutral-400">/</li>
-        <li class="text-sm text-neutral-900 dark:text-neutral-100">{title}</li>
+        {category && (
+          <>
+            <li><span class="text-sm text-neutral-500">{category}</span></li>
+            <li class="text-sm text-neutral-400">/</li>
+          </>
+        )}
+        <li class="text-sm text-neutral-900 dark:text-neutral-100" aria-current="page">{title}</li>
       </ol>
     </nav>
 

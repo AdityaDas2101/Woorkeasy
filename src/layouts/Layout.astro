@@ -6,16 +6,48 @@
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import '../styles/global.css';
+import { languages } from '../i18n/translations.js';
 
 export interface Props {
   title: string;
   description: string;
   canonicalURL?: string;
+  image?: string;
+  jsonLd?: object | object[];
+  noIndex?: boolean;
 }
 
-const { title, description, canonicalURL } = Astro.props;
+const {
+  title,
+  description,
+  canonicalURL,
+  image = '/og-default.png',
+  jsonLd,
+  noIndex,
+} = Astro.props;
+
 const siteURL = 'https://woorkeasy.com';
+const siteName = 'Woorkeasy';
 const canonical = canonicalURL || new URL(Astro.url.pathname, siteURL).href;
+
+const defaultJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  name: title,
+  description,
+  url: canonical,
+  publisher: {
+    '@type': 'Organization',
+    name: siteName,
+    url: siteURL,
+  },
+};
+
+const jsonLdScript = jsonLd
+  ? Array.isArray(jsonLd)
+    ? JSON.stringify([defaultJsonLd, ...jsonLd])
+    : JSON.stringify(jsonLd)
+  : JSON.stringify(defaultJsonLd);
 ---
 
 <!doctype html>
@@ -24,9 +56,17 @@ const canonical = canonicalURL || new URL(Astro.url.pathname, siteURL).href;
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
-    <meta name="robots" content="index, follow" />
+    <meta name="robots" content={noIndex ? 'noindex, nofollow' : 'index, follow'} />
     <link rel="canonical" href={canonical} />
     <meta name="generator" content={Astro.generator} />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)" />
+
+    <!-- Hreflang -->
+    <link rel="alternate" hreflang="x-default" href={canonical} />
+    {languages.map(lang => (
+      <link rel="alternate" hreflang={lang.code} href={canonical} />
+    ))}
 
     <!-- Dark mode: apply before paint to prevent flash -->
     <script is:inline>
@@ -43,17 +83,26 @@ const canonical = canonicalURL || new URL(Astro.url.pathname, siteURL).href;
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="Woorkeasy" />
+    <meta property="og:site_name" content={siteName} />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:image" content={new URL(image, siteURL).href} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={title} />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={new URL(image, siteURL).href} />
 
     <title>{title}</title>
 
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json" set:html={jsonLdScript}></script>
   </head>
   <body class="min-h-screen flex flex-col bg-neutral-50 dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 font-sans antialiased transition-colors duration-200">
     <Header />
@@ -70,11 +119,9 @@ const canonical = canonicalURL || new URL(Astro.url.pathname, siteURL).href;
         const t = translations[lang];
         if (!t) return;
 
-        // Translate all elements with data-i18n attribute
         document.querySelectorAll('[data-i18n]').forEach((el) => {
           const key = el.getAttribute('data-i18n');
           if (key && t[key]) {
-            // For elements with child nodes (like buttons with SVGs), only update text nodes
             const childNodes = el.childNodes;
             let textNodeFound = false;
             for (let i = 0; i < childNodes.length; i++) {
@@ -84,17 +131,14 @@ const canonical = canonicalURL || new URL(Astro.url.pathname, siteURL).href;
                 break;
               }
             }
-            // If no text node was found, and it has no child elements, set textContent
             if (!textNodeFound && el.children.length === 0) {
               el.textContent = t[key];
             }
           }
         });
 
-        // Update HTML lang attribute
         document.documentElement.setAttribute('lang', lang);
 
-        // Add RTL support for Arabic
         if (lang === 'ar') {
           document.documentElement.setAttribute('dir', 'rtl');
         } else {
@@ -102,13 +146,11 @@ const canonical = canonicalURL || new URL(Astro.url.pathname, siteURL).href;
         }
       }
 
-      // Apply on page load
       const savedLang = localStorage.getItem('woorkeasy-lang') || 'en';
       if (savedLang !== 'en') {
         applyTranslations(savedLang);
       }
 
-      // Listen for language changes
       window.addEventListener('language-changed', (e) => {
         const lang = (e as CustomEvent).detail.lang;
         applyTranslations(lang);

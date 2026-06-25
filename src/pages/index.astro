@@ -10,7 +10,7 @@ const tools = [
   // ─── Image: Convert ───
   { title: 'JPG to PNG', description: 'Convert JPG images to lossless PNG format.', href: '/image/jpg-to-png', icon: '�', category: 'Image' },
   { title: 'PNG to JPG', description: 'Convert PNG images to compressed JPG with adjustable quality.', href: '/image/png-to-jpg', icon: '🔄', category: 'Image' },
-  { title: 'Convert to WebP', description: 'Convert JPG/PNG to WebP for smaller web-optimized files.', href: '/image/to-webp', icon: '⚡', category: 'Image' },
+  { title: 'JPG/PNG to WebP', description: 'Convert JPG/PNG to WebP for smaller web-optimized files.', href: '/image/to-webp', icon: '⚡', category: 'Image' },
   { title: 'WebP to JPG/PNG', description: 'Convert WebP images to JPG, PNG, or PDF. Batch supported.', href: '/image/webp-converter', icon: '�', category: 'Image' },
   { title: 'HEIC to JPG', description: 'Convert Apple HEIC photos to universal JPG format.', href: '/image/heic-to-jpg', icon: '�', category: 'Image' },
   // ─── Image: Edit ───
@@ -38,11 +38,37 @@ const tools = [
   { title: 'Character Counter', description: 'Count characters, words, sentences, and get keyword density.', href: '/utility/character-counter', icon: '🔢', category: 'Utility' },
   { title: 'Web to Image / PDF', description: 'Capture any webpage or HTML as a JPG, PNG, or PDF screenshot.', href: '/utility/web-to-image', icon: '🌐', category: 'Utility' },
 ];
+
+const websiteJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'Woorkeasy',
+  url: 'https://woorkeasy.com',
+  description: 'Free online tools for images, PDFs, and finance. All browser-based, no upload needed.',
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: {
+      '@type': 'EntryPoint',
+      urlTemplate: 'https://woorkeasy.com?q={search_term_string}',
+    },
+    'query-input': 'required name=search_term_string',
+  },
+};
+
+const organizationJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'Woorkeasy',
+  url: 'https://woorkeasy.com',
+  email: 'woorkeasy@gmail.com',
+  description: 'Free online tools for images, PDFs, and finance.',
+};
 ---
 
 <Layout
   title="Woorkeasy — All Tools, Zero Hassle. Free Online Image, PDF & Finance Tools"
   description="Free online tools for images, PDFs, and finance. Compress images, convert formats, merge PDFs, and more — all in your browser, no upload to servers."
+  jsonLd={[websiteJsonLd, organizationJsonLd]}
 >
   <!-- Hero Section -->
   <section class="relative overflow-hidden bg-white dark:bg-neutral-950">

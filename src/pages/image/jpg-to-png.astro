@@ -1,0 +1,206 @@
+---
+/**
+ * JPG to PNG Tool
+ * Convert JPG images to lossless PNG format.
+ * Ideal for when you need transparency or lossless quality.
+ */
+import ToolLayout from '../../components/ToolLayout.astro';
+---
+
+<ToolLayout
+  title="JPG to PNG"
+  metaTitle="JPG to PNG Converter Free Online — Convert JPEG to PNG | Woorkeasy"
+  description="Convert JPG images to PNG format online free. Lossless conversion preserves quality. Batch convert multiple JPG files to PNG — all in your browser."
+  heading="JPG to PNG."
+  category="Image Tools"
+>
+  <div id="jpg-to-png-app" class="flex flex-col gap-6">
+    <!-- Upload Zone -->
+    <div
+      id="upload-zone"
+      class="upload-zone flex flex-col items-center justify-center gap-3 p-12 border-2 border-dashed border-neutral-300 rounded-lg cursor-pointer hover:border-neutral-400 transition-colors"
+    >
+      <span class="text-4xl">🖼️</span>
+      <p class="body-md text-neutral-600 dark:text-neutral-400 text-center">
+        Drop JPG files here or <span class="text-neutral-900 dark:text-neutral-100 font-medium underline">browse</span>
+      </p>
+      <p class="body-sm text-neutral-500">Supports multiple files • JPG & JPEG only</p>
+      <input id="file-input" type="file" accept=".jpg,.jpeg,image/jpeg" multiple class="hidden" />
+    </div>
+
+    <!-- File List -->
+    <div id="file-list" class="hidden flex flex-col gap-3"></div>
+
+    <!-- Actions -->
+    <div id="action-bar" class="hidden flex flex-wrap items-center gap-3">
+      <button id="convert-btn" class="btn-primary">Convert All to PNG</button>
+      <button id="download-all-btn" class="btn-secondary hidden">Download All</button>
+      <button id="clear-btn" class="btn-secondary ml-auto">Clear</button>
+    </div>
+
+    <!-- Status -->
+    <div id="status" class="hidden body-sm text-neutral-600 dark:text-neutral-400 flex items-center gap-2">
+      <svg class="animate-spin h-4 w-4 text-neutral-500" viewBox="0 0 24 24" fill="none">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+      </svg>
+      <span id="status-text">Converting...</span>
+    </div>
+
+    <!-- Results -->
+    <div id="results" class="hidden flex flex-col gap-4"></div>
+  </div>
+
+  <!-- Info -->
+  <div class="mt-10 p-6 bg-neutral-50 dark:bg-neutral-800 rounded-lg border border-neutral-200 dark:border-neutral-700">
+    <h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100 mb-3">About JPG to PNG</h3>
+    <ul class="list-disc pl-5 flex flex-col gap-2 body-sm text-neutral-600 dark:text-neutral-400">
+      <li><strong>Lossless quality</strong> — PNG preserves every pixel from your original JPG with no compression artifacts.</li>
+      <li><strong>Transparency support</strong> — Unlike JPG, PNG supports alpha transparency if you need it later.</li>
+      <li><strong>Larger files</strong> — PNG files are larger than JPG; use this when quality matters more than file size.</li>
+      <li><strong>Batch convert</strong> — Drop multiple JPG files and convert them all at once.</li>
+      <li>Everything runs locally in your browser. No files are uploaded.</li>
+    </ul>
+  </div>
+</ToolLayout>
+
+<script>
+  const uploadZone = document.getElementById('upload-zone')!;
+  const fileInput = document.getElementById('file-input') as HTMLInputElement;
+  const fileList = document.getElementById('file-list')!;
+  const actionBar = document.getElementById('action-bar')!;
+  const convertBtn = document.getElementById('convert-btn') as HTMLButtonElement;
+  const downloadAllBtn = document.getElementById('download-all-btn') as HTMLButtonElement;
+  const clearBtn = document.getElementById('clear-btn') as HTMLButtonElement;
+  const statusEl = document.getElementById('status')!;
+  const statusText = document.getElementById('status-text')!;
+  const results = document.getElementById('results')!;
+
+  interface FileEntry { file: File; dataUrl?: string; converted: boolean; }
+  let files: FileEntry[] = [];
+
+  uploadZone.addEventListener('click', () => fileInput.click());
+  uploadZone.addEventListener('dragover', e => { e.preventDefault(); uploadZone.classList.add('border-neutral-500'); });
+  uploadZone.addEventListener('dragleave', () => { uploadZone.classList.remove('border-neutral-500'); });
+  uploadZone.addEventListener('drop', e => { e.preventDefault(); uploadZone.classList.remove('border-neutral-500'); if (e.dataTransfer?.files) addFiles(e.dataTransfer.files); });
+  fileInput.addEventListener('change', () => { if (fileInput.files) addFiles(fileInput.files); });
+
+  function addFiles(fl: FileList) {
+    const jpgs = Array.from(fl).filter(f => f.type === 'image/jpeg' || f.name.toLowerCase().match(/\.jpe?g$/));
+    if (!jpgs.length) { alert('Please select JPG files only.'); return; }
+    jpgs.forEach(f => files.push({ file: f, converted: false }));
+    renderFileList();
+    actionBar.classList.remove('hidden');
+    results.classList.add('hidden');
+    downloadAllBtn.classList.add('hidden');
+  }
+
+  function renderFileList() {
+    fileList.classList.remove('hidden');
+    fileList.innerHTML = files.map((e, i) => `
+      <div class="flex items-center gap-3 p-3 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg">
+        <span class="text-lg">📷</span>
+        <div class="flex-1 min-w-0">
+          <p class="body-sm font-medium text-neutral-900 dark:text-neutral-100 truncate">${e.file.name}</p>
+          <p class="caption-mono text-neutral-500">${(e.file.size / 1024).toFixed(1)} KB</p>
+        </div>
+        <button data-remove="${i}" class="text-neutral-400 hover:text-red-500 transition-colors text-lg leading-none">&times;</button>
+      </div>
+    `).join('');
+    fileList.querySelectorAll('[data-remove]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        files.splice(parseInt((btn as HTMLElement).dataset.remove!), 1);
+        if (!files.length) resetUI(); else renderFileList();
+      });
+    });
+  }
+
+  function resetUI() {
+    files = [];
+    fileList.classList.add('hidden'); fileList.innerHTML = '';
+    actionBar.classList.add('hidden');
+    results.classList.add('hidden'); results.innerHTML = '';
+    downloadAllBtn.classList.add('hidden'); fileInput.value = '';
+  }
+
+  clearBtn.addEventListener('click', resetUI);
+
+  convertBtn.addEventListener('click', async () => {
+    if (!files.length) return;
+    statusEl.classList.remove('hidden');
+    results.classList.add('hidden'); results.innerHTML = '';
+    convertBtn.disabled = true;
+
+    for (let i = 0; i < files.length; i++) {
+      statusText.textContent = `Converting ${i + 1} of ${files.length}...`;
+      const entry = files[i];
+      try {
+        entry.dataUrl = await convertJpgToPng(entry.file);
+        entry.converted = true;
+      } catch { entry.converted = false; }
+    }
+
+    statusEl.classList.add('hidden');
+    convertBtn.disabled = false;
+    showResults();
+  });
+
+  function convertJpgToPng(file: File): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = img.naturalWidth;
+        canvas.height = img.naturalHeight;
+        const ctx = canvas.getContext('2d')!;
+        ctx.drawImage(img, 0, 0);
+        resolve(canvas.toDataURL('image/png'));
+        URL.revokeObjectURL(img.src);
+      };
+      img.onerror = () => { URL.revokeObjectURL(img.src); reject(new Error('Failed')); };
+      img.src = URL.createObjectURL(file);
+    });
+  }
+
+  function showResults() {
+    results.classList.remove('hidden');
+    const converted = files.filter(f => f.converted);
+    results.innerHTML = converted.map((e, i) => {
+      const newName = e.file.name.replace(/\.jpe?g$/i, '.png');
+      const origKB = (e.file.size / 1024).toFixed(1);
+      const newKB = e.dataUrl ? ((e.dataUrl.length * 3 / 4) / 1024).toFixed(1) : '?';
+      return `
+        <div class="flex items-center gap-3 p-3 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg">
+          <img src="${e.dataUrl}" alt="${newName}" class="w-12 h-12 object-cover rounded border border-neutral-200 dark:border-neutral-700" />
+          <div class="flex-1 min-w-0">
+            <p class="body-sm font-medium text-neutral-900 dark:text-neutral-100 truncate">${newName}</p>
+            <p class="caption-mono text-neutral-500">${origKB} KB → ~${newKB} KB</p>
+          </div>
+          <button data-dl="${i}" class="btn-secondary text-sm">Download</button>
+        </div>`;
+    }).join('');
+    results.querySelectorAll('[data-dl]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const entry = converted[parseInt((btn as HTMLElement).dataset.dl!)];
+        if (!entry.dataUrl) return;
+        const a = document.createElement('a');
+        a.href = entry.dataUrl;
+        a.download = entry.file.name.replace(/\.jpe?g$/i, '.png');
+        a.click();
+      });
+    });
+    if (converted.length > 1) downloadAllBtn.classList.remove('hidden');
+  }
+
+  downloadAllBtn.addEventListener('click', () => {
+    files.filter(f => f.converted).forEach((e, i) => {
+      setTimeout(() => {
+        if (!e.dataUrl) return;
+        const a = document.createElement('a');
+        a.href = e.dataUrl;
+        a.download = e.file.name.replace(/\.jpe?g$/i, '.png');
+        a.click();
+      }, i * 300);
+    });
+  });
+</script>
