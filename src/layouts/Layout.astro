@@ -6,6 +6,7 @@
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import RequestToolModal from '../components/RequestToolModal.astro';
+import StickyAd from '../components/StickyAd.astro';
 import '../styles/global.css';
 import { languages } from '../i18n/translations.js';
 
@@ -104,6 +105,21 @@ const jsonLdScript = jsonLd
 
     <!-- JSON-LD Structured Data -->
     <script type="application/ld+json" set:html={jsonLdScript}></script>
+
+    <!-- AdSense (lazy-loaded after first user interaction for speed) -->
+    <script>
+      function loadAdSense() {
+        const s = document.createElement('script');
+        s.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-YOUR_PUBLISHER_ID';
+        s.crossOrigin = 'anonymous';
+        s.async = true;
+        s.onload = () => { (window.adsbygoogle = window.adsbygoogle || []).push({}); };
+        document.head.appendChild(s);
+      }
+      ['scroll', 'click', 'touchstart', 'keydown'].forEach(event =>
+        document.addEventListener(event, loadAdSense, { once: true })
+      );
+    </script>
   </head>
   <body class="min-h-screen flex flex-col bg-neutral-50 dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 font-sans antialiased transition-colors duration-200">
     <Header />
@@ -111,6 +127,8 @@ const jsonLdScript = jsonLd
       <slot />
     </main>
     <Footer />
+
+    <StickyAd />
 
     <RequestToolModal />
 
