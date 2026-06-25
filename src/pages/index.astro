@@ -63,12 +63,83 @@ const organizationJsonLd = {
   email: 'woorkeasy@gmail.com',
   description: 'Free online tools for images, PDFs, and finance.',
 };
+
+const faqJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'Is Woorkeasy really free?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Yes, Woorkeasy is 100% free. All tools are free to use with no subscriptions, no hidden fees, and no account required.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Do you upload my files to a server?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'No. Every tool runs entirely in your browser using client-side processing. Your files never leave your device, and nothing is uploaded to any server.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'What kind of tools does Woorkeasy offer?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Woorkeasy offers 25+ free online tools across image editing (compress, crop, rotate, watermark, background remover, format conversion), PDF manipulation (merge, split, convert, rotate), finance file conversion (OFX, QFX, Excel, CSV), and developer utilities (Base64, URL encode/decode, JSON formatter).',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Can I request a new tool?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Absolutely. You can request a new tool by clicking "Request a Tool" on the homepage or emailing woorkeasy@gmail.com. We build tools based on user requests.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Does Woorkeasy work on mobile devices?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Yes, all tools are fully responsive and work on mobile phones, tablets, and desktop browsers. The interface adapts to your screen size for a smooth experience on any device.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Is there a file size limit?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'No, there are no artificial file size limits. Since all processing happens locally in your browser, the practical limit depends on your device memory. Most tools handle files up to 50MB without issues.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'How do I convert JPG to PNG?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Visit our JPG to PNG converter tool, upload your JPG files, and click "Convert All to PNG". The conversion happens instantly in your browser and you can download the PNG files immediately. No upload or sign-up required.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'How do I merge PDF files?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Use our Merge PDF tool. Upload multiple PDF files, arrange them in your preferred order using the drag-and-drop interface, and click "Merge PDFs". The combined PDF is generated in your browser for instant download.',
+      },
+    },
+  ],
+};
 ---
 
 <Layout
   title="Free Online Tools: Image, PDF & Finance Tools | Woorkeasy"
   description="25+ free online tools for images, PDFs, finance, and developers. Convert, compress, merge, and edit files in your browser. No sign-up, no upload, 100% free."
-  jsonLd={[websiteJsonLd, organizationJsonLd]}
+  jsonLd={[websiteJsonLd, organizationJsonLd, faqJsonLd]}
 >
   <!-- Hero Section -->
   <section class="relative overflow-hidden bg-white dark:bg-neutral-950">
@@ -207,6 +278,58 @@ const organizationJsonLd = {
           <p class="body-sm text-neutral-600 dark:text-neutral-400 mt-2">Your files are processed client-side and never uploaded to any server. Your data stays on your device, always.</p>
         </div>
       </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section class="max-w-3xl mx-auto px-6 py-16 md:py-20">
+    <div class="text-center mb-10">
+      <span class="caption-mono text-neutral-500 uppercase">FAQs</span>
+      <h2 class="display-md text-neutral-900 dark:text-neutral-100 mt-2">Frequently Asked Questions</h2>
+    </div>
+    <div class="space-y-4">
+      <details class="group bg-white dark:bg-neutral-900 rounded-xl p-5 shadow-level-1 open:shadow-level-2 transition-shadow">
+        <summary class="body-lg font-semibold text-neutral-900 dark:text-neutral-100 cursor-pointer list-none flex items-center justify-between">
+          Is Woorkeasy really free?
+          <svg class="w-5 h-5 text-neutral-500 group-open:rotate-180 transition-transform" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </summary>
+        <p class="body-md text-neutral-600 dark:text-neutral-400 mt-3">Yes, Woorkeasy is 100% free. All tools are free to use with no subscriptions, no hidden fees, and no account required.</p>
+      </details>
+      <details class="group bg-white dark:bg-neutral-900 rounded-xl p-5 shadow-level-1 open:shadow-level-2 transition-shadow">
+        <summary class="body-lg font-semibold text-neutral-900 dark:text-neutral-100 cursor-pointer list-none flex items-center justify-between">
+          Do you upload my files to a server?
+          <svg class="w-5 h-5 text-neutral-500 group-open:rotate-180 transition-transform" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </summary>
+        <p class="body-md text-neutral-600 dark:text-neutral-400 mt-3">No. Every tool runs entirely in your browser using client-side processing. Your files never leave your device, and nothing is uploaded to any server.</p>
+      </details>
+      <details class="group bg-white dark:bg-neutral-900 rounded-xl p-5 shadow-level-1 open:shadow-level-2 transition-shadow">
+        <summary class="body-lg font-semibold text-neutral-900 dark:text-neutral-100 cursor-pointer list-none flex items-center justify-between">
+          What tools does Woorkeasy offer?
+          <svg class="w-5 h-5 text-neutral-500 group-open:rotate-180 transition-transform" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </summary>
+        <p class="body-md text-neutral-600 dark:text-neutral-400 mt-3">Woorkeasy offers 25+ free online tools for images (compress, crop, rotate, watermark, background remover, format conversion), PDFs (merge, split, convert, rotate), finance (OFX, QFX, Excel, CSV conversion), and developers (Base64, URL encode/decode, JSON formatter).</p>
+      </details>
+      <details class="group bg-white dark:bg-neutral-900 rounded-xl p-5 shadow-level-1 open:shadow-level-2 transition-shadow">
+        <summary class="body-lg font-semibold text-neutral-900 dark:text-neutral-100 cursor-pointer list-none flex items-center justify-between">
+          Can I request a new tool?
+          <svg class="w-5 h-5 text-neutral-500 group-open:rotate-180 transition-transform" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </summary>
+        <p class="body-md text-neutral-600 dark:text-neutral-400 mt-3">Absolutely. Click "Request a Tool" on this page or email woorkeasy@gmail.com. We build tools based on user requests.</p>
+      </details>
+      <details class="group bg-white dark:bg-neutral-900 rounded-xl p-5 shadow-level-1 open:shadow-level-2 transition-shadow">
+        <summary class="body-lg font-semibold text-neutral-900 dark:text-neutral-100 cursor-pointer list-none flex items-center justify-between">
+          Does Woorkeasy work on mobile?
+          <svg class="w-5 h-5 text-neutral-500 group-open:rotate-180 transition-transform" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </summary>
+        <p class="body-md text-neutral-600 dark:text-neutral-400 mt-3">Yes. All tools are fully responsive and work on mobile phones, tablets, and desktops. The interface adapts to any screen size.</p>
+      </details>
+      <details class="group bg-white dark:bg-neutral-900 rounded-xl p-5 shadow-level-1 open:shadow-level-2 transition-shadow">
+        <summary class="body-lg font-semibold text-neutral-900 dark:text-neutral-100 cursor-pointer list-none flex items-center justify-between">
+          Is there a file size limit?
+          <svg class="w-5 h-5 text-neutral-500 group-open:rotate-180 transition-transform" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </summary>
+        <p class="body-md text-neutral-600 dark:text-neutral-400 mt-3">No artificial limits. Since everything runs locally in your browser, the practical limit depends on your device memory. Most tools handle files up to 50MB easily.</p>
+      </details>
     </div>
   </section>
 
