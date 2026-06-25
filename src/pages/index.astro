@@ -94,7 +94,7 @@ const organizationJsonLd = {
       <!-- CTA Buttons -->
       <div class="flex flex-wrap items-center justify-center gap-4 mt-8">
         <a href="#tools" class="btn-primary no-underline" data-i18n="hero.browseTools">Browse Tools</a>
-        <a href="mailto:woorkeasy@gmail.com" class="btn-secondary no-underline" data-i18n="hero.requestTool">Request a Tool</a>
+        <button data-request-tool class="btn-secondary no-underline cursor-pointer" data-i18n="hero.requestTool">Request a Tool</button>
       </div>
     </div>
   </section>
@@ -162,12 +162,12 @@ const organizationJsonLd = {
     <p class="body-md text-neutral-600 dark:text-neutral-400 mt-2 max-w-xl mx-auto" data-i18n="contact.text">
       We build tools on request. Need a converter, optimizer, or formatter? Let us know.
     </p>
-    <a
-      href="mailto:woorkeasy@gmail.com"
-      class="btn-primary inline-block mt-6 no-underline"
+    <button
+      data-request-tool
+      class="btn-primary inline-block mt-6 no-underline cursor-pointer"
     >
       woorkeasy@gmail.com
-    </a>
+    </button>
   </section>
 </Layout>
 

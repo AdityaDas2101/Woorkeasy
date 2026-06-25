@@ -1,0 +1,174 @@
+---
+/**
+ * RequestToolModal Component
+ * Floating modal with a form to collect tool requests.
+ * On submit, opens mailto with structured body.
+ * Triggered via `data-request-tool` attribute on any element.
+ */
+---
+
+<dialog
+  id="request-tool-modal"
+  class="fixed inset-0 z-50 m-auto w-full max-w-lg max-h-[90vh] bg-white dark:bg-neutral-900 rounded-2xl shadow-2xl border border-neutral-200 dark:border-neutral-700 backdrop:bg-black/50 backdrop:backdrop-blur-sm open:flex open:flex-col p-0"
+>
+  <form id="request-tool-form" method="dialog" class="flex flex-col max-h-[90vh]">
+    <!-- Header -->
+    <div class="flex items-center justify-between px-6 pt-6 pb-4 border-b border-neutral-200 dark:border-neutral-700">
+      <h2 class="text-lg font-semibold text-neutral-900 dark:text-neutral-100" data-i18n="requestTool.title">Request a Tool</h2>
+      <button
+        type="button"
+        id="request-tool-close"
+        class="flex items-center justify-center w-8 h-8 rounded-lg text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+        aria-label="Close"
+      >
+        <svg class="w-4 h-4" viewBox="0 0 16 16" fill="none">
+          <path d="M4 4l8 8m0-8l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Body -->
+    <div class="flex-1 overflow-y-auto px-6 py-5 space-y-4">
+      <p class="text-sm text-neutral-600 dark:text-neutral-400" data-i18n="requestTool.description">
+        Tell us what tool you need. We'll build it and let you know.
+      </p>
+
+      <div>
+        <label for="rt-name" class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1" data-i18n="requestTool.nameLabel">Your Name</label>
+        <input
+          id="rt-name"
+          type="text"
+          required
+          class="w-full px-3 py-2.5 text-sm bg-white dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-600 rounded-lg text-neutral-900 dark:text-neutral-100 placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-900/20 dark:focus:ring-neutral-100/20"
+          placeholder="e.g. John Doe"
+        />
+      </div>
+
+      <div>
+        <label for="rt-email" class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1" data-i18n="requestTool.emailLabel">Your Email (optional)</label>
+        <input
+          id="rt-email"
+          type="email"
+          class="w-full px-3 py-2.5 text-sm bg-white dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-600 rounded-lg text-neutral-900 dark:text-neutral-100 placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-900/20 dark:focus:ring-neutral-100/20"
+          placeholder="john@example.com"
+        />
+      </div>
+
+      <div>
+        <label for="rt-category" class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1" data-i18n="requestTool.categoryLabel">Category</label>
+        <select
+          id="rt-category"
+          class="w-full px-3 py-2.5 text-sm bg-white dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-600 rounded-lg text-neutral-900 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-neutral-900/20 dark:focus:ring-neutral-100/20"
+        >
+          <option value="Image" data-i18n="requestTool.catImage">Image</option>
+          <option value="PDF" data-i18n="requestTool.catPdf">PDF</option>
+          <option value="Finance" data-i18n="requestTool.catFinance">Finance</option>
+          <option value="Dev" data-i18n="requestTool.catDev">Dev</option>
+          <option value="Utility" data-i18n="requestTool.catUtility">Utility</option>
+          <option value="Other" data-i18n="requestTool.catOther">Other</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="rt-description" class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1" data-i18n="requestTool.descLabel">Tool Description</label>
+        <textarea
+          id="rt-description"
+          required
+          rows="4"
+          class="w-full px-3 py-2.5 text-sm bg-white dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-600 rounded-lg text-neutral-900 dark:text-neutral-100 placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-900/20 dark:focus:ring-neutral-100/20 resize-none"
+          placeholder="Describe the tool you need — what should it do?"
+        ></textarea>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="flex items-center justify-end gap-3 px-6 py-4 border-t border-neutral-200 dark:border-neutral-700">
+      <button
+        type="button"
+        id="request-tool-cancel"
+        class="px-4 py-2 text-sm font-medium text-neutral-600 dark:text-neutral-400 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+        data-i18n="requestTool.cancel"
+      >
+        Cancel
+      </button>
+      <button
+        type="submit"
+        class="px-5 py-2 text-sm font-medium text-white bg-neutral-900 dark:bg-white dark:text-neutral-900 rounded-lg hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors"
+        data-i18n="requestTool.submit"
+      >
+        Send Request
+      </button>
+    </div>
+  </form>
+</dialog>
+
+<script>
+  const modal = document.getElementById('request-tool-modal') as HTMLDialogElement;
+  const form = document.getElementById('request-tool-form') as HTMLFormElement;
+  const nameInput = document.getElementById('rt-name') as HTMLInputElement;
+  const emailInput = document.getElementById('rt-email') as HTMLInputElement;
+  const categorySelect = document.getElementById('rt-category') as HTMLSelectElement;
+  const descInput = document.getElementById('rt-description') as HTMLTextAreaElement;
+  const closeBtn = document.getElementById('request-tool-close') as HTMLButtonElement;
+  const cancelBtn = document.getElementById('request-tool-cancel') as HTMLButtonElement;
+
+  function openModal() {
+    form.reset();
+    modal.showModal();
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    modal.close();
+    document.body.style.overflow = '';
+  }
+
+  // Expose globally
+  (window as any).openRequestToolModal = openModal;
+
+  // Trigger via data-request-tool attribute
+  document.addEventListener('click', (e) => {
+    const trigger = (e.target as HTMLElement).closest('[data-request-tool]');
+    if (trigger) {
+      e.preventDefault();
+      openModal();
+    }
+  });
+
+  closeBtn.addEventListener('click', closeModal);
+  cancelBtn.addEventListener('click', closeModal);
+
+  modal.addEventListener('close', () => {
+    document.body.style.overflow = '';
+  });
+
+  // Close on backdrop click
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) closeModal();
+  });
+
+  // Submit
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const name = nameInput.value.trim();
+    const email = emailInput.value.trim();
+    const category = categorySelect.value;
+    const description = descInput.value.trim();
+
+    if (!name || !description) return;
+
+    const subject = encodeURIComponent(`Tool Request: ${category} — ${name}`);
+    const body = encodeURIComponent(
+      `Tool Request\n${'='.repeat(40)}\n\n` +
+      `Name: ${name}\n` +
+      `Email: ${email || '(not provided)'}\n` +
+      `Category: ${category}\n` +
+      `Page: ${window.location.href}\n\n` +
+      `Description:\n${description}\n`
+    );
+
+    closeModal();
+    window.location.href = `mailto:woorkeasy@gmail.com?subject=${subject}&body=${body}`;
+  });
+</script>
