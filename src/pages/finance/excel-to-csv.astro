@@ -1,8 +1,8 @@
----
+﻿---
 /**
  * Excel to CSV Converter
  * Parses Excel (.xlsx, .xls) files and converts to CSV.
- * Uses a lightweight parsing approach — reads the XML inside .xlsx files.
+ * Uses a lightweight parsing approach " reads the XML inside .xlsx files.
  * Falls back to TSV parsing for .xls files.
  */
 import ToolLayout from '../../components/ToolLayout.astro';
@@ -10,8 +10,8 @@ import ToolLayout from '../../components/ToolLayout.astro';
 
 <ToolLayout
   title="Excel to CSV"
-  metaTitle="Convert Excel to CSV Online Free — XLSX to CSV | Woorkeasy"
-  description="Convert Excel spreadsheets (.xlsx, .xls) to CSV format. Fast browser-based conversion — no uploads, no data leaves your device."
+  metaTitle="Excel to CSV Converter Free  - XLSX to CSV Online | Woorkeasy"
+  description="Convert Excel to CSV online free. Transform XLSX files to comma-separated values format with sheet selection. No upload, instant download."
   heading="Convert Excel to CSV."
   category="Finance"
 >
@@ -79,6 +79,78 @@ import ToolLayout from '../../components/ToolLayout.astro';
   </div>
 </ToolLayout>
 
+  <div slot="info">
+    <section class="bg-white dark:bg-neutral-900 rounded-xl p-6 md:p-8 shadow-level-3 dark:border dark:border-neutral-800 mt-6">
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100">How to Use Excel to CSV Converter</h2>
+      <ol class="list-decimal list-inside space-y-2 mt-4 body-md text-neutral-700 dark:text-neutral-300">
+        <li>Upload or drag & drop your Excel file (.xlsx or .xls) onto the converter area.</li>
+        <li>Select the sheet you want to convert and choose your preferred delimiter (comma, semicolon, or tab).</li>
+        <li>Click "Download CSV" to save the selected sheet as a comma-separated values file.</li>
+      </ol>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">Features</h2>
+      <ul class="list-disc list-inside space-y-2 mt-4 body-md text-neutral-700 dark:text-neutral-300">
+        <li><strong>Sheet Selection</strong> - choose which sheet to convert when your workbook has multiple sheets.</li>
+        <li><strong>Delimiter Options</strong> - export with comma, semicolon, or tab delimiters to suit your needs.</li>
+        <li><strong>Live Preview</strong> - inspect the parsed data before downloading to ensure accuracy.</li>
+        <li><strong>No Upload</strong> - all processing happens in your browser. Your data stays private.</li>
+      </ul>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">Why Use Our Excel to CSV Converter</h2>
+      <p class="body-md text-neutral-700 dark:text-neutral-300 mt-4">Our free Excel to CSV converter makes it easy to extract spreadsheet data into the universally compatible CSV format. Whether you are migrating data between systems, preparing files for database import, or sharing data with collaborators who don't have Excel, this tool handles the conversion instantly and accurately. With sheet selection and multiple delimiter options, you get full control over the output format - all without uploading files to any server.</p>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">FAQs</h2>
+      <div class="space-y-4 mt-4">
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Does it support .xls files?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">Yes, our tool supports both .xlsx and .xls file formats. The .xls parser extracts data from the older Excel format while maintaining compatibility with all spreadsheet applications.</p></div>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Can I convert multiple sheets at once?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">Currently, you can select and convert one sheet at a time. Simply upload the file again to convert a different sheet. We recommend converting each sheet individually for the best results.</p></div>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Is my data safe when converting Excel to CSV?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">Yes, all processing is done locally in your browser using JavaScript. Your Excel files are never uploaded to any server, ensuring your spreadsheet data remains completely private and secure.</p></div>
+      </div>
+    </section>
+
+    <!-- Related Tools -->
+    <section class="bg-white dark:bg-neutral-900 rounded-xl p-6 md:p-8 shadow-level-3 dark:border dark:border-neutral-800 mt-6">
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100">Related Tools</h2>
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mt-4">
+        <a href="/finance/csv-to-excel/" class="px-4 py-3 bg-neutral-100 dark:bg-neutral-800 rounded-lg body-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors text-center">CSV to Excel</a>
+        <a href="/finance/ofx-to-excel/" class="px-4 py-3 bg-neutral-100 dark:bg-neutral-800 rounded-lg body-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors text-center">OFX to Excel</a>
+        <a href="/finance/qfx-to-excel/" class="px-4 py-3 bg-neutral-100 dark:bg-neutral-800 rounded-lg body-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors text-center">QFX to Excel</a>
+      </div>
+    </section>
+  </div>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Does it support .xls files?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, our tool supports both .xlsx and .xls file formats. The .xls parser extracts data from the older Excel format while maintaining compatibility with all spreadsheet applications."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I convert multiple sheets at once?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Currently, you can select and convert one sheet at a time. Simply upload the file again to convert a different sheet."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is my data safe when converting Excel to CSV?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, all processing is done locally in your browser using JavaScript. Your Excel files are never uploaded to any server."
+        }
+      }
+    ]
+  }
+  </script>
+
 <style>
   #preview-table th {
     font-family: var(--font-mono);
@@ -141,7 +213,7 @@ import ToolLayout from '../../components/ToolLayout.astro';
 
     try {
       if (file.name.endsWith('.csv')) {
-        // Direct CSV — just show preview
+        // Direct CSV " just show preview
         const text = await file.text();
         const rows = parseCSV(text);
         sheets = { 'Sheet1': rows };
@@ -254,7 +326,7 @@ import ToolLayout from '../../components/ToolLayout.astro';
           // Stored (no compression)
           entries[name] = decoder.decode(entry.data);
         } else if (entry.method === 8) {
-          // Deflate — decompress using DecompressionStream
+          // Deflate " decompress using DecompressionStream
           const decompressed = await decompressData(entry.data);
           entries[name] = decoder.decode(decompressed);
         }
@@ -380,4 +452,7 @@ import ToolLayout from '../../components/ToolLayout.astro';
     link.click();
   });
 </script>
+
+
+
 

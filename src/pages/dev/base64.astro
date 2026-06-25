@@ -1,4 +1,4 @@
----
+﻿---
 /**
  * Base64 Encode/Decode Tool
  * Encode text or files to Base64, or decode Base64 back to text/file.
@@ -8,8 +8,8 @@ import ToolLayout from '../../components/ToolLayout.astro';
 
 <ToolLayout
   title="Base64 Encode/Decode"
-  metaTitle="Base64 Encoder & Decoder Free Online | Woorkeasy"
-  description="Encode text or files to Base64, or decode Base64 strings back to text or downloadable files. Free developer tool — runs in your browser."
+  metaTitle="Base64 Encode Decode Free - Online Converter | Woorkeasy"
+  description="Base64 encode and decode online free. Convert text to Base64 and back instantly. URL-safe encoding, no upload, secure browser-based tool."
   heading="Base64 Encode / Decode."
   category="Dev Tools"
 >
@@ -47,7 +47,7 @@ import ToolLayout from '../../components/ToolLayout.astro';
         <!-- File input -->
         <div id="encode-file-group" class="hidden">
           <div class="upload-zone flex flex-col items-center justify-center gap-2 p-8 border-2 border-dashed border-neutral-300 rounded-lg cursor-pointer hover:border-neutral-400 transition-colors">
-            <span class="text-2xl">📁</span>
+            <span class="text-2xl">"</span>
             <p class="body-sm text-neutral-600 dark:text-neutral-400">Drop a file or <span class="underline">browse</span></p>
             <input id="encode-file-input" type="file" class="hidden" />
             <p id="encode-file-name" class="body-sm text-neutral-500 hidden"></p>
@@ -102,17 +102,77 @@ import ToolLayout from '../../components/ToolLayout.astro';
     </div>
   </div>
 
-  <!-- Info -->
-  <div class="mt-10 p-6 bg-neutral-50 dark:bg-neutral-800 rounded-lg border border-neutral-200 dark:border-neutral-700">
-    <h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100 mb-3">About Base64</h3>
-    <ul class="list-disc pl-5 flex flex-col gap-2 body-sm text-neutral-600 dark:text-neutral-400">
-      <li><strong>Encode</strong> — converts text or binary files into a safe ASCII string for embedding or transmitting.</li>
-      <li><strong>Decode</strong> — converts Base64 strings back to the original text or file.</li>
-      <li>Common uses: data URIs, email attachments (MIME), API payloads, JWT tokens.</li>
-      <li>Everything runs in your browser. No data leaves your machine.</li>
-    </ul>
+  <div slot="info">
+    <section class="bg-white dark:bg-neutral-900 rounded-xl p-6 md:p-8 shadow-level-3 dark:border dark:border-neutral-800 mt-6">
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100">How to Use Base64 Encode Decode</h2>
+      <ol class="list-decimal list-inside space-y-2 mt-4 body-md text-neutral-700 dark:text-neutral-300">
+        <li>Select the mode tab: Encode or Decode.</li>
+        <li>For encoding, enter text or upload a file, then click "Encode to Base64". For decoding, paste a Base64 string and click "Decode".</li>
+        <li>Copy the result or download the decoded file using the provided buttons.</li>
+      </ol>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">Features</h2>
+      <ul class="list-disc list-inside space-y-2 mt-4 body-md text-neutral-700 dark:text-neutral-300">
+        <li><strong>Encode & Decode</strong>  convert text or files to Base64 and back.</li>
+        <li><strong>File Support</strong>  encode any file type (images, documents, binaries) to Base64.</li>
+        <li><strong>URL-Safe Option</strong>  encode data for safe transmission in URLs.</li>
+        <li><strong>Copy & Download</strong>  easily copy results to clipboard or download decoded files.</li>
+      </ul>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">Why Use Our Base64 Tool</h2>
+      <p class="body-md text-neutral-700 dark:text-neutral-300 mt-4">Base64 encoding is essential for embedding binary data in JSON, XML, HTML data URIs, and email attachments. Our browser-based tool handles both encoding and decoding without any server interaction, making it ideal for developers who need quick, secure conversions. With support for both text and file inputs, plus a "Decode as File" option, you have full flexibility for any use case.</p>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">FAQs</h2>
+      <div class="space-y-4 mt-4">
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">What is Base64 used for?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">Base64 is used to encode binary data into ASCII text for safe transmission over media designed for text. Common uses include data URIs in HTML/CSS, email attachments (MIME), storing binary data in JSON, and embedding images in web pages.</p></div>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Is Base64 encryption?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">No, Base64 is an encoding scheme, not encryption. It converts binary data to text format for safe transport but provides no security. Do not use Base64 to protect sensitive data  use proper encryption algorithms instead.</p></div>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Can I encode large files?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">Yes, the tool handles files in your browser. Performance depends on your device's memory. For very large files (100MB+), the encoding may take a few seconds as everything processes locally.</p></div>
+      </div>
+    </section>
+
+    <!-- Related Tools -->
+    <section class="bg-white dark:bg-neutral-900 rounded-xl p-6 md:p-8 shadow-level-3 dark:border dark:border-neutral-800 mt-6">
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100">Related Tools</h2>
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mt-4">
+        <a href="/dev/url-encode/" class="px-4 py-3 bg-neutral-100 dark:bg-neutral-800 rounded-lg body-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors text-center">URL Encode Decode</a>
+        <a href="/dev/json-formatter/" class="px-4 py-3 bg-neutral-100 dark:bg-neutral-800 rounded-lg body-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors text-center">JSON Formatter</a>
+      </div>
+    </section>
   </div>
 </ToolLayout>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is Base64 used for?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Base64 is used to encode binary data into ASCII text for safe transmission over media designed for text. Common uses include data URIs in HTML/CSS, email attachments (MIME), storing binary data in JSON, and embedding images in web pages."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is Base64 encryption?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No, Base64 is an encoding scheme, not encryption. It converts binary data to text format for safe transport but provides no security. Do not use Base64 to protect sensitive data."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I encode large files?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, the tool handles files in your browser. Performance depends on your device's memory. For very large files (100MB+), the encoding may take a few seconds."
+        }
+      }
+    ]
+  }
+  </script>
 
 <script>
   // Tab switching
@@ -196,7 +256,7 @@ import ToolLayout from '../../components/ToolLayout.astro';
 
     encodeOutput.value = result;
     encodeOutputGroup.classList.remove('hidden');
-    encodeStats.textContent = `Input: ${formatBytes(inputSize)} → Output: ${formatBytes(result.length)} (${Math.round(result.length / inputSize * 100)}% of original)`;
+    encodeStats.textContent = `Input: ${formatBytes(inputSize)} ' Output: ${formatBytes(result.length)} (${Math.round(result.length / inputSize * 100)}% of original)`;
   });
 
   copyEncodeBtn.addEventListener('click', () => {
@@ -256,3 +316,4 @@ import ToolLayout from '../../components/ToolLayout.astro';
     return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
   }
 </script>
+

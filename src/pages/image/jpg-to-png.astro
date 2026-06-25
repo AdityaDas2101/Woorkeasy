@@ -1,4 +1,4 @@
----
+﻿---
 /**
  * JPG to PNG Tool
  * Convert JPG images to lossless PNG format.
@@ -9,8 +9,8 @@ import ToolLayout from '../../components/ToolLayout.astro';
 
 <ToolLayout
   title="JPG to PNG"
-  metaTitle="JPG to PNG Converter Free Online — Convert JPEG to PNG | Woorkeasy"
-  description="Convert JPG images to PNG format online free. Lossless conversion preserves quality. Batch convert multiple JPG files to PNG — all in your browser."
+  metaTitle="JPG to PNG Converter Free  - Convert Images Online | Woorkeasy"
+  description="Convert JPG to PNG online free. High-quality JPG to PNG conversion with lossless output. No upload, instant download, 100% free browser-based tool."
   heading="JPG to PNG."
   category="Image Tools"
 >
@@ -20,11 +20,11 @@ import ToolLayout from '../../components/ToolLayout.astro';
       id="upload-zone"
       class="upload-zone flex flex-col items-center justify-center gap-3 p-12 border-2 border-dashed border-neutral-300 rounded-lg cursor-pointer hover:border-neutral-400 transition-colors"
     >
-      <span class="text-4xl">🖼️</span>
+      <span class="text-4xl">-</span>
       <p class="body-md text-neutral-600 dark:text-neutral-400 text-center">
         Drop JPG files here or <span class="text-neutral-900 dark:text-neutral-100 font-medium underline">browse</span>
       </p>
-      <p class="body-sm text-neutral-500">Supports multiple files • JPG & JPEG only</p>
+      <p class="body-sm text-neutral-500">Supports multiple files  JPG & JPEG only</p>
       <input id="file-input" type="file" accept=".jpg,.jpeg,image/jpeg" multiple class="hidden" />
     </div>
 
@@ -51,18 +51,84 @@ import ToolLayout from '../../components/ToolLayout.astro';
     <div id="results" class="hidden flex flex-col gap-4"></div>
   </div>
 
-  <!-- Info -->
-  <div class="mt-10 p-6 bg-neutral-50 dark:bg-neutral-800 rounded-lg border border-neutral-200 dark:border-neutral-700">
-    <h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100 mb-3">About JPG to PNG</h3>
-    <ul class="list-disc pl-5 flex flex-col gap-2 body-sm text-neutral-600 dark:text-neutral-400">
-      <li><strong>Lossless quality</strong> — PNG preserves every pixel from your original JPG with no compression artifacts.</li>
-      <li><strong>Transparency support</strong> — Unlike JPG, PNG supports alpha transparency if you need it later.</li>
-      <li><strong>Larger files</strong> — PNG files are larger than JPG; use this when quality matters more than file size.</li>
-      <li><strong>Batch convert</strong> — Drop multiple JPG files and convert them all at once.</li>
-      <li>Everything runs locally in your browser. No files are uploaded.</li>
-    </ul>
+  <div slot="info">
+    <section class="bg-white dark:bg-neutral-900 rounded-xl p-6 md:p-8 shadow-level-3 dark:border dark:border-neutral-800 mt-6">
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100">How to Use JPG to PNG Converter</h2>
+      <ol class="list-decimal list-inside space-y-2 mt-4 body-md text-neutral-700 dark:text-neutral-300">
+        <li>Drop or browse to select your JPG file(s)</li>
+        <li>Wait for automatic conversion to PNG</li>
+        <li>Download individual files or all at once</li>
+      </ol>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">Features</h2>
+      <ul class="list-disc list-inside space-y-2 mt-4 body-md text-neutral-700 dark:text-neutral-300">
+        <li>Lossless conversion preserves original quality</li>
+        <li>Supports transparency channel in output PNG</li>
+        <li>Batch convert multiple JPG files simultaneously</li>
+        <li>100% browser-based, no upload required</li>
+        <li>Unlimited file size and count</li>
+      </ul>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">Why Use Our JPG to PNG Converter</h2>
+      <p class="body-md text-neutral-700 dark:text-neutral-300 mt-4">Need a transparent PNG from a JPG? Our converter gives you lossless PNG output with full alpha channel support. Since everything runs in your browser, your images never leave your device. Perfect for designers, developers, and anyone who needs high-quality image conversion without uploading to a server.</p>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">FAQs</h2>
+      <div class="space-y-4 mt-4">
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Is JPG to PNG conversion free?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">Yes, completely free with no hidden charges or limits.</p></div>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Will I lose image quality?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">No. PNG is a lossless format, so quality is fully preserved from the original JPG.</p></div>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Does PNG support transparency?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">Yes, unlike JPG, the output PNG supports alpha transparency.</p></div>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">How many files can I convert?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">Unlimited. Convert as many JPG files as you need at once.</p></div>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Are my images uploaded to a server?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">No. Everything runs locally in your browser. Your files never leave your device.</p></div>
+      </div>
+    </section>
+
+    <!-- Related Tools -->
+    <section class="bg-white dark:bg-neutral-900 rounded-xl p-6 md:p-8 shadow-level-3 dark:border dark:border-neutral-800 mt-6">
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100">Related Tools</h2>
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mt-4">
+        <a href="/image/png-to-jpg" class="btn-secondary text-center no-underline text-sm">PNG to JPG</a>
+        <a href="/image/compress" class="btn-secondary text-center no-underline text-sm">Compress Image</a>
+        <a href="/image/crop" class="btn-secondary text-center no-underline text-sm">Crop Image</a>
+        <a href="/image/webp-converter" class="btn-secondary text-center no-underline text-sm">WebP Converter</a>
+        <a href="/image/rotate" class="btn-secondary text-center no-underline text-sm">Rotate Image</a>
+      </div>
+    </section>
   </div>
 </ToolLayout>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Is JPG to PNG conversion free?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes, completely free with no hidden charges or limits." }
+    },
+    {
+      "@type": "Question",
+      "name": "Will I lose image quality?",
+      "acceptedAnswer": { "@type": "Answer", "text": "No. PNG is a lossless format, so quality is fully preserved from the original JPG." }
+    },
+    {
+      "@type": "Question",
+      "name": "Does PNG support transparency?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes, unlike JPG, the output PNG supports alpha transparency." }
+    },
+    {
+      "@type": "Question",
+      "name": "How many files can I convert?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Unlimited. Convert as many JPG files as you need at once." }
+    },
+    {
+      "@type": "Question",
+      "name": "Are my images uploaded to a server?",
+      "acceptedAnswer": { "@type": "Answer", "text": "No. Everything runs locally in your browser. Your files never leave your device." }
+    }
+  ]
+}
+</script>
 
 <script>
   const uploadZone = document.getElementById('upload-zone')!;
@@ -99,7 +165,7 @@ import ToolLayout from '../../components/ToolLayout.astro';
     fileList.classList.remove('hidden');
     fileList.innerHTML = files.map((e, i) => `
       <div class="flex items-center gap-3 p-3 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg">
-        <span class="text-lg">📷</span>
+        <span class="text-lg">"</span>
         <div class="flex-1 min-w-0">
           <p class="body-sm font-medium text-neutral-900 dark:text-neutral-100 truncate">${e.file.name}</p>
           <p class="caption-mono text-neutral-500">${(e.file.size / 1024).toFixed(1)} KB</p>
@@ -174,7 +240,7 @@ import ToolLayout from '../../components/ToolLayout.astro';
           <img src="${e.dataUrl}" alt="${newName}" class="w-12 h-12 object-cover rounded border border-neutral-200 dark:border-neutral-700" />
           <div class="flex-1 min-w-0">
             <p class="body-sm font-medium text-neutral-900 dark:text-neutral-100 truncate">${newName}</p>
-            <p class="caption-mono text-neutral-500">${origKB} KB → ~${newKB} KB</p>
+            <p class="caption-mono text-neutral-500">${origKB} KB ' ~${newKB} KB</p>
           </div>
           <button data-dl="${i}" class="btn-secondary text-sm">Download</button>
         </div>`;
@@ -204,3 +270,6 @@ import ToolLayout from '../../components/ToolLayout.astro';
     });
   });
 </script>
+
+
+

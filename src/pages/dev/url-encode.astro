@@ -1,4 +1,4 @@
----
+﻿---
 /**
  * URL Encode/Decode Tool
  * Encode or decode URL strings (percent-encoding).
@@ -8,8 +8,8 @@ import ToolLayout from '../../components/ToolLayout.astro';
 
 <ToolLayout
   title="URL Encode/Decode"
-  metaTitle="URL Encoder & Decoder Free Online | Woorkeasy"
-  description="Encode or decode URL strings with percent-encoding. Supports full URL encoding and component encoding — free developer tool."
+  metaTitle="URL Encode Decode Free  - Online URL Converter | Woorkeasy"
+  description="URL encode and decode online free. Convert text to percent-encoded URL format and back. No upload, instant browser-based tool."
   heading="URL Encode / Decode."
   category="Dev Tools"
 >
@@ -88,17 +88,77 @@ import ToolLayout from '../../components/ToolLayout.astro';
     </div>
   </div>
 
-  <!-- Info -->
-  <div class="mt-10 p-6 bg-neutral-50 dark:bg-neutral-800 rounded-lg border border-neutral-200 dark:border-neutral-700">
-    <h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100 mb-3">About URL Encoding</h3>
-    <ul class="list-disc pl-5 flex flex-col gap-2 body-sm text-neutral-600 dark:text-neutral-400">
-      <li><strong>encodeURIComponent</strong> — encodes everything except <code>A-Z a-z 0-9 - _ . ! ~ * ' ( )</code>. Use for query params.</li>
-      <li><strong>encodeURI</strong> — preserves URL structure characters (<code>: / ? # [ ] @ ! $ & ' ( ) * + , ; =</code>). Use for full URLs.</li>
-      <li>Spaces become <code>%20</code>, special characters become <code>%XX</code> hex codes.</li>
-      <li>Everything runs locally in your browser.</li>
-    </ul>
+  <div slot="info">
+    <section class="bg-white dark:bg-neutral-900 rounded-xl p-6 md:p-8 shadow-level-3 dark:border dark:border-neutral-800 mt-6">
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100">How to Use URL Encode Decode</h2>
+      <ol class="list-decimal list-inside space-y-2 mt-4 body-md text-neutral-700 dark:text-neutral-300">
+        <li>Select Encode or Decode mode using the tabs.</li>
+        <li>For encoding, enter your text or URL and choose between encodeURIComponent (for query params) or encodeURI (preserves URL structure). For decoding, paste an encoded string.</li>
+        <li>Click the action button or type live to see instant results. Copy the output with one click.</li>
+      </ol>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">Features</h2>
+      <ul class="list-disc list-inside space-y-2 mt-4 body-md text-neutral-700 dark:text-neutral-300">
+        <li><strong>Dual Encoding Modes</strong> - encodeURIComponent for query parameters, encodeURI for full URLs.</li>
+        <li><strong>Live Encoding</strong> - results update in real time as you type.</li>
+        <li><strong>Decode Support</strong> - convert percent-encoded strings back to readable text.</li>
+        <li><strong>Copy to Clipboard</strong> - instantly copy results with a single click.</li>
+      </ul>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">Why Use Our URL Encode Decode Tool</h2>
+      <p class="body-md text-neutral-700 dark:text-neutral-300 mt-4">URL encoding (percent-encoding) is essential for safely including special characters in URLs. Our tool makes it easy to encode query parameters, path segments, and full URLs. With both encodeURIComponent and encodeURI modes, developers can choose the exact behavior needed. The live encoding feature shows results as you type, making it perfect for quick testing and debugging.</p>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">FAQs</h2>
+      <div class="space-y-4 mt-4">
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">What's the difference between encodeURI and encodeURIComponent?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">encodeURI preserves URL structure characters (: / ? # [ ] @ ! $ & ' ( ) * + , ; =), while encodeURIComponent encodes almost everything. Use encodeURIComponent for query parameter values.</p></div>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Why do spaces become %20?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">Spaces are not allowed in URLs. Percent-encoding replaces them with %20 to ensure safe transmission. Modern browsers handle this automatically, but manual encoding is needed for API calls and URL construction.</p></div>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Is my data sent to a server?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">No, everything runs in your browser using JavaScript. Your text never leaves your device, making it completely safe for sensitive strings, API keys, and tokens.</p></div>
+      </div>
+    </section>
+
+    <!-- Related Tools -->
+    <section class="bg-white dark:bg-neutral-900 rounded-xl p-6 md:p-8 shadow-level-3 dark:border dark:border-neutral-800 mt-6">
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100">Related Tools</h2>
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mt-4">
+        <a href="/dev/base64/" class="px-4 py-3 bg-neutral-100 dark:bg-neutral-800 rounded-lg body-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors text-center">Base64 Encode Decode</a>
+        <a href="/dev/json-formatter/" class="px-4 py-3 bg-neutral-100 dark:bg-neutral-800 rounded-lg body-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors text-center">JSON Formatter</a>
+      </div>
+    </section>
   </div>
 </ToolLayout>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What's the difference between encodeURI and encodeURIComponent?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "encodeURI preserves URL structure characters (: / ? # [ ] @ ! $ & ' ( ) * + , ; =), while encodeURIComponent encodes almost everything. Use encodeURIComponent for query parameter values."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Why do spaces become %20?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Spaces are not allowed in URLs. Percent-encoding replaces them with %20 to ensure safe transmission. Modern browsers handle this automatically."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is my data sent to a server?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No, everything runs in your browser using JavaScript. Your text never leaves your device, making it completely safe."
+        }
+      }
+    ]
+  }
+  </script>
 
 <script>
   const tabEncode = document.getElementById('tab-encode')!;
@@ -181,3 +241,5 @@ import ToolLayout from '../../components/ToolLayout.astro';
     try { decodeOutput.value = decodeURIComponent(decodeInput.value); } catch {}
   });
 </script>
+
+

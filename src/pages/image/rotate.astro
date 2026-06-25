@@ -1,7 +1,7 @@
----
+﻿---
 /**
  * Rotate & Flip Image Tool
- * Rotate images by 90°, 180°, 270° or custom degrees.
+ * Rotate images by 90, 180, 270 or custom degrees.
  * Flip horizontally or vertically. Uses HTML Canvas.
  */
 import ToolLayout from '../../components/ToolLayout.astro';
@@ -9,8 +9,8 @@ import ToolLayout from '../../components/ToolLayout.astro';
 
 <ToolLayout
   title="Rotate Image"
-  metaTitle="Rotate & Flip Image Online Free — 90°, 180°, Custom Angle | Woorkeasy"
-  description="Rotate images by any angle or flip them horizontally/vertically. Quick presets for 90°, 180°, 270° — all processing in your browser."
+  metaTitle="Rotate Image Online Free  - Flip Images | Woorkeasy"
+  description="Rotate images online free by any angle. Flip horizontally or vertically. Browser-based image rotator, no upload, instant results."
   heading="Rotate & Flip Image."
   category="Image Tools"
 >
@@ -33,23 +33,23 @@ import ToolLayout from '../../components/ToolLayout.astro';
       <!-- Quick Rotate Buttons -->
       <div class="flex flex-wrap items-center gap-3 mb-4">
         <span class="text-sm text-neutral-600 font-medium">Rotate:</span>
-        <button data-rotate="90" class="rotate-preset text-sm px-4 py-2 rounded-full border border-neutral-200 hover:border-neutral-900 hover:bg-neutral-50 transition-colors">↻ 90°</button>
-        <button data-rotate="180" class="rotate-preset text-sm px-4 py-2 rounded-full border border-neutral-200 hover:border-neutral-900 hover:bg-neutral-50 transition-colors">↻ 180°</button>
-        <button data-rotate="270" class="rotate-preset text-sm px-4 py-2 rounded-full border border-neutral-200 hover:border-neutral-900 hover:bg-neutral-50 transition-colors">↻ 270°</button>
+        <button data-rotate="90" class="rotate-preset text-sm px-4 py-2 rounded-full border border-neutral-200 hover:border-neutral-900 hover:bg-neutral-50 transition-colors"> 90</button>
+        <button data-rotate="180" class="rotate-preset text-sm px-4 py-2 rounded-full border border-neutral-200 hover:border-neutral-900 hover:bg-neutral-50 transition-colors"> 180</button>
+        <button data-rotate="270" class="rotate-preset text-sm px-4 py-2 rounded-full border border-neutral-200 hover:border-neutral-900 hover:bg-neutral-50 transition-colors"> 270</button>
       </div>
 
       <!-- Custom Angle -->
       <div class="flex items-center gap-3 mb-4">
         <span class="text-sm text-neutral-600 font-medium">Custom angle:</span>
         <input type="range" id="angle-slider" min="0" max="360" value="0" class="flex-1 max-w-xs accent-neutral-900" />
-        <span id="angle-value" class="text-sm font-mono text-neutral-900 w-12 text-right">0°</span>
+        <span id="angle-value" class="text-sm font-mono text-neutral-900 w-12 text-right">0</span>
       </div>
 
       <!-- Flip Buttons -->
       <div class="flex flex-wrap items-center gap-3 mb-6">
         <span class="text-sm text-neutral-600 font-medium">Flip:</span>
-        <button id="flip-h" class="text-sm px-4 py-2 rounded-full border border-neutral-200 hover:border-neutral-900 hover:bg-neutral-50 transition-colors">↔ Horizontal</button>
-        <button id="flip-v" class="text-sm px-4 py-2 rounded-full border border-neutral-200 hover:border-neutral-900 hover:bg-neutral-50 transition-colors">↕ Vertical</button>
+        <button id="flip-h" class="text-sm px-4 py-2 rounded-full border border-neutral-200 hover:border-neutral-900 hover:bg-neutral-50 transition-colors">" Horizontal</button>
+        <button id="flip-v" class="text-sm px-4 py-2 rounded-full border border-neutral-200 hover:border-neutral-900 hover:bg-neutral-50 transition-colors"> Vertical</button>
       </div>
 
       <!-- Preview -->
@@ -64,7 +64,85 @@ import ToolLayout from '../../components/ToolLayout.astro';
       </div>
     </div>
   </div>
+
+  <div slot="info">
+    <section class="bg-white dark:bg-neutral-900 rounded-xl p-6 md:p-8 shadow-level-3 dark:border dark:border-neutral-800 mt-6">
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100">How to Use Image Rotator</h2>
+      <ol class="list-decimal list-inside space-y-2 mt-4 body-md text-neutral-700 dark:text-neutral-300">
+        <li>Drop or browse an image</li>
+        <li>Click a preset rotation button or use the slider for custom angle</li>
+        <li>Flip horizontally or vertically if needed</li>
+        <li>Click "Download Image" to save</li>
+      </ol>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">Features</h2>
+      <ul class="list-disc list-inside space-y-2 mt-4 body-md text-neutral-700 dark:text-neutral-300">
+        <li>Quick rotate presets (90, 180, 270)</li>
+        <li>Custom angle slider (0-360)</li>
+        <li>Horizontal and vertical flip</li>
+        <li>Full-resolution output</li>
+        <li>Live preview of all changes</li>
+      </ul>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">Why Use Our Image Rotator</h2>
+      <p class="body-md text-neutral-700 dark:text-neutral-300 mt-4">Fix crooked photos, create mirror effects, or prepare images for printing with our rotation and flip tool. Whether you need a quick 90 rotation or a precise custom angle, our tool gives you full control with instant visual feedback. All processing is done locally " no upload needed.</p>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">FAQs</h2>
+      <div class="space-y-4 mt-4">
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Can I rotate by any angle?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">Yes, use the custom angle slider from 0 to 360 for precise control.</p></div>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">What does flip do?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">Horizontal flip mirrors left-to-right; vertical flip mirrors top-to-bottom.</p></div>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Will rotating reduce quality?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">Rotation at 90 increments is lossless. Custom angles may require minor interpolation.</p></div>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Can I undo a rotation?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">Yes, click "Reset" to revert to the original orientation.</p></div>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Is it free?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">Yes, completely free with unlimited uses and no sign-up required.</p></div>
+      </div>
+    </section>
+
+    <!-- Related Tools -->
+    <section class="bg-white dark:bg-neutral-900 rounded-xl p-6 md:p-8 shadow-level-3 dark:border dark:border-neutral-800 mt-6">
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100">Related Tools</h2>
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mt-4">
+        <a href="/image/crop" class="btn-secondary text-center no-underline text-sm">Crop Image</a>
+        <a href="/image/compress" class="btn-secondary text-center no-underline text-sm">Compress Image</a>
+        <a href="/image/jpg-to-png" class="btn-secondary text-center no-underline text-sm">JPG to PNG</a>
+        <a href="/image/watermark" class="btn-secondary text-center no-underline text-sm">Add Watermark</a>
+      </div>
+    </section>
+  </div>
 </ToolLayout>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Can I rotate by any angle?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes, use the custom angle slider from 0 to 360 for precise control." }
+    },
+    {
+      "@type": "Question",
+      "name": "What does flip do?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Horizontal flip mirrors left-to-right; vertical flip mirrors top-to-bottom." }
+    },
+    {
+      "@type": "Question",
+      "name": "Will rotating reduce quality?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Rotation at 90 increments is lossless. Custom angles may require minor interpolation." }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I undo a rotation?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes, click Reset to revert to the original orientation." }
+    },
+    {
+      "@type": "Question",
+      "name": "Is it free?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes, completely free with unlimited uses and no sign-up required." }
+    }
+  ]
+}
+</script>
 
 <script>
   const uploadZone = document.getElementById('upload-zone')!;
@@ -101,7 +179,7 @@ import ToolLayout from '../../components/ToolLayout.astro';
       flippedH = false;
       flippedV = false;
       angleSlider.value = '0';
-      angleValue.textContent = '0°';
+      angleValue.textContent = '0';
       controls.classList.remove('hidden');
       render();
     };
@@ -113,7 +191,7 @@ import ToolLayout from '../../components/ToolLayout.astro';
     btn.addEventListener('click', () => {
       currentAngle = parseInt((btn as HTMLElement).dataset.rotate!);
       angleSlider.value = currentAngle.toString();
-      angleValue.textContent = currentAngle + '°';
+      angleValue.textContent = currentAngle + '';
       render();
     });
   });
@@ -121,7 +199,7 @@ import ToolLayout from '../../components/ToolLayout.astro';
   // Custom angle slider
   angleSlider.addEventListener('input', () => {
     currentAngle = parseInt(angleSlider.value);
-    angleValue.textContent = currentAngle + '°';
+    angleValue.textContent = currentAngle + '';
     render();
   });
 
@@ -135,7 +213,7 @@ import ToolLayout from '../../components/ToolLayout.astro';
     flippedH = false;
     flippedV = false;
     angleSlider.value = '0';
-    angleValue.textContent = '0°';
+    angleValue.textContent = '0';
     render();
   });
 
@@ -199,3 +277,6 @@ import ToolLayout from '../../components/ToolLayout.astro';
     }, 'image/png');
   }
 </script>
+
+
+

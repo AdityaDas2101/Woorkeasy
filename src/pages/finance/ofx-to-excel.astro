@@ -1,4 +1,4 @@
----
+﻿---
 /**
  * OFX to Excel/CSV Converter
  * Parses OFX (Open Financial Exchange) XML using DOMParser.
@@ -9,8 +9,8 @@ import ToolLayout from '../../components/ToolLayout.astro';
 
 <ToolLayout
   title="OFX to Excel"
-  metaTitle="Convert OFX to Excel/CSV Online Free — Bank Statements | Woorkeasy"
-  description="Convert OFX bank statement files to Excel or CSV format. Parse transaction data instantly — all in your browser, no data leaves your device."
+  metaTitle="OFX to Excel Converter Free  - Bank Statement to XLSX | Woorkeasy"
+  description="Convert OFX bank statements to Excel online free. Transform financial OFX files into editable XLSX spreadsheets. No upload, secure processing."
   heading="Convert OFX to Excel."
   category="Finance"
 >
@@ -51,6 +51,78 @@ import ToolLayout from '../../components/ToolLayout.astro';
     </div>
   </div>
 </ToolLayout>
+
+  <div slot="info">
+    <section class="bg-white dark:bg-neutral-900 rounded-xl p-6 md:p-8 shadow-level-3 dark:border dark:border-neutral-800 mt-6">
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100">How to Use OFX to Excel Converter</h2>
+      <ol class="list-decimal list-inside space-y-2 mt-4 body-md text-neutral-700 dark:text-neutral-300">
+        <li>Upload or drag & drop your OFX bank statement file onto the converter.</li>
+        <li>Review the parsed transactions in the preview table to verify accuracy.</li>
+        <li>Download as CSV or Excel (TSV) for further analysis in your spreadsheet software.</li>
+      </ol>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">Features</h2>
+      <ul class="list-disc list-inside space-y-2 mt-4 body-md text-neutral-700 dark:text-neutral-300">
+        <li><strong>Bank Transaction Parsing</strong> - extracts date, amount, type, name, and memo from OFX statements.</li>
+        <li><strong>Dual Export</strong> - download as CSV (comma-separated) or TSV (opens directly in Excel).</li>
+        <li><strong>Transaction Preview</strong> - review all parsed entries before downloading.</li>
+        <li><strong>Secure & Private</strong> - all processing runs locally. Your financial data never leaves your device.</li>
+      </ul>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">Why Use Our OFX to Excel Converter</h2>
+      <p class="body-md text-neutral-700 dark:text-neutral-300 mt-4">Managing personal or business finances often requires importing bank statement data into spreadsheet software. Our OFX to Excel converter parses your bank's OFX export files and transforms transaction data into clean, editable spreadsheets. No more manual data entry or sending sensitive financial information to cloud servers. The built-in preview lets you verify all transactions before downloading, ensuring accuracy every time.</p>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">FAQs</h2>
+      <div class="space-y-4 mt-4">
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Which banks support OFX exports?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">Most major banks and financial institutions support OFX export, including Chase, Bank of America, Wells Fargo, Citibank, and many others. Check your bank's download options for QFX, OFX, or Quicken format.</p></div>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Can I convert multiple OFX files?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">You can process one file at a time. Simply upload each OFX file separately to convert them. Each file's transactions will be parsed and displayed in the preview table.</p></div>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Is my financial data secure?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">Yes, all processing is done locally in your browser using JavaScript. Your bank statements and transaction data never leave your computer, ensuring complete privacy and security.</p></div>
+      </div>
+    </section>
+
+    <!-- Related Tools -->
+    <section class="bg-white dark:bg-neutral-900 rounded-xl p-6 md:p-8 shadow-level-3 dark:border dark:border-neutral-800 mt-6">
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100">Related Tools</h2>
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mt-4">
+        <a href="/finance/qfx-to-excel/" class="px-4 py-3 bg-neutral-100 dark:bg-neutral-800 rounded-lg body-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors text-center">QFX to Excel</a>
+        <a href="/finance/csv-to-excel/" class="px-4 py-3 bg-neutral-100 dark:bg-neutral-800 rounded-lg body-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors text-center">CSV to Excel</a>
+        <a href="/finance/excel-to-csv/" class="px-4 py-3 bg-neutral-100 dark:bg-neutral-800 rounded-lg body-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors text-center">Excel to CSV</a>
+      </div>
+    </section>
+  </div>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Which banks support OFX exports?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Most major banks and financial institutions support OFX export, including Chase, Bank of America, Wells Fargo, Citibank, and many others."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I convert multiple OFX files?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "You can process one file at a time. Simply upload each OFX file separately to convert them."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is my financial data secure?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, all processing is done locally in your browser using JavaScript. Your bank statements and transaction data never leave your computer."
+        }
+      }
+    ]
+  }
+  </script>
 
 <style>
   #preview-table th {
@@ -207,4 +279,7 @@ import ToolLayout from '../../components/ToolLayout.astro';
     downloadFile(toTSV(), 'transactions.xls', 'application/vnd.ms-excel');
   });
 </script>
+
+
+
 

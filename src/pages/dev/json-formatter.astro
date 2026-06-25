@@ -1,4 +1,4 @@
----
+﻿---
 /**
  * JSON Formatter Tool
  * Format, validate, and minify JSON with syntax highlighting.
@@ -8,8 +8,8 @@ import ToolLayout from '../../components/ToolLayout.astro';
 
 <ToolLayout
   title="JSON Formatter"
-  metaTitle="JSON Formatter, Validator & Minifier Free Online | Woorkeasy"
-  description="Format, validate, and minify JSON data with syntax highlighting. Detect errors instantly — free developer tool, runs in your browser."
+  metaTitle="JSON Formatter Online Free  - Format Validate JSON | Woorkeasy"
+  description="Format and validate JSON online free. Beautify, minify, and validate JSON with error detection. No upload, instant browser-based JSON tool."
   heading="JSON Formatter."
   category="Dev Tools"
 >
@@ -73,25 +73,84 @@ import ToolLayout from '../../components/ToolLayout.astro';
     <!-- Tree View -->
     <details class="group">
       <summary class="body-sm font-medium text-neutral-700 dark:text-neutral-300 cursor-pointer hover:text-neutral-900 dark:hover:text-neutral-100">
-        📊 JSON Stats
+        " JSON Stats
       </summary>
       <div id="json-stats" class="mt-3 p-4 bg-neutral-50 dark:bg-neutral-800 rounded-lg border border-neutral-200 dark:border-neutral-700 grid grid-cols-2 md:grid-cols-4 gap-4">
       </div>
     </details>
   </div>
 
-  <!-- Info -->
-  <div class="mt-10 p-6 bg-neutral-50 dark:bg-neutral-800 rounded-lg border border-neutral-200 dark:border-neutral-700">
-    <h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100 mb-3">About JSON Formatter</h3>
-    <ul class="list-disc pl-5 flex flex-col gap-2 body-sm text-neutral-600 dark:text-neutral-400">
-      <li><strong>Format</strong> — pretty-prints JSON with your chosen indentation.</li>
-      <li><strong>Minify</strong> — removes all whitespace for the smallest possible output.</li>
-      <li><strong>Validate</strong> — checks if your JSON is valid and shows the exact error location.</li>
-      <li>Shows stats: keys, values, nesting depth, arrays, objects.</li>
-      <li>All processing runs locally. Your data never leaves your browser.</li>
-    </ul>
+  <div slot="info">
+    <section class="bg-white dark:bg-neutral-900 rounded-xl p-6 md:p-8 shadow-level-3 dark:border dark:border-neutral-800 mt-6">
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100">How to Use JSON Formatter</h2>
+      <ol class="list-decimal list-inside space-y-2 mt-4 body-md text-neutral-700 dark:text-neutral-300">
+        <li>Paste or type your JSON data into the input area.</li>
+        <li>Choose your action: Format (pretty-print), Minify (compress), or Validate (check for errors). Select your preferred indentation.</li>
+        <li>View the formatted output with detailed JSON stats including key counts, objects, arrays, and nesting depth.</li>
+      </ol>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">Features</h2>
+      <ul class="list-disc list-inside space-y-2 mt-4 body-md text-neutral-700 dark:text-neutral-300">
+        <li><strong>Pretty-Print</strong> - formats JSON with customizable indentation (2 spaces, 4 spaces, or tab) for readability.</li>
+        <li><strong>Minify</strong> - compresses JSON by removing all whitespace for production use.</li>
+        <li><strong>Validation</strong> - detects JSON syntax errors and shows exact error locations for quick debugging.</li>
+        <li><strong>JSON Stats</strong> - displays key counts, object counts, array counts, and nesting depth for data analysis.</li>
+      </ul>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">Why Use Our JSON Formatter</h2>
+      <p class="body-md text-neutral-700 dark:text-neutral-300 mt-4">Working with JSON data requires proper formatting for debugging, validation for error checking, and minification for production. Our all-in-one JSON tool gives developers everything they need in a single browser-based interface. No data leaves your machine, making it safe for sensitive configuration files and API responses. The built-in JSON stats provide instant insight into your data structure's complexity.</p>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">FAQs</h2>
+      <div class="space-y-4 mt-4">
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">What size JSON can I format?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">There is no hard limit. The tool processes JSON in your browser's memory, so performance depends on your device. For very large JSON files (10MB+), formatting may take a moment.</p></div>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Does it support JSON5 or comments?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">No, this tool validates strict JSON as defined by the ECMAScript specification. Comments, trailing commas, and single-quoted strings are not valid JSON and will be flagged as errors.</p></div>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Can I download the formatted JSON?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">Yes, use the "Download" button to save the formatted or minified output as a .json file. You can also copy the result to your clipboard with one click.</p></div>
+      </div>
+    </section>
+
+    <!-- Related Tools -->
+    <section class="bg-white dark:bg-neutral-900 rounded-xl p-6 md:p-8 shadow-level-3 dark:border dark:border-neutral-800 mt-6">
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100">Related Tools</h2>
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mt-4">
+        <a href="/dev/base64/" class="px-4 py-3 bg-neutral-100 dark:bg-neutral-800 rounded-lg body-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors text-center">Base64 Encode Decode</a>
+        <a href="/dev/url-encode/" class="px-4 py-3 bg-neutral-100 dark:bg-neutral-800 rounded-lg body-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors text-center">URL Encode Decode</a>
+      </div>
+    </section>
   </div>
 </ToolLayout>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What size JSON can I format?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "There is no hard limit. The tool processes JSON in your browser's memory, so performance depends on your device. For very large JSON files (10MB+), formatting may take a moment."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does it support JSON5 or comments?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No, this tool validates strict JSON as defined by the ECMAScript specification. Comments, trailing commas, and single-quoted strings are not valid JSON."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I download the formatted JSON?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, use the Download button to save the formatted or minified output as a .json file. You can also copy the result to your clipboard with one click."
+        }
+      }
+    ]
+  }
+  </script>
 
 <script>
   const jsonInput = document.getElementById('json-input') as HTMLTextAreaElement;
@@ -121,10 +180,10 @@ import ToolLayout from '../../components/ToolLayout.astro';
     statusBar.classList.remove('hidden', 'bg-green-50', 'dark:bg-green-950', 'border-green-200', 'dark:border-green-800', 'bg-red-50', 'dark:bg-red-950', 'border-red-200', 'dark:border-red-800');
     if (type === 'success') {
       statusBar.classList.add('bg-green-50', 'dark:bg-green-950', 'border-green-200', 'dark:border-green-800');
-      statusIcon.textContent = '✅';
+      statusIcon.textContent = '';
     } else {
       statusBar.classList.add('bg-red-50', 'dark:bg-red-950', 'border-red-200', 'dark:border-red-800');
-      statusIcon.textContent = '❌';
+      statusIcon.textContent = '';
     }
     statusMsg.textContent = msg;
   }
@@ -140,7 +199,7 @@ import ToolLayout from '../../components/ToolLayout.astro';
       const formatted = JSON.stringify(parsed, null, getIndent());
       jsonOutput.textContent = formatted;
       outputGroup.classList.remove('hidden');
-      showStatus('success', 'Valid JSON — formatted successfully.');
+      showStatus('success', 'Valid JSON " formatted successfully.');
       outputStats.textContent = `${formatted.length} chars`;
       computeStats(parsed);
     } catch (err: any) {
@@ -158,7 +217,7 @@ import ToolLayout from '../../components/ToolLayout.astro';
       const minified = JSON.stringify(parsed);
       jsonOutput.textContent = minified;
       outputGroup.classList.remove('hidden');
-      showStatus('success', `Minified: ${input.length} → ${minified.length} chars (${Math.round((1 - minified.length / input.length) * 100)}% smaller)`);
+      showStatus('success', `Minified: ${input.length} ' ${minified.length} chars (${Math.round((1 - minified.length / input.length) * 100)}% smaller)`);
       outputStats.textContent = `${minified.length} chars`;
       computeStats(parsed);
     } catch (err: any) {
@@ -174,7 +233,7 @@ import ToolLayout from '../../components/ToolLayout.astro';
     try {
       const parsed = JSON.parse(input);
       outputGroup.classList.add('hidden');
-      showStatus('success', 'Valid JSON ✓');
+      showStatus('success', 'Valid JSON "');
       computeStats(parsed);
     } catch (err: any) {
       outputGroup.classList.add('hidden');
@@ -252,3 +311,6 @@ import ToolLayout from '../../components/ToolLayout.astro';
     `;
   }
 </script>
+
+
+

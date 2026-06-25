@@ -1,4 +1,4 @@
----
+﻿---
 /**
  * Crop Image Tool
  * Allows users to visually select a crop region on their image
@@ -9,8 +9,8 @@ import ToolLayout from '../../components/ToolLayout.astro';
 
 <ToolLayout
   title="Crop Image"
-  metaTitle="Crop Image Online Free — Custom Aspect Ratios | Woorkeasy"
-  description="Crop images to any size or aspect ratio. Drag to select the area you want to keep — works with JPG, PNG, and WebP. No uploads, fully browser-based."
+  metaTitle="Crop Image Online Free  - Crop JPG PNG Photos | Woorkeasy"
+  description="Crop images online free with preset aspect ratios and custom dimensions. Perfect for social media, thumbnails, and web graphics. No upload."
   heading="Crop Image Online."
   category="Image Tools"
 >
@@ -85,7 +85,84 @@ import ToolLayout from '../../components/ToolLayout.astro';
       </div>
     </div>
   </div>
+
+  <div slot="info">
+    <section class="bg-white dark:bg-neutral-900 rounded-xl p-6 md:p-8 shadow-level-3 dark:border dark:border-neutral-800 mt-6">
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100">How to Use Image Cropper</h2>
+      <ol class="list-decimal list-inside space-y-2 mt-4 body-md text-neutral-700 dark:text-neutral-300">
+        <li>Drop or browse an image</li>
+        <li>Drag to select the crop area or choose an aspect ratio preset</li>
+        <li>Click "Crop & Download" to save</li>
+      </ol>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">Features</h2>
+      <ul class="list-disc list-inside space-y-2 mt-4 body-md text-neutral-700 dark:text-neutral-300">
+        <li>Free-form or preset aspect ratios (1:1, 4:3, 16:9, 3:2, 9:16)</li>
+        <li>Visual drag-to-select crop interface</li>
+        <li>Touch support for mobile devices</li>
+        <li>Preserves full resolution in cropped output</li>
+        <li>Instant live preview of crop selection</li>
+      </ul>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">Why Use Our Image Cropper</h2>
+      <p class="body-md text-neutral-700 dark:text-neutral-300 mt-4">Need perfectly sized images for social media, thumbnails, or your website? Our crop tool gives you visual control with preset aspect ratios for Instagram (1:1), YouTube (16:9), and more. The crop is applied at full resolution, so you never lose quality. No uploads, no sign-ups, instant results.</p>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">FAQs</h2>
+      <div class="space-y-4 mt-4">
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">What aspect ratios are available?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">Free, 1:1, 4:3, 16:9, 3:2, and 9:16 presets are included.</p></div>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Can I crop to custom dimensions?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">Yes, use "Free" mode and drag to any size. You can also enter exact pixel values.</p></div>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Does cropping reduce image quality?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">No, we preserve the original resolution within the cropped area.</p></div>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Can I crop on mobile?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">Yes, touch gestures are fully supported for drag-to-crop on mobile devices.</p></div>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Is it free?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">Yes, completely free with no limits or sign-up required.</p></div>
+      </div>
+    </section>
+
+    <!-- Related Tools -->
+    <section class="bg-white dark:bg-neutral-900 rounded-xl p-6 md:p-8 shadow-level-3 dark:border dark:border-neutral-800 mt-6">
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100">Related Tools</h2>
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mt-4">
+        <a href="/image/compress" class="btn-secondary text-center no-underline text-sm">Compress Image</a>
+        <a href="/image/jpg-to-png" class="btn-secondary text-center no-underline text-sm">JPG to PNG</a>
+        <a href="/image/rotate" class="btn-secondary text-center no-underline text-sm">Rotate Image</a>
+        <a href="/image/watermark" class="btn-secondary text-center no-underline text-sm">Add Watermark</a>
+      </div>
+    </section>
+  </div>
 </ToolLayout>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What aspect ratios are available?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Free, 1:1, 4:3, 16:9, 3:2, and 9:16 presets are included." }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I crop to custom dimensions?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes, use Free mode and drag to any size. You can also enter exact pixel values." }
+    },
+    {
+      "@type": "Question",
+      "name": "Does cropping reduce image quality?",
+      "acceptedAnswer": { "@type": "Answer", "text": "No, we preserve the original resolution within the cropped area." }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I crop on mobile?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes, touch gestures are fully supported for drag-to-crop on mobile devices." }
+    },
+    {
+      "@type": "Question",
+      "name": "Is it free?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes, completely free with no limits or sign-up required." }
+    }
+  ]
+}
+</script>
 
 <script>
   const uploadZone = document.getElementById('upload-zone')!;
@@ -325,3 +402,5 @@ import ToolLayout from '../../components/ToolLayout.astro';
     }, 'image/png');
   });
 </script>
+
+

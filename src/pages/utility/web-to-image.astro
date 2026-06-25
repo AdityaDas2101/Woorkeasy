@@ -1,4 +1,4 @@
----
+﻿---
 /**
  * Web to Image/PDF Tool
  * Paste HTML or enter a URL to capture a webpage as JPG, PNG, or PDF.
@@ -9,8 +9,8 @@ import ToolLayout from '../../components/ToolLayout.astro';
 
 <ToolLayout
   title="Web to Image / PDF"
-  metaTitle="Webpage to JPG, PNG & PDF Free Online Converter | Woorkeasy"
-  description="Convert any webpage or HTML content to JPG, PNG, or PDF. Paste a URL or HTML code and download a high-quality screenshot — free, browser-based, no sign-up."
+  metaTitle="Webpage to Image/PDF Free  - Screenshot Tool | Woorkeasy"
+  description="Convert webpage to image or PDF online free. Capture any URL as JPG, PNG, or PDF screenshot. No upload, browser-based, instant results."
   heading="Web to Image / PDF."
   category="Utility"
 >
@@ -51,7 +51,7 @@ import ToolLayout from '../../components/ToolLayout.astro';
         </button>
       </div>
       <p class="body-sm text-neutral-500 mt-2">
-        ⚠️ Some websites block embedding. If capture fails, use the <strong>Paste HTML</strong> tab instead.
+          Some websites block embedding. If capture fails, use the <strong>Paste HTML</strong> tab instead.
       </p>
     </div>
 
@@ -121,18 +121,76 @@ import ToolLayout from '../../components/ToolLayout.astro';
     </div>
   </div>
 
-  <!-- Info Section -->
-  <div class="mt-10 p-6 bg-neutral-50 rounded-lg border border-neutral-200">
-    <h3 class="body-md font-semibold text-neutral-900 mb-3">How it works</h3>
-    <ul class="list-disc pl-5 flex flex-col gap-2 body-sm text-neutral-600">
-      <li><strong>Enter URL</strong> — loads the page in a sandboxed frame and captures it as an image.</li>
-      <li><strong>Paste HTML</strong> — renders your HTML in an isolated container and screenshots it.</li>
-      <li><strong>Export formats</strong> — download as PNG (lossless), JPG (smaller file), or PDF (printable).</li>
-      <li><strong>Scale</strong> — 2x or 3x produces crisp high-DPI screenshots.</li>
-      <li>Everything runs in your browser. No data is sent to any server.</li>
-    </ul>
+  <div slot="info">
+    <section class="bg-white dark:bg-neutral-900 rounded-xl p-6 md:p-8 shadow-level-3 dark:border dark:border-neutral-800 mt-6">
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100">How to Use Webpage to Image/PDF</h2>
+      <ol class="list-decimal list-inside space-y-2 mt-4 body-md text-neutral-700 dark:text-neutral-300">
+        <li>Choose between "Enter URL" or "Paste HTML" mode using the tabs.</li>
+        <li>Enter a full URL (with https://) or paste HTML code, select your export format (PNG, JPG, or PDF), and choose the scale (1x, 2x, or 3x).</li>
+        <li>Click "Capture" or "Render & Capture" to generate the screenshot, preview it, and download.</li>
+      </ol>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">Features</h2>
+      <ul class="list-disc list-inside space-y-2 mt-4 body-md text-neutral-700 dark:text-neutral-300">
+        <li><strong>URL Capture</strong> - load any public webpage and capture it as an image or PDF.</li>
+        <li><strong>HTML Rendering</strong> - paste custom HTML and capture it as a screenshot - perfect for UI mockups.</li>
+        <li><strong>Multiple Formats</strong> - export as PNG (lossless), JPG (smaller file size), or PDF (printable document).</li>
+        <li><strong>HiDPI Support</strong> - 2x and 3x scaling options produce crisp retina-quality screenshots.</li>
+      </ul>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">Why Use Our Webpage to Image/PDF Tool</h2>
+      <p class="body-md text-neutral-700 dark:text-neutral-300 mt-4">Create professional webpage screenshots for presentations, documentation, bug reports, or design portfolios without installing any software. Our tool works entirely in your browser, capturing web content at high resolution with multiple format options. With both URL and HTML input modes, you can capture live websites or render your own designs. The 2x and 3x scaling ensures crisp screenshots on retina displays.</p>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">FAQs</h2>
+      <div class="space-y-4 mt-4">
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Why do some websites fail to capture?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">Some websites block embedding via X-Frame-Options headers (like Google, Facebook). For these sites, use the "Paste HTML" tab with the page's source code, or use the HTML input mode to capture custom content.</p></div>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Which format should I choose?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">PNG is lossless and best for quality screenshots with text and UI elements. JPG produces smaller files suitable for web use and photos. PDF is ideal for printable documents, reports, and sharing formatted captures.</p></div>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Is there a size limit for HTML content?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">There is no hard limit, but very large HTML may slow down rendering. For complex pages, use 1x scale for better performance or simplify the HTML before capturing.</p></div>
+      </div>
+    </section>
+
+    <!-- Related Tools -->
+    <section class="bg-white dark:bg-neutral-900 rounded-xl p-6 md:p-8 shadow-level-3 dark:border dark:border-neutral-800 mt-6">
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100">Related Tools</h2>
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mt-4">
+        <a href="/utility/character-counter/" class="px-4 py-3 bg-neutral-100 dark:bg-neutral-800 rounded-lg body-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors text-center">Character Counter</a>
+      </div>
+    </section>
   </div>
 </ToolLayout>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Why do some websites fail to capture?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Some websites block embedding via X-Frame-Options headers. For these sites, use the Paste HTML tab with the page's source code."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Which format should I choose?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "PNG is lossless and best for quality screenshots. JPG produces smaller files for web use. PDF is ideal for printable documents and reports."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is there a size limit for HTML content?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "There is no hard limit, but very large HTML may slow down rendering. For complex pages, use 1x scale for better performance."
+        }
+      }
+    ]
+  }
+  </script>
 
 <script>
   // Load html2canvas from CDN
@@ -352,3 +410,6 @@ import ToolLayout from '../../components/ToolLayout.astro';
     });
   });
 </script>
+
+
+

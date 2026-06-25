@@ -1,4 +1,4 @@
----
+﻿---
 /**
  * HEIC to JPG Converter
  * Uses heic2any library to convert Apple HEIC/HEIF images to JPG.
@@ -9,8 +9,8 @@ import ToolLayout from '../../components/ToolLayout.astro';
 
 <ToolLayout
   title="HEIC to JPG"
-  metaTitle="Convert HEIC to JPG Online Free — Apple Photos to JPEG | Woorkeasy"
-  description="Convert HEIC and HEIF images from iPhone/iPad to universally compatible JPG format. Fast, free, browser-based conversion."
+  metaTitle="HEIC to JPG Converter Free  - Apple HEIC to JPEG | Woorkeasy"
+  description="Convert HEIC to JPG online free. Transform Apple HEIC photos to universal JPG format. No upload, instant conversion, 100% free."
   heading="Convert HEIC to JPG."
   category="Image Tools"
 >
@@ -56,7 +56,84 @@ import ToolLayout from '../../components/ToolLayout.astro';
       <div id="results-list" class="flex flex-col gap-4"></div>
     </div>
   </div>
+
+  <div slot="info">
+    <section class="bg-white dark:bg-neutral-900 rounded-xl p-6 md:p-8 shadow-level-3 dark:border dark:border-neutral-800 mt-6">
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100">How to Use HEIC to JPG Converter</h2>
+      <ol class="list-decimal list-inside space-y-2 mt-4 body-md text-neutral-700 dark:text-neutral-300">
+        <li>Drop or browse HEIC/HEIF files from your iPhone/iPad</li>
+        <li>Adjust quality with the slider</li>
+        <li>Click "Convert to JPG" and download</li>
+      </ol>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">Features</h2>
+      <ul class="list-disc list-inside space-y-2 mt-4 body-md text-neutral-700 dark:text-neutral-300">
+        <li>Convert Apple HEIC/HEIF to universal JPG format</li>
+        <li>Adjustable output quality</li>
+        <li>Lazy-loads heic2any library for fast startup</li>
+        <li>Works on any device including iPhone</li>
+        <li>No upload, fully private processing</li>
+      </ul>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">Why Use Our HEIC to JPG Converter</h2>
+      <p class="body-md text-neutral-700 dark:text-neutral-300 mt-4">Apple devices capture photos in HEIC format which isn't compatible with many apps and websites. Convert HEIC to JPG for universal compatibility. Our tool uses the heic2any library to convert directly in your browser " no uploads, no privacy concerns, and instant results.</p>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">FAQs</h2>
+      <div class="space-y-4 mt-4">
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">What is HEIC?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">HEIC is Apple's default photo format, based on HEIF (High Efficiency Image File Format).</p></div>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Why convert HEIC to JPG?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">JPG is universally supported by all devices, software, and websites, unlike HEIC.</p></div>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Will I lose quality?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">Minimal loss. HEIC is already compressed, and JPG at high quality preserves detail well.</p></div>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Is it safe?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">Yes, all processing happens locally. Your photos never leave your device.</p></div>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Can I convert from my iPhone directly?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">Yes, open this page on your iPhone and convert photos straight from your camera roll.</p></div>
+      </div>
+    </section>
+
+    <!-- Related Tools -->
+    <section class="bg-white dark:bg-neutral-900 rounded-xl p-6 md:p-8 shadow-level-3 dark:border dark:border-neutral-800 mt-6">
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100">Related Tools</h2>
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mt-4">
+        <a href="/image/jpg-to-png" class="btn-secondary text-center no-underline text-sm">JPG to PNG</a>
+        <a href="/image/webp-converter" class="btn-secondary text-center no-underline text-sm">WebP Converter</a>
+        <a href="/image/compress" class="btn-secondary text-center no-underline text-sm">Compress Image</a>
+        <a href="/image/png-to-jpg" class="btn-secondary text-center no-underline text-sm">PNG to JPG</a>
+      </div>
+    </section>
+  </div>
 </ToolLayout>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is HEIC?",
+      "acceptedAnswer": { "@type": "Answer", "text": "HEIC is Apple's default photo format, based on HEIF (High Efficiency Image File Format)." }
+    },
+    {
+      "@type": "Question",
+      "name": "Why convert HEIC to JPG?",
+      "acceptedAnswer": { "@type": "Answer", "text": "JPG is universally supported by all devices, software, and websites, unlike HEIC." }
+    },
+    {
+      "@type": "Question",
+      "name": "Will I lose quality?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Minimal loss. HEIC is already compressed, and JPG at high quality preserves detail well." }
+    },
+    {
+      "@type": "Question",
+      "name": "Is it safe?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes, all processing happens locally. Your photos never leave your device." }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I convert from my iPhone directly?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes, open this page on your iPhone and convert photos straight from your camera roll." }
+    }
+  ]
+}
+</script>
 
 <script>
   const uploadZone = document.getElementById('upload-zone')!;
@@ -147,4 +224,6 @@ import ToolLayout from '../../components/ToolLayout.astro';
     return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
   }
 </script>
+
+
 

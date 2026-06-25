@@ -1,4 +1,4 @@
----
+﻿---
 /**
  * PNG to JPG Tool
  * Convert PNG images to JPG format with adjustable quality.
@@ -9,8 +9,8 @@ import ToolLayout from '../../components/ToolLayout.astro';
 
 <ToolLayout
   title="PNG to JPG"
-  metaTitle="PNG to JPG Converter Free Online — Lossless to Compressed | Woorkeasy"
-  description="Convert PNG images to JPG format with adjustable quality. Transparent areas are filled with white. Free, browser-based, no upload needed."
+  metaTitle="PNG to JPG Converter Free  - Convert Images Online | Woorkeasy"
+  description="Convert PNG to JPG online free with adjustable quality. Reduce file size while maintaining clarity. Browser-based PNG to JPG converter, no upload needed."
   heading="PNG to JPG."
   category="Image Tools"
 >
@@ -20,11 +20,11 @@ import ToolLayout from '../../components/ToolLayout.astro';
       id="upload-zone"
       class="upload-zone flex flex-col items-center justify-center gap-3 p-12 border-2 border-dashed border-neutral-300 rounded-lg cursor-pointer hover:border-neutral-400 transition-colors"
     >
-      <span class="text-4xl">🖼️</span>
+      <span class="text-4xl">-</span>
       <p class="body-md text-neutral-600 dark:text-neutral-400 text-center">
         Drop PNG files here or <span class="text-neutral-900 dark:text-neutral-100 font-medium underline">browse</span>
       </p>
-      <p class="body-sm text-neutral-500">Supports multiple files • PNG only</p>
+      <p class="body-sm text-neutral-500">Supports multiple files  PNG only</p>
       <input id="file-input" type="file" accept=".png,image/png" multiple class="hidden" />
     </div>
 
@@ -67,18 +67,83 @@ import ToolLayout from '../../components/ToolLayout.astro';
     <div id="results" class="hidden flex flex-col gap-4"></div>
   </div>
 
-  <!-- Info -->
-  <div class="mt-10 p-6 bg-neutral-50 dark:bg-neutral-800 rounded-lg border border-neutral-200 dark:border-neutral-700">
-    <h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100 mb-3">About PNG to JPG</h3>
-    <ul class="list-disc pl-5 flex flex-col gap-2 body-sm text-neutral-600 dark:text-neutral-400">
-      <li><strong>Why convert?</strong> — JPG files are significantly smaller than PNG, ideal for sharing and web use.</li>
-      <li><strong>Transparency</strong> — PNG transparency is replaced with a solid background (white by default).</li>
-      <li><strong>Quality</strong> — Adjust the slider to balance file size vs image quality.</li>
-      <li>Batch convert — drop multiple PNG files at once.</li>
-      <li>Everything runs in your browser. No files are uploaded.</li>
-    </ul>
+  <div slot="info">
+    <section class="bg-white dark:bg-neutral-900 rounded-xl p-6 md:p-8 shadow-level-3 dark:border dark:border-neutral-800 mt-6">
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100">How to Use PNG to JPG Converter</h2>
+      <ol class="list-decimal list-inside space-y-2 mt-4 body-md text-neutral-700 dark:text-neutral-300">
+        <li>Drop or browse to select your PNG file(s)</li>
+        <li>Adjust quality slider and background color</li>
+        <li>Click "Convert All" and download your JPG files</li>
+      </ol>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">Features</h2>
+      <ul class="list-disc list-inside space-y-2 mt-4 body-md text-neutral-700 dark:text-neutral-300">
+        <li>Adjustable quality from 10% to 100%</li>
+        <li>Custom background color for transparency fill</li>
+        <li>Batch convert multiple PNG files at once</li>
+        <li>Significant file size reduction compared to PNG</li>
+        <li>Fully client-side processing, no upload</li>
+      </ul>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">Why Use Our PNG to JPG Converter</h2>
+      <p class="body-md text-neutral-700 dark:text-neutral-300 mt-4">PNG files are great for quality but can be too large for web use. Convert PNG to JPG to dramatically reduce file sizes while maintaining good visual quality. Our tool gives you full control over the output quality and handles transparency by letting you choose a background fill color.</p>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">FAQs</h2>
+      <div class="space-y-4 mt-4">
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Is PNG to JPG conversion free?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">Yes, completely free with unlimited conversions and no sign-up required.</p></div>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">What happens to transparent areas?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">Transparent areas are filled with your chosen background color (white by default).</p></div>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">How much smaller will the file be?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">JPG files are typically 50-80% smaller than PNG at similar quality settings.</p></div>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Can I adjust the quality?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">Yes, use the quality slider from 10% to 100% to balance size and quality.</p></div>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Are my images uploaded?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">No, everything runs locally in your browser. Your files stay private.</p></div>
+      </div>
+    </section>
+
+    <!-- Related Tools -->
+    <section class="bg-white dark:bg-neutral-900 rounded-xl p-6 md:p-8 shadow-level-3 dark:border dark:border-neutral-800 mt-6">
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100">Related Tools</h2>
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mt-4">
+        <a href="/image/jpg-to-png" class="btn-secondary text-center no-underline text-sm">JPG to PNG</a>
+        <a href="/image/compress" class="btn-secondary text-center no-underline text-sm">Compress Image</a>
+        <a href="/image/crop" class="btn-secondary text-center no-underline text-sm">Crop Image</a>
+        <a href="/image/to-webp" class="btn-secondary text-center no-underline text-sm">JPG/PNG to WebP</a>
+      </div>
+    </section>
   </div>
 </ToolLayout>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Is PNG to JPG conversion free?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes, completely free with unlimited conversions and no sign-up required." }
+    },
+    {
+      "@type": "Question",
+      "name": "What happens to transparent areas?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Transparent areas are filled with your chosen background color (white by default)." }
+    },
+    {
+      "@type": "Question",
+      "name": "How much smaller will the file be?",
+      "acceptedAnswer": { "@type": "Answer", "text": "JPG files are typically 50-80% smaller than PNG at similar quality settings." }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I adjust the quality?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes, use the quality slider from 10% to 100% to balance size and quality." }
+    },
+    {
+      "@type": "Question",
+      "name": "Are my images uploaded?",
+      "acceptedAnswer": { "@type": "Answer", "text": "No, everything runs locally in your browser. Your files stay private." }
+    }
+  ]
+}
+</script>
 
 <script>
   const uploadZone = document.getElementById('upload-zone')!;
@@ -124,7 +189,7 @@ import ToolLayout from '../../components/ToolLayout.astro';
     fileList.classList.remove('hidden');
     fileList.innerHTML = files.map((e, i) => `
       <div class="flex items-center gap-3 p-3 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg">
-        <span class="text-lg">🖼️</span>
+        <span class="text-lg">-</span>
         <div class="flex-1 min-w-0">
           <p class="body-sm font-medium text-neutral-900 dark:text-neutral-100 truncate">${e.file.name}</p>
           <p class="caption-mono text-neutral-500">${(e.file.size / 1024).toFixed(1)} KB</p>
@@ -203,7 +268,7 @@ import ToolLayout from '../../components/ToolLayout.astro';
           <img src="${e.dataUrl}" alt="${newName}" class="w-12 h-12 object-cover rounded border border-neutral-200 dark:border-neutral-700" />
           <div class="flex-1 min-w-0">
             <p class="body-sm font-medium text-neutral-900 dark:text-neutral-100 truncate">${newName}</p>
-            <p class="caption-mono text-neutral-500">${origKB} KB → ~${newKB} KB</p>
+            <p class="caption-mono text-neutral-500">${origKB} KB ' ~${newKB} KB</p>
           </div>
           <button data-dl="${i}" class="btn-secondary text-sm">Download</button>
         </div>`;
@@ -233,3 +298,6 @@ import ToolLayout from '../../components/ToolLayout.astro';
     });
   });
 </script>
+
+
+

@@ -1,4 +1,4 @@
----
+﻿---
 /**
  * WebP Converter Tool
  * Convert WebP images to JPG, PNG, or PDF format.
@@ -9,8 +9,8 @@ import ToolLayout from '../../components/ToolLayout.astro';
 
 <ToolLayout
   title="WebP Converter"
-  metaTitle="WebP to JPG, PNG & PDF Free Online Converter | Woorkeasy"
-  description="Convert WebP images to JPG, PNG, or PDF format instantly. Free browser-based tool — no upload, no sign-up, unlimited conversions."
+  metaTitle="WebP to JPG/PNG Converter Free  - WebP to Image | Woorkeasy"
+  description="Convert WebP to JPG, PNG, or PDF online free. Batch convert WebP images to standard formats. No upload, fast, secure browser-based tool."
   heading="WebP to JPG / PNG / PDF."
   category="Image Tools"
 >
@@ -20,11 +20,11 @@ import ToolLayout from '../../components/ToolLayout.astro';
       id="upload-zone"
       class="upload-zone flex flex-col items-center justify-center gap-3 p-12 border-2 border-dashed border-neutral-300 rounded-lg cursor-pointer hover:border-neutral-400 transition-colors"
     >
-      <span class="text-4xl">🖼️</span>
+      <span class="text-4xl">-</span>
       <p class="body-md text-neutral-600 text-center">
         Drop WebP files here or <span class="text-neutral-900 font-medium underline">browse</span>
       </p>
-      <p class="body-sm text-neutral-500">Supports multiple files • WebP only</p>
+      <p class="body-sm text-neutral-500">Supports multiple files  WebP only</p>
       <input id="file-input" type="file" accept=".webp,image/webp" multiple class="hidden" />
     </div>
 
@@ -80,18 +80,83 @@ import ToolLayout from '../../components/ToolLayout.astro';
     <div id="results" class="hidden flex flex-col gap-4"></div>
   </div>
 
-  <!-- Info Section -->
-  <div class="mt-10 p-6 bg-neutral-50 rounded-lg border border-neutral-200">
-    <h3 class="body-md font-semibold text-neutral-900 mb-3">About WebP Conversion</h3>
-    <ul class="list-disc pl-5 flex flex-col gap-2 body-sm text-neutral-600">
-      <li><strong>JPG</strong> — smaller file size, ideal for photos and web use. Adjustable quality.</li>
-      <li><strong>PNG</strong> — lossless format, preserves transparency. Best for graphics and screenshots.</li>
-      <li><strong>PDF</strong> — each image becomes a page. Great for sharing or printing.</li>
-      <li>All conversion happens in your browser. No files are uploaded anywhere.</li>
-      <li>Batch convert — drop multiple WebP files at once.</li>
-    </ul>
+  <div slot="info">
+    <section class="bg-white dark:bg-neutral-900 rounded-xl p-6 md:p-8 shadow-level-3 dark:border dark:border-neutral-800 mt-6">
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100">How to Use WebP Converter</h2>
+      <ol class="list-decimal list-inside space-y-2 mt-4 body-md text-neutral-700 dark:text-neutral-300">
+        <li>Drop or browse WebP files</li>
+        <li>Choose output format (JPG, PNG, or PDF)</li>
+        <li>Click "Convert All" and download your files</li>
+      </ol>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">Features</h2>
+      <ul class="list-disc list-inside space-y-2 mt-4 body-md text-neutral-700 dark:text-neutral-300">
+        <li>Convert WebP to JPG, PNG, or PDF</li>
+        <li>Batch convert multiple WebP files at once</li>
+        <li>PDF output combines all images into one document</li>
+        <li>Adjustable JPG quality</li>
+        <li>No upload, fully private browser-based processing</li>
+      </ul>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">Why Use Our WebP Converter</h2>
+      <p class="body-md text-neutral-700 dark:text-neutral-300 mt-4">WebP is great for the web, but not all software supports it. Convert WebP images back to universal formats like JPG, PNG, or PDF for editing, printing, or sharing. Our browser-based tool keeps your files private and supports batch conversion for maximum efficiency.</p>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">FAQs</h2>
+      <div class="space-y-4 mt-4">
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Can I convert WebP to PDF?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">Yes, select PDF as output format. Each image becomes a separate page in the PDF.</p></div>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Does JPG conversion support quality adjustment?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">Yes, use the quality slider when JPG is selected to control compression level.</p></div>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Can I convert multiple WebP files at once?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">Yes, batch conversion is supported. Drop all your WebP files and convert them together.</p></div>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Is it free?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">Yes, completely free with unlimited conversions and no sign-up required.</p></div>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Are my files uploaded?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">No, everything processes locally in your browser. Your files never leave your device.</p></div>
+      </div>
+    </section>
+
+    <!-- Related Tools -->
+    <section class="bg-white dark:bg-neutral-900 rounded-xl p-6 md:p-8 shadow-level-3 dark:border dark:border-neutral-800 mt-6">
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100">Related Tools</h2>
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mt-4">
+        <a href="/image/to-webp" class="btn-secondary text-center no-underline text-sm">JPG/PNG to WebP</a>
+        <a href="/image/compress" class="btn-secondary text-center no-underline text-sm">Compress Image</a>
+        <a href="/image/crop" class="btn-secondary text-center no-underline text-sm">Crop Image</a>
+        <a href="/image/jpg-to-png" class="btn-secondary text-center no-underline text-sm">JPG to PNG</a>
+      </div>
+    </section>
   </div>
 </ToolLayout>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Can I convert WebP to PDF?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes, select PDF as output format. Each image becomes a separate page in the PDF." }
+    },
+    {
+      "@type": "Question",
+      "name": "Does JPG conversion support quality adjustment?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes, use the quality slider when JPG is selected to control compression level." }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I convert multiple WebP files at once?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes, batch conversion is supported. Drop all your WebP files and convert them together." }
+    },
+    {
+      "@type": "Question",
+      "name": "Is it free?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes, completely free with unlimited conversions and no sign-up required." }
+    },
+    {
+      "@type": "Question",
+      "name": "Are my files uploaded?",
+      "acceptedAnswer": { "@type": "Answer", "text": "No, everything processes locally in your browser. Your files never leave your device." }
+    }
+  ]
+}
+</script>
 
 <script>
   // Load jsPDF for PDF export
@@ -129,7 +194,7 @@ import ToolLayout from '../../components/ToolLayout.astro';
     qualityValue.textContent = qualitySlider.value + '%';
   });
 
-  // Format change — show/hide quality
+  // Format change " show/hide quality
   document.querySelectorAll('input[name="output-format"]').forEach(radio => {
     radio.addEventListener('change', () => {
       const format = getFormat();
@@ -187,7 +252,7 @@ import ToolLayout from '../../components/ToolLayout.astro';
     fileList.classList.remove('hidden');
     fileList.innerHTML = files.map((entry, i) => `
       <div class="flex items-center gap-3 p-3 bg-white border border-neutral-200 rounded-lg">
-        <span class="text-lg">🖼️</span>
+        <span class="text-lg">-</span>
         <div class="flex-1 min-w-0">
           <p class="body-sm font-medium text-neutral-900 truncate">${entry.file.name}</p>
           <p class="caption-mono text-neutral-500">${(entry.file.size / 1024).toFixed(1)} KB</p>
@@ -298,7 +363,7 @@ import ToolLayout from '../../components/ToolLayout.astro';
       // Single PDF with all images as pages
       results.innerHTML = `
         <div class="flex items-center gap-3 p-4 bg-green-50 border border-green-200 rounded-lg">
-          <span class="text-lg">✅</span>
+          <span class="text-lg"></span>
           <div class="flex-1">
             <p class="body-sm font-medium text-neutral-900">${convertedFiles.length} image(s) ready as PDF</p>
             <p class="caption-mono text-neutral-500">Each image will be a separate page</p>
@@ -320,7 +385,7 @@ import ToolLayout from '../../components/ToolLayout.astro';
             <img src="${entry.dataUrl}" alt="${newName}" class="w-12 h-12 object-cover rounded border border-neutral-200" />
             <div class="flex-1 min-w-0">
               <p class="body-sm font-medium text-neutral-900 truncate">${newName}</p>
-              <p class="caption-mono text-neutral-500">${originalSize} KB → ~${newSize} KB</p>
+              <p class="caption-mono text-neutral-500">${originalSize} KB ' ~${newSize} KB</p>
             </div>
             <button data-dl="${i}" class="btn-secondary text-sm">Download</button>
           </div>
@@ -392,3 +457,5 @@ import ToolLayout from '../../components/ToolLayout.astro';
     pdf.save('webp-converted.pdf');
   }
 </script>
+
+

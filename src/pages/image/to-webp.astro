@@ -1,4 +1,4 @@
----
+﻿---
 /**
  * JPG/PNG to WebP Tool
  * Convert JPG or PNG images to WebP format with quality control.
@@ -9,8 +9,8 @@ import ToolLayout from '../../components/ToolLayout.astro';
 
 <ToolLayout
   title="JPG/PNG to WebP"
-  metaTitle="JPG & PNG to WebP Converter Free Online | Woorkeasy"
-  description="Convert JPG and PNG images to WebP format for smaller file sizes with great quality. Batch support, adjustable quality — free and browser-based."
+  metaTitle="JPG/PNG to WebP Converter Free  - WebP Images | Woorkeasy"
+  description="Convert JPG and PNG to WebP format for faster websites. Reduce image size without quality loss. Free online WebP converter, no upload."
   heading="JPG / PNG to WebP."
   category="Image Tools"
 >
@@ -20,11 +20,11 @@ import ToolLayout from '../../components/ToolLayout.astro';
       id="upload-zone"
       class="upload-zone flex flex-col items-center justify-center gap-3 p-12 border-2 border-dashed border-neutral-300 rounded-lg cursor-pointer hover:border-neutral-400 transition-colors"
     >
-      <span class="text-4xl">⚡</span>
+      <span class="text-4xl"></span>
       <p class="body-md text-neutral-600 dark:text-neutral-400 text-center">
         Drop JPG or PNG files here or <span class="text-neutral-900 dark:text-neutral-100 font-medium underline">browse</span>
       </p>
-      <p class="body-sm text-neutral-500">Supports multiple files • JPG & PNG accepted</p>
+      <p class="body-sm text-neutral-500">Supports multiple files  JPG & PNG accepted</p>
       <input id="file-input" type="file" accept=".jpg,.jpeg,.png,image/jpeg,image/png" multiple class="hidden" />
     </div>
 
@@ -63,18 +63,83 @@ import ToolLayout from '../../components/ToolLayout.astro';
     <div id="results" class="hidden flex flex-col gap-4"></div>
   </div>
 
-  <!-- Info -->
-  <div class="mt-10 p-6 bg-neutral-50 dark:bg-neutral-800 rounded-lg border border-neutral-200 dark:border-neutral-700">
-    <h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100 mb-3">Why WebP?</h3>
-    <ul class="list-disc pl-5 flex flex-col gap-2 body-sm text-neutral-600 dark:text-neutral-400">
-      <li><strong>Smaller files</strong> — WebP typically achieves 25-35% smaller files than JPG at equivalent quality.</li>
-      <li><strong>Transparency support</strong> — Unlike JPG, WebP supports alpha transparency like PNG.</li>
-      <li><strong>Web-optimized</strong> — Supported by all modern browsers, ideal for websites.</li>
-      <li><strong>Batch convert</strong> — Drop multiple files and convert them all at once.</li>
-      <li>Everything runs locally in your browser. No data is uploaded.</li>
-    </ul>
+  <div slot="info">
+    <section class="bg-white dark:bg-neutral-900 rounded-xl p-6 md:p-8 shadow-level-3 dark:border dark:border-neutral-800 mt-6">
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100">How to Use JPG/PNG to WebP Converter</h2>
+      <ol class="list-decimal list-inside space-y-2 mt-4 body-md text-neutral-700 dark:text-neutral-300">
+        <li>Drop or browse JPG or PNG files</li>
+        <li>Adjust quality for size vs. quality balance</li>
+        <li>Click "Convert All to WebP" and download</li>
+      </ol>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">Features</h2>
+      <ul class="list-disc list-inside space-y-2 mt-4 body-md text-neutral-700 dark:text-neutral-300">
+        <li>Convert both JPG and PNG to WebP format</li>
+        <li>Adjustable quality control</li>
+        <li>25-35% smaller files than JPG at equivalent quality</li>
+        <li>Supports alpha transparency</li>
+        <li>Batch conversion of multiple files</li>
+      </ul>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">Why Use Our WebP Converter</h2>
+      <p class="body-md text-neutral-700 dark:text-neutral-300 mt-4">WebP is the modern image format for the web, offering superior compression with 25-35% smaller file sizes compared to JPG at equivalent quality. It supports transparency like PNG and is supported by all modern browsers. Converting your images to WebP will make your website faster and save bandwidth.</p>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">FAQs</h2>
+      <div class="space-y-4 mt-4">
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">What is WebP?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">WebP is a modern image format developed by Google that provides superior lossy and lossless compression.</p></div>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Is WebP supported by all browsers?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">Yes, all modern browsers including Chrome, Firefox, Safari, and Edge support WebP.</p></div>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Does WebP support transparency?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">Yes, WebP supports alpha transparency just like PNG.</p></div>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">How much smaller will my files be?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">Typically 25-35% smaller than JPG and 26% smaller than PNG at the same quality.</p></div>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Can I convert multiple files at once?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">Yes, batch conversion is supported. Drop multiple files and convert them all together.</p></div>
+      </div>
+    </section>
+
+    <!-- Related Tools -->
+    <section class="bg-white dark:bg-neutral-900 rounded-xl p-6 md:p-8 shadow-level-3 dark:border dark:border-neutral-800 mt-6">
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100">Related Tools</h2>
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mt-4">
+        <a href="/image/webp-converter" class="btn-secondary text-center no-underline text-sm">WebP to JPG</a>
+        <a href="/image/compress" class="btn-secondary text-center no-underline text-sm">Compress Image</a>
+        <a href="/image/jpg-to-png" class="btn-secondary text-center no-underline text-sm">JPG to PNG</a>
+        <a href="/image/crop" class="btn-secondary text-center no-underline text-sm">Crop Image</a>
+      </div>
+    </section>
   </div>
 </ToolLayout>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is WebP?",
+      "acceptedAnswer": { "@type": "Answer", "text": "WebP is a modern image format developed by Google that provides superior lossy and lossless compression." }
+    },
+    {
+      "@type": "Question",
+      "name": "Is WebP supported by all browsers?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes, all modern browsers including Chrome, Firefox, Safari, and Edge support WebP." }
+    },
+    {
+      "@type": "Question",
+      "name": "Does WebP support transparency?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes, WebP supports alpha transparency just like PNG." }
+    },
+    {
+      "@type": "Question",
+      "name": "How much smaller will my files be?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Typically 25-35% smaller than JPG and 26% smaller than PNG at the same quality." }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I convert multiple files at once?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes, batch conversion is supported. Drop multiple files and convert them all together." }
+    }
+  ]
+}
+</script>
 
 <script>
   const uploadZone = document.getElementById('upload-zone')!;
@@ -117,10 +182,10 @@ import ToolLayout from '../../components/ToolLayout.astro';
     fileList.classList.remove('hidden');
     fileList.innerHTML = files.map((e, i) => `
       <div class="flex items-center gap-3 p-3 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg">
-        <span class="text-lg">${e.file.type === 'image/png' ? '🖼️' : '📷'}</span>
+        <span class="text-lg">${e.file.type === 'image/png' ? '-' : '"'}</span>
         <div class="flex-1 min-w-0">
           <p class="body-sm font-medium text-neutral-900 dark:text-neutral-100 truncate">${e.file.name}</p>
-          <p class="caption-mono text-neutral-500">${(e.file.size / 1024).toFixed(1)} KB • ${e.file.type.split('/')[1].toUpperCase()}</p>
+          <p class="caption-mono text-neutral-500">${(e.file.size / 1024).toFixed(1)} KB  ${e.file.type.split('/')[1].toUpperCase()}</p>
         </div>
         <button data-remove="${i}" class="text-neutral-400 hover:text-red-500 transition-colors text-lg leading-none">&times;</button>
       </div>
@@ -200,7 +265,7 @@ import ToolLayout from '../../components/ToolLayout.astro';
           <img src="${e.dataUrl}" alt="${newName}" class="w-12 h-12 object-cover rounded border border-neutral-200 dark:border-neutral-700" />
           <div class="flex-1 min-w-0">
             <p class="body-sm font-medium text-neutral-900 dark:text-neutral-100 truncate">${newName}</p>
-            <p class="caption-mono text-neutral-500">${origKB} KB → ${newKB} KB <span class="text-green-600 dark:text-green-400">(${savings}% smaller)</span></p>
+            <p class="caption-mono text-neutral-500">${origKB} KB ' ${newKB} KB <span class="text-green-600 dark:text-green-400">(${savings}% smaller)</span></p>
           </div>
           <button data-dl="${i}" class="btn-secondary text-sm">Download</button>
         </div>`;
@@ -230,3 +295,6 @@ import ToolLayout from '../../components/ToolLayout.astro';
     });
   });
 </script>
+
+
+

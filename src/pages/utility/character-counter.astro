@@ -1,4 +1,4 @@
----
+﻿---
 /**
  * Character Counter Tool
  * Live character, word, sentence, and paragraph count.
@@ -9,8 +9,8 @@ import ToolLayout from '../../components/ToolLayout.astro';
 
 <ToolLayout
   title="Character Counter"
-  metaTitle="Character Counter Online Free — Word & Sentence Count | Woorkeasy"
-  description="Count characters, words, sentences, and paragraphs in real time. Get reading time estimates and keyword density — a free online text analysis tool."
+  metaTitle="Character Counter Online Free  - Word Counter Tool | Woorkeasy"
+  description="Count characters and words online free. Real-time character counter with word count, sentence count, and keyword density analysis. No upload."
   heading="Character Counter."
   category="Utility"
 >
@@ -66,6 +66,76 @@ import ToolLayout from '../../components/ToolLayout.astro';
     </div>
   </div>
 </ToolLayout>
+
+  <div slot="info">
+    <section class="bg-white dark:bg-neutral-900 rounded-xl p-6 md:p-8 shadow-level-3 dark:border dark:border-neutral-800 mt-6">
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100">How to Use Character Counter</h2>
+      <ol class="list-decimal list-inside space-y-2 mt-4 body-md text-neutral-700 dark:text-neutral-300">
+        <li>Type or paste your text into the large text area.</li>
+        <li>Watch the live stats update in real time - characters, words, sentences, paragraphs, and reading time.</li>
+        <li>Review keyword density analysis below the stats to understand your most frequent terms.</li>
+      </ol>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">Features</h2>
+      <ul class="list-disc list-inside space-y-2 mt-4 body-md text-neutral-700 dark:text-neutral-300">
+        <li><strong>Real-Time Counting</strong> - all metrics update instantly as you type or paste.</li>
+        <li><strong>Comprehensive Stats</strong> - characters (with and without spaces), words, sentences, paragraphs, and reading time.</li>
+        <li><strong>Keyword Density</strong> - identifies your most frequent words with usage count and density percentage.</li>
+        <li><strong>Stop Word Filtering</strong> - common English stop words are excluded from keyword analysis for meaningful results.</li>
+      </ul>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">Why Use Our Character Counter</h2>
+      <p class="body-md text-neutral-700 dark:text-neutral-300 mt-4">Whether you're writing social media posts with character limits, SEO content with word count requirements, or academic papers with strict formatting rules, our character counter provides all the metrics you need at a glance. The real-time updates mean no button clicking - just type and watch your stats change instantly. The keyword density analysis helps optimize your content for search engines and readability by identifying overused or underused terms.</p>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">FAQs</h2>
+      <div class="space-y-4 mt-4">
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Does it count characters with or without spaces?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">Both. The main count includes spaces, and a separate "No Spaces" counter shows characters excluding spaces. This is useful for platform-specific limits like Twitter or meta descriptions.</p></div>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">How is reading time calculated?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">Reading time is based on an average reading speed of 200 words per minute. Results are shown in seconds for short texts and minutes for longer content, giving you a clear sense of your text's length.</p></div>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">How does keyword density work?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">The tool counts word frequency across your text, filters out common English stop words (the, and, is, etc.), and shows the top 12 keywords with their count and percentage of total words.</p></div>
+      </div>
+    </section>
+
+    <!-- Related Tools -->
+    <section class="bg-white dark:bg-neutral-900 rounded-xl p-6 md:p-8 shadow-level-3 dark:border dark:border-neutral-800 mt-6">
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100">Related Tools</h2>
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mt-4">
+        <a href="/utility/web-to-image/" class="px-4 py-3 bg-neutral-100 dark:bg-neutral-800 rounded-lg body-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors text-center">Webpage to Image</a>
+      </div>
+    </section>
+  </div>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Does it count characters with or without spaces?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Both. The main count includes spaces, and a separate 'No Spaces' counter shows characters excluding spaces."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How is reading time calculated?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Reading time is based on an average reading speed of 200 words per minute. Results are shown in seconds for short texts and minutes for longer content."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How does keyword density work?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The tool counts word frequency, filters out common English stop words, and shows the top 12 keywords with their count and percentage of total words."
+        }
+      }
+    ]
+  }
+  </script>
 
 <script>
   const textInput = document.getElementById('text-input') as HTMLTextAreaElement;
@@ -155,7 +225,7 @@ import ToolLayout from '../../components/ToolLayout.astro';
       return `
         <div class="flex items-center justify-between p-[var(--spacing-xs)] bg-neutral-50 rounded-md">
           <span class="body-sm text-neutral-900">${word}</span>
-          <span class="caption-mono text-neutral-500">${count}× (${density}%)</span>
+          <span class="caption-mono text-neutral-500">${count}- (${density}%)</span>
         </div>
       `;
     }).join('');
@@ -164,3 +234,6 @@ import ToolLayout from '../../components/ToolLayout.astro';
   // Initialize with empty state
   updateCounts();
 </script>
+
+
+

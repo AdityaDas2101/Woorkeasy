@@ -9,8 +9,8 @@ import ToolLayout from '../../components/ToolLayout.astro';
 
 <ToolLayout
   title="PDF to Image"
-  metaTitle="PDF to JPG & PNG Converter Free Online | Woorkeasy"
-  description="Convert PDF pages to JPG or PNG images. Each page becomes a separate image. Free, browser-based, no upload needed."
+  metaTitle="PDF to Image Converter Free - PDF to JPG PNG | Woorkeasy"
+  description="Convert PDF to image online free. Extract PDF pages as JPG or PNG images with high quality. Browser-based PDF to image converter, no upload needed."
   heading="PDF to Image."
   category="PDF Tools"
 >
@@ -20,7 +20,7 @@ import ToolLayout from '../../components/ToolLayout.astro';
       id="upload-zone"
       class="upload-zone flex flex-col items-center justify-center gap-3 p-12 border-2 border-dashed border-neutral-300 rounded-lg cursor-pointer hover:border-neutral-400 transition-colors"
     >
-      <span class="text-4xl">📄</span>
+      <span class="text-4xl">"</span>
       <p class="body-md text-neutral-600 dark:text-neutral-400 text-center">
         Drop a PDF file here or <span class="text-neutral-900 dark:text-neutral-100 font-medium underline">browse</span>
       </p>
@@ -61,7 +61,7 @@ import ToolLayout from '../../components/ToolLayout.astro';
     <!-- File Info -->
     <div id="file-info" class="hidden p-4 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg">
       <div class="flex items-center gap-3">
-        <span class="text-lg">📄</span>
+        <span class="text-lg">"</span>
         <div class="flex-1 min-w-0">
           <p id="file-name" class="body-sm font-medium text-neutral-900 dark:text-neutral-100 truncate"></p>
           <p id="file-pages" class="caption-mono text-neutral-500"></p>
@@ -89,17 +89,124 @@ import ToolLayout from '../../components/ToolLayout.astro';
     <div id="results" class="hidden grid grid-cols-2 md:grid-cols-3 gap-4"></div>
   </div>
 
-  <!-- Info -->
-  <div class="mt-10 p-6 bg-neutral-50 dark:bg-neutral-800 rounded-lg border border-neutral-200 dark:border-neutral-700">
-    <h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100 mb-3">About PDF to Image</h3>
-    <ul class="list-disc pl-5 flex flex-col gap-2 body-sm text-neutral-600 dark:text-neutral-400">
-      <li><strong>Each page = one image</strong> — every PDF page is converted to a separate image file.</li>
-      <li><strong>High resolution</strong> — use 2x or 3x scale for crisp, print-quality images.</li>
-      <li><strong>PNG vs JPG</strong> — PNG is lossless (larger files), JPG is compressed (smaller files).</li>
-      <li>Processing happens entirely in your browser using PDF.js.</li>
-    </ul>
+  <div slot="info">
+    <section class="bg-white dark:bg-neutral-900 rounded-xl p-6 md:p-8 shadow-level-3 dark:border dark:border-neutral-800 mt-6">
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100">How to Use PDF to Image Converter</h2>
+      <ol class="list-decimal list-inside space-y-2 mt-4 body-md text-neutral-700 dark:text-neutral-300">
+        <li>Upload your PDF " Drag & drop a PDF file or click to browse.</li>
+        <li>Choose settings " Select PNG or JPG format, adjust scale (1x-3x) and quality.</li>
+        <li>Convert and download " Click "Convert All Pages" and download images individually or all at once.</li>
+      </ol>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">Features</h2>
+      <ul class="list-disc list-inside space-y-2 mt-4 body-md text-neutral-700 dark:text-neutral-300">
+        <li>Multiple output formats " Choose between PNG (lossless) or JPG (compressed) images.</li>
+        <li>Adjustable resolution " Scale from 1x (72 DPI) to 3x (216 DPI) for print-quality output.</li>
+        <li>Individual or batch download " Download single images or all pages at once.</li>
+        <li>High-quality rendering " Each PDF page is rendered as a crisp, clear image.</li>
+        <li>Secure and private " All conversion happens in your browser, no server uploads.</li>
+      </ul>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">Why Use Our PDF to Image Converter</h2>
+      <p class="body-md text-neutral-700 dark:text-neutral-300 mt-4">Our free PDF to image online converter transforms PDF pages into high-quality JPG or PNG images. Whether you need to extract figures from reports, convert documents for social media, or create image thumbnails, this tool delivers sharp results with adjustable resolution. No uploads, no limits, and completely free.</p>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">FAQs</h2>
+      <div class="space-y-4 mt-4">
+        <div>
+          <h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Can I convert PDF to JPG?</h3>
+          <p class="body-md text-neutral-700 dark:text-neutral-300">Yes, select JPG format for compressed images with adjustable quality level.</p>
+        </div>
+        <div>
+          <h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Can I convert PDF to PNG?</h3>
+          <p class="body-md text-neutral-700 dark:text-neutral-300">Yes, PNG format delivers lossless, high-quality output with transparent backgrounds.</p>
+        </div>
+        <div>
+          <h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">What resolution options are available?</h3>
+          <p class="body-md text-neutral-700 dark:text-neutral-300">Choose from 1x (72 DPI), 2x (144 DPI), or 3x (216 DPI) scale for your desired quality.</p>
+        </div>
+        <div>
+          <h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Are my files uploaded to a server?</h3>
+          <p class="body-md text-neutral-700 dark:text-neutral-300">No, all processing occurs in your browser using PDF.js. Your files stay private.</p>
+        </div>
+        <div>
+          <h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Can I download all images at once?</h3>
+          <p class="body-md text-neutral-700 dark:text-neutral-300">Yes, use the "Download All" button to batch-download all converted pages.</p>
+        </div>
+        <div>
+          <h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Is there a limit on PDF pages?</h3>
+          <p class="body-md text-neutral-700 dark:text-neutral-300">No, you can convert PDFs of any length without restrictions.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-white dark:bg-neutral-900 rounded-xl p-6 md:p-8 shadow-level-3 dark:border dark:border-neutral-800 mt-6">
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100">Related Tools</h2>
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mt-4">
+        <a href="/pdf/merge-pdf" class="btn-secondary text-center no-underline text-sm">Merge PDF</a>
+        <a href="/pdf/split-pdf" class="btn-secondary text-center no-underline text-sm">Split PDF</a>
+        <a href="/pdf/rotate-pdf" class="btn-secondary text-center no-underline text-sm">Rotate PDF</a>
+        <a href="/pdf/jpg-to-pdf" class="btn-secondary text-center no-underline text-sm">JPG to PDF</a>
+      </div>
+    </section>
   </div>
 </ToolLayout>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Can I convert PDF to JPG?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, select JPG format for compressed images with adjustable quality level."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I convert PDF to PNG?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, PNG format delivers lossless, high-quality output with transparent backgrounds."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What resolution options are available?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Choose from 1x (72 DPI), 2x (144 DPI), or 3x (216 DPI) scale for your desired quality."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Are my files uploaded to a server?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No, all processing occurs in your browser using PDF.js. Your files stay private."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I download all images at once?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, use the Download All button to batch-download all converted pages."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is there a limit on PDF pages?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No, you can convert PDFs of any length without restrictions."
+      }
+    }
+  ]
+}
+</script>
 
 <script>
   // Load PDF.js from CDN
@@ -278,3 +385,4 @@ import ToolLayout from '../../components/ToolLayout.astro';
     });
   });
 </script>
+

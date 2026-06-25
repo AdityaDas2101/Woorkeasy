@@ -1,4 +1,4 @@
----
+﻿---
 /**
  * CSV to Excel Tool
  * Convert CSV files to Excel (.xlsx) format.
@@ -9,8 +9,8 @@ import ToolLayout from '../../components/ToolLayout.astro';
 
 <ToolLayout
   title="CSV to Excel"
-  metaTitle="CSV to Excel (XLSX) Converter Free Online | Woorkeasy"
-  description="Convert CSV files to Excel .xlsx format instantly. Auto-detects delimiters, preserves data — free, browser-based, no upload required."
+  metaTitle="CSV to Excel Converter Free  - CSV to XLSX Online | Woorkeasy"
+  description="Convert CSV to Excel online free. Transform CSV files to proper .xlsx spreadsheets instantly. No upload, browser-based converter, 100% free."
   heading="CSV to Excel."
   category="Finance"
 >
@@ -20,7 +20,7 @@ import ToolLayout from '../../components/ToolLayout.astro';
       id="upload-zone"
       class="upload-zone flex flex-col items-center justify-center gap-3 p-12 border-2 border-dashed border-neutral-300 rounded-lg cursor-pointer hover:border-neutral-400 transition-colors"
     >
-      <span class="text-4xl">📊</span>
+      <span class="text-4xl">"</span>
       <p class="body-md text-neutral-600 dark:text-neutral-400 text-center">
         Drop a CSV file here or <span class="text-neutral-900 dark:text-neutral-100 font-medium underline">browse</span>
       </p>
@@ -51,7 +51,7 @@ import ToolLayout from '../../components/ToolLayout.astro';
     <!-- File Info & Preview -->
     <div id="file-info" class="hidden">
       <div class="flex items-center gap-3 p-4 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg mb-4">
-        <span class="text-lg">📄</span>
+        <span class="text-lg">"</span>
         <div class="flex-1 min-w-0">
           <p id="file-name" class="body-sm font-medium text-neutral-900 dark:text-neutral-100 truncate"></p>
           <p id="file-stats" class="caption-mono text-neutral-500"></p>
@@ -72,17 +72,78 @@ import ToolLayout from '../../components/ToolLayout.astro';
     </div>
   </div>
 
-  <!-- Info -->
-  <div class="mt-10 p-6 bg-neutral-50 dark:bg-neutral-800 rounded-lg border border-neutral-200 dark:border-neutral-700">
-    <h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100 mb-3">About CSV to Excel</h3>
-    <ul class="list-disc pl-5 flex flex-col gap-2 body-sm text-neutral-600 dark:text-neutral-400">
-      <li><strong>Auto-detect</strong> — automatically detects comma, semicolon, tab, or pipe delimiters.</li>
-      <li><strong>Proper XLSX</strong> — generates a real .xlsx file that opens in Excel, Google Sheets, etc.</li>
-      <li><strong>Preview</strong> — see your data before converting to catch any parsing issues.</li>
-      <li>Everything runs in your browser. Your data stays private.</li>
-    </ul>
+  <div slot="info">
+    <section class="bg-white dark:bg-neutral-900 rounded-xl p-6 md:p-8 shadow-level-3 dark:border dark:border-neutral-800 mt-6">
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100">How to Use CSV to Excel Converter</h2>
+      <ol class="list-decimal list-inside space-y-2 mt-4 body-md text-neutral-700 dark:text-neutral-300">
+        <li>Upload or drag & drop your CSV file onto the converter area.</li>
+        <li>Select the delimiter (auto-detect, comma, semicolon, tab, or pipe) and choose whether the first row is a header.</li>
+        <li>Click "Download as Excel (.xlsx)" to save your converted spreadsheet.</li>
+      </ol>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">Features</h2>
+      <ul class="list-disc list-inside space-y-2 mt-4 body-md text-neutral-700 dark:text-neutral-300">
+        <li><strong>Auto-Detect Delimiter</strong> - automatically identifies comma, semicolon, tab, and pipe delimiters.</li>
+        <li><strong>Live Preview</strong> - inspect your parsed data before converting to catch any issues.</li>
+        <li><strong>Proper XLSX Output</strong> - generates a real .xlsx file compatible with Excel, Google Sheets, and LibreOffice.</li>
+        <li><strong>100% Browser-Based</strong> - your files never leave your device. No upload, no servers, complete privacy.</li>
+      </ul>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">Why Use Our CSV to Excel Converter</h2>
+      <p class="body-md text-neutral-700 dark:text-neutral-300 mt-4">Our free online CSV to Excel converter delivers instant, accurate transformations without compromising your data privacy. Unlike cloud-based alternatives, all processing happens locally in your browser so sensitive spreadsheets never leave your computer. The auto-delimiter detection handles messy CSV exports from any source, while the live preview ensures your data is parsed correctly before download. Whether you are a data analyst cleaning datasets or an office worker reformatting reports, this tool provides a fast, reliable XLSX conversion in seconds.</p>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">FAQs</h2>
+      <div class="space-y-4 mt-4">
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Can I convert large CSV files?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">Yes, the converter handles large CSV files efficiently. Since everything runs in your browser, performance depends on your device's memory. For extremely large files (100k+ rows), we recommend a modern browser like Chrome or Edge.</p></div>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">What delimiters are supported?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">Our tool supports comma (,), semicolon (;), tab, and pipe (|) delimiters. The auto-detect feature intelligently identifies the correct delimiter from your file, so you rarely need to select it manually.</p></div>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Is my data safe when converting CSV to Excel?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">Absolutely. All processing is done locally in your browser using JavaScript. No files are uploaded to any server, and your data never leaves your device.</p></div>
+      </div>
+    </section>
+
+    <!-- Related Tools -->
+    <section class="bg-white dark:bg-neutral-900 rounded-xl p-6 md:p-8 shadow-level-3 dark:border dark:border-neutral-800 mt-6">
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100">Related Tools</h2>
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mt-4">
+        <a href="/finance/excel-to-csv/" class="px-4 py-3 bg-neutral-100 dark:bg-neutral-800 rounded-lg body-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors text-center">Excel to CSV</a>
+        <a href="/finance/ofx-to-excel/" class="px-4 py-3 bg-neutral-100 dark:bg-neutral-800 rounded-lg body-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors text-center">OFX to Excel</a>
+        <a href="/finance/qfx-to-excel/" class="px-4 py-3 bg-neutral-100 dark:bg-neutral-800 rounded-lg body-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors text-center">QFX to Excel</a>
+      </div>
+    </section>
   </div>
 </ToolLayout>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Can I convert large CSV files?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, the converter handles large CSV files efficiently. Since everything runs in your browser, performance depends on your device's memory. For extremely large files (100k+ rows), we recommend a modern browser like Chrome or Edge."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What delimiters are supported?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Our tool supports comma (,), semicolon (;), tab, and pipe (|) delimiters. The auto-detect feature intelligently identifies the correct delimiter from your file, so you rarely need to select it manually."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is my data safe when converting CSV to Excel?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Absolutely. All processing is done locally in your browser using JavaScript. No files are uploaded to any server, and your data never leaves your device."
+        }
+      }
+    ]
+  }
+  </script>
 
 <script>
   const uploadZone = document.getElementById('upload-zone')!;
@@ -172,7 +233,7 @@ import ToolLayout from '../../components/ToolLayout.astro';
 
     const totalRows = parsedRows.length;
     const totalCols = parsedRows.reduce((max, r) => Math.max(max, r.length), 0);
-    fileStats.textContent = `${totalRows} rows × ${totalCols} columns • delimiter: "${delimiter === '\t' ? 'tab' : delimiter}"`;
+    fileStats.textContent = `${totalRows} rows - ${totalCols} columns  delimiter: "${delimiter === '\t' ? 'tab' : delimiter}"`;
 
     // Build preview (first 20 rows)
     const hasHeader = firstRowHeader.checked;
@@ -418,3 +479,5 @@ import ToolLayout from '../../components/ToolLayout.astro';
     return (crc ^ 0xFFFFFFFF) >>> 0;
   }
 </script>
+
+

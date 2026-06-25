@@ -1,4 +1,4 @@
----
+﻿---
 /**
  * JPG to PDF Converter
  * Uses jsPDF to convert one or more images into a PDF document.
@@ -8,8 +8,8 @@ import ToolLayout from '../../components/ToolLayout.astro';
 
 <ToolLayout
   title="JPG to PDF"
-  metaTitle="Convert JPG to PDF Online Free — Images to PDF | Woorkeasy"
-  description="Convert JPG, PNG, and WebP images to PDF. Combine multiple images into a single PDF document — entirely in your browser."
+  metaTitle="JPG to PDF Online Free  - Convert Images to PDF | Woorkeasy"
+  description="Convert JPG to PDF online free. Combine multiple images into a single PDF document with page size options. No upload, instant download, 100% free."
   heading="Convert Images to PDF."
   category="PDF Tools"
 >
@@ -22,7 +22,7 @@ import ToolLayout from '../../components/ToolLayout.astro';
           <rect x="8" y="8" width="32" height="32" rx="4" stroke="currentColor" stroke-width="2"/>
         </svg>
         <p class="body-md text-neutral-600">Drag & drop images here, or <span class="text-blue-600 font-medium">browse</span></p>
-        <p class="body-sm text-neutral-500">Supports JPG, PNG, WebP — each image = one PDF page</p>
+        <p class="body-sm text-neutral-500">Supports JPG, PNG, WebP " each image = one PDF page</p>
       </div>
       <input type="file" id="file-input" accept="image/jpeg,image/png,image/webp" multiple class="hidden" />
     </div>
@@ -78,7 +78,125 @@ import ToolLayout from '../../components/ToolLayout.astro';
       </div>
     </div>
   </div>
+
+  <div slot="info">
+    <section class="bg-white dark:bg-neutral-900 rounded-xl p-6 md:p-8 shadow-level-3 dark:border dark:border-neutral-800 mt-6">
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100">How to Use JPG to PDF Converter</h2>
+      <ol class="list-decimal list-inside space-y-2 mt-4 body-md text-neutral-700 dark:text-neutral-300">
+        <li>Upload your images " Drag & drop JPG, PNG, or WebP images or click to browse.</li>
+        <li>Customize settings " Choose page size (A4, Letter, or Fit to Image) and orientation.</li>
+        <li>Convert and download " Click "Create PDF" and download your combined PDF instantly.</li>
+      </ol>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">Features</h2>
+      <ul class="list-disc list-inside space-y-2 mt-4 body-md text-neutral-700 dark:text-neutral-300">
+        <li>Multiple image formats " Supports JPG, PNG, and WebP images.</li>
+        <li>Customizable page size " A4, Letter, or auto-fit to image dimensions.</li>
+        <li>Portrait or landscape orientation " Flexible layout for any document type.</li>
+        <li>100% browser-based " No files uploaded to servers, complete privacy.</li>
+        <li>Unlimited conversions " No sign-up, no watermarks, no page limits.</li>
+      </ul>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">Why Use Our JPG to PDF Converter</h2>
+      <p class="body-md text-neutral-700 dark:text-neutral-300 mt-4">Our free JPG to PDF online converter lets you combine multiple images into a single PDF document in seconds. Whether digitizing paperwork, creating portfolios, or compiling photo albums, this tool handles all popular image formats. Everything runs in your browser " no uploads, no privacy risks, no file size limits.</p>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">FAQs</h2>
+      <div class="space-y-4 mt-4">
+        <div>
+          <h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Is this JPG to PDF converter really free?</h3>
+          <p class="body-md text-neutral-700 dark:text-neutral-300">Yes, completely free with no hidden charges, watermarks, or page limits.</p>
+        </div>
+        <div>
+          <h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">What image formats are supported?</h3>
+          <p class="body-md text-neutral-700 dark:text-neutral-300">JPG, PNG, and WebP images are all supported. Each image becomes one page in the PDF.</p>
+        </div>
+        <div>
+          <h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Can I combine multiple images into one PDF?</h3>
+          <p class="body-md text-neutral-700 dark:text-neutral-300">Yes, upload multiple images and each becomes a separate page in your combined PDF document.</p>
+        </div>
+        <div>
+          <h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Are my images uploaded to a server?</h3>
+          <p class="body-md text-neutral-700 dark:text-neutral-300">No, all processing happens in your browser locally " your files never leave your device.</p>
+        </div>
+        <div>
+          <h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">What page sizes are available?</h3>
+          <p class="body-md text-neutral-700 dark:text-neutral-300">Choose from A4, Letter, or Fit to Image which automatically matches image dimensions.</p>
+        </div>
+        <div>
+          <h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Is there a limit on the number of images?</h3>
+          <p class="body-md text-neutral-700 dark:text-neutral-300">No, you can combine as many images as you like with no restrictions.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-white dark:bg-neutral-900 rounded-xl p-6 md:p-8 shadow-level-3 dark:border dark:border-neutral-800 mt-6">
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100">Related Tools</h2>
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mt-4">
+        <a href="/pdf/merge-pdf" class="btn-secondary text-center no-underline text-sm">Merge PDF</a>
+        <a href="/pdf/split-pdf" class="btn-secondary text-center no-underline text-sm">Split PDF</a>
+        <a href="/pdf/pdf-to-image" class="btn-secondary text-center no-underline text-sm">PDF to Image</a>
+        <a href="/pdf/rotate-pdf" class="btn-secondary text-center no-underline text-sm">Rotate PDF</a>
+      </div>
+    </section>
+  </div>
 </ToolLayout>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Is this JPG to PDF converter really free?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, completely free with no hidden charges, watermarks, or page limits."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What image formats are supported?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "JPG, PNG, and WebP images are all supported. Each image becomes one page in the PDF."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I combine multiple images into one PDF?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, upload multiple images and each becomes a separate page in your combined PDF document."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Are my images uploaded to a server?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No, all processing happens in your browser locally. Your files never leave your device."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What page sizes are available?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Choose from A4, Letter, or Fit to Image which automatically matches image dimensions."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is there a limit on the number of images?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No, you can combine as many images as you like with no restrictions."
+      }
+    }
+  ]
+}
+</script>
 
 <script>
   import { jsPDF } from 'jspdf';
@@ -163,7 +281,7 @@ import ToolLayout from '../../components/ToolLayout.astro';
       const url = URL.createObjectURL(pdfBlob);
 
       resultName.textContent = 'images.pdf';
-      resultInfo.textContent = `${files.length} page(s) • ${formatBytes(pdfBlob.size)}`;
+      resultInfo.textContent = `${files.length} page(s)  ${formatBytes(pdfBlob.size)}`;
       downloadBtn.href = url;
 
       loading.classList.add('hidden');
@@ -200,4 +318,6 @@ import ToolLayout from '../../components/ToolLayout.astro';
     return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
   }
 </script>
+
+
 

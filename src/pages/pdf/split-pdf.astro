@@ -1,4 +1,4 @@
----
+﻿---
 /**
  * Split PDF Tool
  * Split a PDF into individual pages or custom page ranges.
@@ -9,8 +9,8 @@ import ToolLayout from '../../components/ToolLayout.astro';
 
 <ToolLayout
   title="Split PDF"
-  metaTitle="Split PDF Free Online — Extract Pages from PDF | Woorkeasy"
-  description="Split PDF files into individual pages or custom page ranges. Extract specific pages from any PDF — free, browser-based, no upload."
+  metaTitle="Split PDF Online Free  - Extract PDF Pages | Woorkeasy"
+  description="Split PDF files online free. Extract specific pages or divide multi-page PDFs into separate documents. No upload, no limits, secure browser-based PDF splitter."
   heading="Split PDF."
   category="PDF Tools"
 >
@@ -20,7 +20,7 @@ import ToolLayout from '../../components/ToolLayout.astro';
       id="upload-zone"
       class="upload-zone flex flex-col items-center justify-center gap-3 p-12 border-2 border-dashed border-neutral-300 rounded-lg cursor-pointer hover:border-neutral-400 transition-colors"
     >
-      <span class="text-4xl">✂️</span>
+      <span class="text-4xl"></span>
       <p class="body-md text-neutral-600 dark:text-neutral-400 text-center">
         Drop a PDF file here or <span class="text-neutral-900 dark:text-neutral-100 font-medium underline">browse</span>
       </p>
@@ -31,7 +31,7 @@ import ToolLayout from '../../components/ToolLayout.astro';
     <!-- File Info -->
     <div id="file-info" class="hidden p-4 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg">
       <div class="flex items-center gap-3">
-        <span class="text-lg">📄</span>
+        <span class="text-lg">"</span>
         <div class="flex-1 min-w-0">
           <p id="file-name" class="body-sm font-medium text-neutral-900 dark:text-neutral-100 truncate"></p>
           <p id="file-pages" class="caption-mono text-neutral-500"></p>
@@ -85,16 +85,124 @@ import ToolLayout from '../../components/ToolLayout.astro';
     <div id="results" class="hidden flex flex-col gap-3"></div>
   </div>
 
-  <!-- Info -->
-  <div class="mt-10 p-6 bg-neutral-50 dark:bg-neutral-800 rounded-lg border border-neutral-200 dark:border-neutral-700">
-    <h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100 mb-3">About Split PDF</h3>
-    <ul class="list-disc pl-5 flex flex-col gap-2 body-sm text-neutral-600 dark:text-neutral-400">
-      <li><strong>Extract every page</strong> — each page becomes its own PDF file.</li>
-      <li><strong>Custom ranges</strong> — specify pages like <code>1-3, 5, 7-10</code> to create a single PDF with those pages.</li>
-      <li>All processing happens in your browser. Your files stay private.</li>
-    </ul>
+  <div slot="info">
+    <section class="bg-white dark:bg-neutral-900 rounded-xl p-6 md:p-8 shadow-level-3 dark:border dark:border-neutral-800 mt-6">
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100">How to Use Split PDF Tool</h2>
+      <ol class="list-decimal list-inside space-y-2 mt-4 body-md text-neutral-700 dark:text-neutral-300">
+        <li>Upload your PDF " Drag & drop a PDF file or click to browse.</li>
+        <li>Choose split mode " Extract every page as separate PDFs or specify custom page ranges.</li>
+        <li>Split and download " Click "Split PDF" and download individual pages or extracts.</li>
+      </ol>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">Features</h2>
+      <ul class="list-disc list-inside space-y-2 mt-4 body-md text-neutral-700 dark:text-neutral-300">
+        <li>Extract every page " Split a PDF into individual one-page files automatically.</li>
+        <li>Custom page ranges " Extract specific pages like 1-3, 5, 7-10 into a single PDF.</li>
+        <li>Preserved formatting " All text, images, and layout remain exactly as in the original.</li>
+        <li>Fast extraction " Quickly splits even large multi-page documents.</li>
+        <li>Secure and private " 100% browser-based processing with no server uploads.</li>
+      </ul>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">Why Use Our PDF Splitter</h2>
+      <p class="body-md text-neutral-700 dark:text-neutral-300 mt-4">Our free split PDF online tool makes it easy to extract pages from any PDF. Separate a multi-page document into individual files, or extract specific page ranges for sharing. Perfect for pulling out key chapters, removing unnecessary pages, or reorganizing documents. All processing happens in your browser " no uploads, no limits, completely free.</p>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">FAQs</h2>
+      <div class="space-y-4 mt-4">
+        <div>
+          <h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Can I extract specific pages from a PDF?</h3>
+          <p class="body-md text-neutral-700 dark:text-neutral-300">Yes, use "Custom page ranges" to extract specific pages like 1-3, 5, 7-10 into a single PDF.</p>
+        </div>
+        <div>
+          <h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Does splitting affect PDF quality?</h3>
+          <p class="body-md text-neutral-700 dark:text-neutral-300">No, all content maintains its original quality, formatting, and resolution.</p>
+        </div>
+        <div>
+          <h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Are my files uploaded to a server?</h3>
+          <p class="body-md text-neutral-700 dark:text-neutral-300">No, all processing happens in your browser. Your files stay private and secure.</p>
+        </div>
+        <div>
+          <h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Can I split a PDF into individual pages?</h3>
+          <p class="body-md text-neutral-700 dark:text-neutral-300">Yes, choose "Extract every page" to create one separate PDF file per page.</p>
+        </div>
+        <div>
+          <h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Is there a limit on PDF size or pages?</h3>
+          <p class="body-md text-neutral-700 dark:text-neutral-300">No, you can split PDFs of any size with no restrictions or limitations.</p>
+        </div>
+        <div>
+          <h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Can I download all pages at once?</h3>
+          <p class="body-md text-neutral-700 dark:text-neutral-300">Yes, use the "Download All" button to download all extracted files simultaneously.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-white dark:bg-neutral-900 rounded-xl p-6 md:p-8 shadow-level-3 dark:border dark:border-neutral-800 mt-6">
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100">Related Tools</h2>
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mt-4">
+        <a href="/pdf/merge-pdf" class="btn-secondary text-center no-underline text-sm">Merge PDF</a>
+        <a href="/pdf/pdf-to-image" class="btn-secondary text-center no-underline text-sm">PDF to Image</a>
+        <a href="/pdf/rotate-pdf" class="btn-secondary text-center no-underline text-sm">Rotate PDF</a>
+        <a href="/pdf/jpg-to-pdf" class="btn-secondary text-center no-underline text-sm">JPG to PDF</a>
+      </div>
+    </section>
   </div>
 </ToolLayout>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Can I extract specific pages from a PDF?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, use Custom page ranges to extract specific pages like 1-3, 5, 7-10 into a single PDF."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does splitting affect PDF quality?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No, all content maintains its original quality, formatting, and resolution."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Are my files uploaded to a server?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No, all processing happens in your browser. Your files stay private and secure."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I split a PDF into individual pages?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, choose Extract every page to create one separate PDF file per page."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is there a limit on PDF size or pages?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No, you can split PDFs of any size with no restrictions or limitations."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I download all pages at once?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, use the Download All button to download all extracted files simultaneously."
+      }
+    }
+  ]
+}
+</script>
 
 <script>
   import { PDFDocument } from 'pdf-lib';
@@ -199,7 +307,7 @@ import ToolLayout from '../../components/ToolLayout.astro';
         }
         showResults(outputFiles);
       } else {
-        // Custom range — create a single PDF with selected pages
+        // Custom range " create a single PDF with selected pages
         const pages = parseRanges(rangeInput.value, totalPages);
         if (pages.length === 0) { alert('No valid pages specified.'); statusEl.classList.add('hidden'); splitBtn.disabled = false; return; }
 
@@ -224,7 +332,7 @@ import ToolLayout from '../../components/ToolLayout.astro';
     results.classList.remove('hidden');
     results.innerHTML = files.map((f, i) => `
       <div class="flex items-center gap-3 p-3 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg">
-        <span class="text-lg">📄</span>
+        <span class="text-lg">"</span>
         <div class="flex-1 min-w-0">
           <p class="body-sm font-medium text-neutral-900 dark:text-neutral-100 truncate">${f.name}</p>
           <p class="caption-mono text-neutral-500">${(f.blob.size / 1024).toFixed(1)} KB</p>
@@ -252,3 +360,6 @@ import ToolLayout from '../../components/ToolLayout.astro';
     URL.revokeObjectURL(url);
   }
 </script>
+
+
+
