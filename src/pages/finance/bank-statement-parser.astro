@@ -14,6 +14,12 @@ import ToolLayout from '../../components/ToolLayout.astro';
   description="Parse any bank statement format online free. Auto-detect QFX, OFX, CSV, and PDF files. Extract transactions into standardized CSV. No upload, secure."
   heading="Bank Statement Parser"
   category="Finance"
+  tryNextTools={[
+    { name: 'OFX to Excel', href: '/finance/ofx-to-excel/' },
+    { name: 'PDF Statement to Excel', href: '/finance/pdf-statement-to-excel/' },
+    { name: 'Transaction Deduplicator', href: '/finance/transaction-deduplicator/' },
+    { name: 'Merge PDF', href: '/pdf/merge-pdf/' },
+  ]}
 >
   <div id="app">
     <!-- Upload Zone -->
@@ -61,40 +67,38 @@ import ToolLayout from '../../components/ToolLayout.astro';
   <div slot="info">
     <section class="bg-white dark:bg-neutral-900 rounded-xl p-6 md:p-8 shadow-level-3 dark:border dark:border-neutral-800 mt-6">
       <h2 class="display-sm text-neutral-900 dark:text-neutral-100">How to Use Bank Statement Parser</h2>
+      <p class="body-md text-neutral-600 dark:text-neutral-400 mt-2">Parsing bank statements from any format takes just three steps with our universal parser:</p>
       <ol class="list-decimal list-inside space-y-2 mt-4 body-md text-neutral-700 dark:text-neutral-300">
-        <li>Upload or drag & drop any bank statement file — QFX, OFX, CSV, or PDF.</li>
-        <li>The tool auto-detects the format and parses all transactions instantly.</li>
-        <li>Review transactions and download standardized CSV for analysis.</li>
+        <li>Upload or drag & drop any bank statement file &mdash; QFX, OFX, CSV, or PDF.</li>
+        <li>The tool auto-detects the file format and parses all transactions instantly.</li>
+        <li>Review parsed transactions in the preview table and download standardized CSV for analysis.</li>
       </ol>
+      <p class="body-md text-neutral-600 dark:text-neutral-400 mt-4">All processing happens locally in your browser. Your sensitive financial data never leaves your device.</p>
 
       <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">Features</h2>
       <ul class="list-disc list-inside space-y-2 mt-4 body-md text-neutral-700 dark:text-neutral-300">
-        <li><strong>Multi-Format Support</strong> - handles QFX, OFX, CSV, and PDF bank statement files.</li>
-        <li><strong>Auto-Format Detection</strong> - instantly identifies file type by extension and content inspection.</li>
-        <li><strong>Standardized Output</strong> - normalizes all formats into uniform Date, Amount, Type, Description columns.</li>
-        <li><strong>Private & Secure</strong> - all processing happens in your browser. No data ever leaves your device.</li>
+        <li><strong>Multi-Format Support</strong> &mdash; handles QFX (Quicken), OFX (Open Financial Exchange), CSV (comma-separated values), and PDF bank statement files in one tool.</li>
+        <li><strong>Auto-Format Detection</strong> &mdash; instantly identifies file type by extension and content inspection. No need to select format manually.</li>
+        <li><strong>Standardized Output</strong> &mdash; normalizes all formats into uniform Date, Amount, Type, Description columns for easy analysis.</li>
+        <li><strong>Zero Server Upload</strong> &mdash; all processing happens in your browser using JavaScript. Your financial data never leaves your computer.</li>
+        <li><strong>Free and Unlimited</strong> &mdash; no account required, no file size limits, no hidden fees. Use it as many times as you need.</li>
       </ul>
 
-      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">Why Use Our Bank Statement Parser</h2>
-      <p class="body-md text-neutral-700 dark:text-neutral-300 mt-4">Dealing with different bank export formats can be frustrating. QFX, OFX, CSV, and PDF statements each have their own structure, making it hard to get a unified view of your finances. Our bank statement parser automatically detects any format you throw at it and normalizes every transaction into a clean, standardized CSV. Whether you are reconciling accounts, building a budget, or preparing tax documents, this tool eliminates the manual work of reformatting — and keeps your sensitive financial data private on your own device.</p>
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">Why Use a Universal Bank Statement Parser</h2>
+      <p class="body-md text-neutral-700 dark:text-neutral-300 mt-4">If you manage finances across multiple bank accounts, you have likely encountered the frustration of dealing with different export formats. One bank provides QFX files for QuickBooks import, another offers OFX statements, a third emails CSV spreadsheets, and some only provide PDF statements through their online portal. Each format has its own data structure, column naming convention, and field encoding, making it difficult to consolidate your financial data into a single, unified view.</p>
+      <p class="body-md text-neutral-700 dark:text-neutral-300 mt-4">Our universal bank statement parser solves this problem by automatically detecting the file format and normalizing all transactions into a consistent structure. Whether you are a freelancer tracking multiple income streams, a small business owner reconciling accounts, a bookkeeper managing client portfolios, or an individual building a personal budget, this tool eliminates the manual work of reformatting each bank statement type separately.</p>
+      <p class="body-md text-neutral-700 dark:text-neutral-300 mt-4">The parser handles each format intelligently: For QFX and OFX files, it reads the SGML/XML transaction tags including dates, amounts, payee names, and memo fields. For CSV files, it detects the delimiter (comma, tab, or semicolon) and maps common column headers to standardized fields. For PDF statements, it uses text extraction to identify transaction rows and parse structured data. The result is a clean, consistent CSV output with uniform Date, Amount, Transaction Type, and Description columns regardless of the input format.</p>
+      <p class="body-md text-neutral-700 dark:text-neutral-300 mt-4">Security is paramount when handling financial documents. Unlike cloud-based services that require uploading your bank statements to external servers, our parser processes everything locally in your browser. Your transaction data, account numbers, and financial details remain on your computer and are never transmitted over the internet. This makes it ideal for processing sensitive financial information securely and privately.</p>
 
       <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">FAQs</h2>
       <div class="space-y-4 mt-4">
-        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">What file formats are supported?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">The parser supports QFX (Quicken Financial Exchange), OFX (Open Financial Exchange), CSV (comma-separated values), and PDF bank statement files. Each format is detected automatically, and transactions are normalized into a standard structure.</p></div>
-        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">How does format detection work?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">The tool first checks the file extension, then inspects the file content — QFX/OFX files contain SGML tags like &lt;STMTTRN&gt;, CSV files have delimiters such as commas or tabs, and PDF files start with a %PDF header. This multi-layered detection ensures accurate format identification.</p></div>
-        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Is my data secure?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">Absolutely. All processing is done locally in your browser using JavaScript. Your bank statements and financial data never leave your device, ensuring complete privacy and security.</p></div>
-      </div>
-    </section>
-
-    <!-- Related Tools -->
-    <section class="bg-white dark:bg-neutral-900 rounded-xl p-6 md:p-8 shadow-level-3 dark:border dark:border-neutral-800 mt-6">
-      <h2 class="display-sm text-neutral-900 dark:text-neutral-100">Related Tools</h2>
-      <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mt-4">
-        <a href="/finance/qfx-to-excel/" class="px-4 py-3 bg-neutral-100 dark:bg-neutral-800 rounded-lg body-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors text-center">QFX to Excel</a>
-        <a href="/finance/ofx-to-excel/" class="px-4 py-3 bg-neutral-100 dark:bg-neutral-800 rounded-lg body-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors text-center">OFX to Excel</a>
-        <a href="/finance/csv-to-excel/" class="px-4 py-3 bg-neutral-100 dark:bg-neutral-800 rounded-lg body-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors text-center">CSV to Excel</a>
-        <a href="/finance/pdf-statement-to-excel/" class="px-4 py-3 bg-neutral-100 dark:bg-neutral-800 rounded-lg body-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors text-center">PDF to Excel</a>
-        <a href="/finance/column-mapper/" class="px-4 py-3 bg-neutral-100 dark:bg-neutral-800 rounded-lg body-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors text-center">Column Mapper</a>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">What file formats does the parser support?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">The parser supports QFX (Quicken Financial Exchange), OFX (Open Financial Exchange), CSV (comma-separated values), and PDF bank statement files. Each format is detected automatically, and transactions are normalized into a standard structure with Date, Amount, Type, and Description columns.</p></div>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">How does the auto-detection work?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">The tool first checks the file extension, then inspects the file content. QFX/OFX files contain SGML tags, CSV files have delimiters like commas or tabs, and PDF files start with a PDF header. This multi-layered detection ensures accurate format identification every time.</p></div>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Can it parse PDF bank statements from any bank?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">The parser works with most standard PDF bank statements that use structured tables. Results may vary depending on the bank's PDF layout. If you have issues with a specific bank, try our PDF Statement to Excel tool for dedicated PDF parsing.</p></div>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Is my financial data secure when using this tool?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">Absolutely. All processing is done locally in your browser using JavaScript. Your bank statements, transaction data, and financial information never leave your device and are not stored on any server. Complete privacy is guaranteed.</p></div>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">What if my CSV file uses a different delimiter?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">The parser automatically detects common delimiters including commas, tabs, and semicolons. It also attempts to recognize common column header names across different bank formats to map them correctly.</p></div>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Can I remove duplicate transactions after parsing?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">Yes, after downloading the standardized CSV, use our Transaction Deduplicator tool to find and remove any duplicate entries from your parsed data.</p></div>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Is there a file size limit for uploaded statements?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">No artificial limits exist. Since processing happens locally in your browser, the practical limit depends on your device memory. Most bank statements are well under 10MB and process instantly.</p></div>
       </div>
     </section>
   </div>
@@ -106,7 +110,7 @@ import ToolLayout from '../../components/ToolLayout.astro';
     "mainEntity": [
       {
         "@type": "Question",
-        "name": "What file formats are supported?",
+        "name": "What file formats does the parser support?",
         "acceptedAnswer": {
           "@type": "Answer",
           "text": "The parser supports QFX (Quicken Financial Exchange), OFX (Open Financial Exchange), CSV (comma-separated values), and PDF bank statement files."
@@ -114,18 +118,50 @@ import ToolLayout from '../../components/ToolLayout.astro';
       },
       {
         "@type": "Question",
-        "name": "How does format detection work?",
+        "name": "How does the auto-detection work?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "The tool first checks the file extension, then inspects the file content — QFX/OFX files contain SGML tags like STMTTRN, CSV files have delimiters such as commas or tabs, and PDF files start with a PDF header."
+          "text": "The tool first checks the file extension, then inspects the file content. QFX/OFX files contain SGML tags, CSV files have delimiters, and PDF files start with a PDF header."
         }
       },
       {
         "@type": "Question",
-        "name": "Is my data secure?",
+        "name": "Can it parse PDF bank statements from any bank?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Absolutely. All processing is done locally in your browser using JavaScript. Your bank statements and financial data never leave your device."
+          "text": "The parser works with most standard PDF bank statements that use structured tables. Results may vary depending on the bank's PDF layout."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is my financial data secure?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. All processing is done locally in your browser using JavaScript. Your financial data never leaves your device."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What if my CSV file uses a different delimiter?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The parser automatically detects common delimiters including commas, tabs, and semicolons."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I remove duplicate transactions after parsing?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, after downloading the standardized CSV, use our Transaction Deduplicator tool to remove any duplicate entries."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is there a file size limit?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No artificial limits exist. The practical limit depends on your device memory."
         }
       }
     ]
