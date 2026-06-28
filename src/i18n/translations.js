@@ -27,10 +27,10 @@ export const translations = {
     'nav.requestTool': 'Request a Tool',
 
     // Hero
-    'hero.badge': '100% Free • No Sign-up • Browser-based',
-    'hero.title': 'All Tools, Zero Hassle.',
-    'hero.subtitle': 'Free online tools for images, PDFs, and finance. We even add tools on your request.',
-    'hero.browseTools': 'Browse Tools',
+    'hero.badge': 'No signup • No upload • 100% free',
+    'hero.title': 'Free Online Tools for Work & Finance',
+    'hero.subtitle': 'Convert, calculate & automate your tasks instantly — no signup, no upload, no limits.',
+    'hero.browseTools': 'Browse All Tools',
     'hero.requestTool': 'Request a Tool',
 
     // Trust strip

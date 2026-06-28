@@ -1,24 +1,24 @@
 ---
 /**
  * Homepage — Woorkeasy
- * Hero section with brand gradient, tool category grid, and contact CTA.
+ * Hero with instant value prop, featured tool demo, popular picks, and full tool grid.
  */
 import Layout from '../layouts/Layout.astro';
 import ToolCard from '../components/ToolCard.astro';
 
 const tools = [
   // ─── Image: Convert ───
-  { title: 'JPG to PNG', description: 'Convert JPG images to lossless PNG format.', href: '/image/jpg-to-png', icon: '�', category: 'Image' },
+  { title: 'JPG to PNG', description: 'Convert JPG images to lossless PNG format.', href: '/image/jpg-to-png', icon: '🖼️', category: 'Image' },
   { title: 'PNG to JPG', description: 'Convert PNG images to compressed JPG with adjustable quality.', href: '/image/png-to-jpg', icon: '🔄', category: 'Image' },
   { title: 'JPG/PNG to WebP', description: 'Convert JPG/PNG to WebP for smaller web-optimized files.', href: '/image/to-webp', icon: '⚡', category: 'Image' },
-  { title: 'WebP to JPG/PNG', description: 'Convert WebP images to JPG, PNG, or PDF. Batch supported.', href: '/image/webp-converter', icon: '�', category: 'Image' },
-  { title: 'HEIC to JPG', description: 'Convert Apple HEIC photos to universal JPG format.', href: '/image/heic-to-jpg', icon: '�', category: 'Image' },
+  { title: 'WebP to JPG/PNG', description: 'Convert WebP images to JPG, PNG, or PDF. Batch supported.', href: '/image/webp-converter', icon: '🖼️', category: 'Image' },
+  { title: 'HEIC to JPG', description: 'Convert Apple HEIC photos to universal JPG format.', href: '/image/heic-to-jpg', icon: '📱', category: 'Image' },
   // ─── Image: Edit ───
-  { title: 'Compress Image', description: 'Reduce image file size with adjustable quality slider.', href: '/image/compress', icon: '�️', category: 'Image' },
+  { title: 'Compress Image', description: 'Reduce image file size with adjustable quality slider.', href: '/image/compress', icon: '💾', category: 'Image' },
   { title: 'Crop Image', description: 'Crop images to exact dimensions with preset aspect ratios.', href: '/image/crop', icon: '✂️', category: 'Image' },
-  { title: 'Rotate & Flip', description: 'Rotate images by any angle or flip horizontally/vertically.', href: '/image/rotate', icon: '�', category: 'Image' },
-  { title: 'Add Watermark', description: 'Add text or image watermarks with adjustable opacity and position.', href: '/image/watermark', icon: '�', category: 'Image' },
-  { title: 'Remove Background', description: 'AI-powered background removal using TensorFlow.js.', href: '/image/background-remover', icon: '�️', category: 'Image' },
+  { title: 'Rotate & Flip', description: 'Rotate images by any angle or flip horizontally/vertically.', href: '/image/rotate', icon: '🔄', category: 'Image' },
+  { title: 'Add Watermark', description: 'Add text or image watermarks with adjustable opacity and position.', href: '/image/watermark', icon: '💧', category: 'Image' },
+  { title: 'Remove Background', description: 'AI-powered background removal using TensorFlow.js.', href: '/image/background-remover', icon: '✨', category: 'Image' },
   // ─── PDF Tools ───
   { title: 'JPG to PDF', description: 'Convert images to PDF documents with page size options.', href: '/pdf/jpg-to-pdf', icon: '📄', category: 'PDF' },
   { title: 'PDF to Image', description: 'Convert PDF pages to high-quality JPG or PNG images.', href: '/pdf/pdf-to-image', icon: '🖼️', category: 'PDF' },
@@ -44,6 +44,10 @@ const tools = [
   { title: 'Character Counter', description: 'Count characters, words, sentences, and get keyword density.', href: '/utility/character-counter', icon: '🔢', category: 'Utility' },
   { title: 'Web to Image / PDF', description: 'Capture any webpage or HTML as a JPG, PNG, or PDF screenshot.', href: '/utility/web-to-image', icon: '🌐', category: 'Utility' },
 ];
+
+const popularTools = tools.filter(t =>
+  ['OFX to Excel', 'Merge PDF', 'Bank Statement Parser'].includes(t.title)
+);
 
 const websiteJsonLd = {
   '@context': 'https://schema.org',
@@ -147,60 +151,107 @@ const faqJsonLd = {
   description="30+ free online tools for images, PDFs, finance, and developers. Convert, compress, merge, and edit files in your browser. No sign-up, no upload, 100% free."
   jsonLd={[websiteJsonLd, organizationJsonLd, faqJsonLd]}
 >
-  <!-- Hero Section -->
+  <!-- ─── Hero Section ─── -->
   <section class="relative overflow-hidden bg-white dark:bg-neutral-950">
-    <!-- Gradient Background -->
     <div class="absolute inset-0 opacity-15 dark:opacity-10 brand-gradient" aria-hidden="true"></div>
 
-    <div class="relative max-w-5xl mx-auto px-6 py-24 md:py-32 text-center">
-      <!-- Eyebrow Badge -->
+    <div class="relative max-w-5xl mx-auto px-6 py-20 md:py-28 text-center">
+      <!-- Badge -->
       <div class="inline-flex items-center gap-2 bg-neutral-50 dark:bg-neutral-900 rounded-full px-3 py-1 mb-6 shadow-level-1">
-        <span class="caption-mono text-neutral-500" data-i18n="hero.badge">100% Free • No Sign-up • Browser-based</span>
+        <span class="caption-mono text-neutral-500" data-i18n="hero.badge">No signup &bull; No upload &bull; 100% free</span>
       </div>
 
-      <!-- Main Heading -->
-      <h1 class="display-xl text-neutral-900 dark:text-neutral-100 max-w-3xl mx-auto" data-i18n="hero.title">
-        All Tools, Zero Hassle.
+      <!-- Headline -->
+      <h1 class="display-xl text-neutral-900 dark:text-neutral-100 max-w-4xl mx-auto" data-i18n="hero.title">
+        Free Online Tools for Work &amp; Finance
       </h1>
 
       <!-- Subtitle -->
       <p class="body-lg text-neutral-600 dark:text-neutral-400 mt-4 max-w-2xl mx-auto" data-i18n="hero.subtitle">
-        Free online tools for images, PDFs, and finance. We even add tools on your request.
+        Convert, calculate &amp; automate your tasks instantly &mdash; no signup, no upload, no limits.
       </p>
 
-      <!-- CTA Buttons -->
+      <!-- CTAs -->
       <div class="flex flex-wrap items-center justify-center gap-4 mt-8">
-        <a href="#tools" class="btn-primary no-underline" data-i18n="hero.browseTools">Browse Tools</a>
+        <a href="/finance/ofx-to-excel/" class="btn-primary no-underline flex items-center gap-2">
+          <span>&#9733;</span> Try Top Tool
+        </a>
+        <a href="#tools" class="btn-secondary no-underline" data-i18n="hero.browseTools">Browse All Tools</a>
         <button data-request-tool class="btn-secondary no-underline cursor-pointer" data-i18n="hero.requestTool">Request a Tool</button>
       </div>
     </div>
   </section>
 
-  <!-- Trust Strip -->
+  <!-- ─── Featured Tool — Instant Interaction ─── -->
+  <section class="max-w-5xl mx-auto px-6 pb-8 -mt-6 relative z-10">
+    <a href="/finance/ofx-to-excel/" class="group block bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30 rounded-2xl border border-blue-100 dark:border-blue-900/50 p-8 md:p-10 no-underline hover:shadow-level-4 transition-all duration-300">
+      <div class="flex flex-col md:flex-row items-center gap-6 md:gap-10">
+        <div class="shrink-0 w-16 h-16 rounded-2xl bg-blue-100 dark:bg-blue-900/50 flex items-center justify-center text-3xl">
+          &#127974;
+        </div>
+        <div class="flex-1 text-center md:text-left">
+          <span class="caption-mono text-blue-600 dark:text-blue-400 uppercase tracking-wider">Most Popular &bull; Finance</span>
+          <h2 class="display-md text-neutral-900 dark:text-neutral-100 mt-1 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">OFX to Excel Converter</h2>
+          <p class="body-md text-neutral-600 dark:text-neutral-400 mt-1">Upload your bank statement and convert OFX to Excel instantly in your browser. No upload, no signup.</p>
+          <!-- Visual drag-and-drop zone -->
+          <div class="mt-5 upload-zone bg-white/60 dark:bg-neutral-900/60 py-6 px-8 rounded-xl flex flex-col items-center gap-2 border-dashed">
+            <svg class="w-8 h-8 text-neutral-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 16V4m0 0L8 8m4-4l4 4M4 20h16" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span class="body-sm text-neutral-500">Drop your .qfx or .ofx file here, or click to browse</span>
+            <span class="caption-mono text-blue-600 dark:text-blue-400 font-medium inline-flex items-center gap-1 mt-1 group-hover:gap-2 transition-all">Try with a sample file &rarr;</span>
+          </div>
+        </div>
+      </div>
+    </a>
+  </section>
+
+  <!-- ─── Trust Strip ─── -->
   <section class="bg-white dark:bg-neutral-950 border-y border-neutral-200 dark:border-neutral-800 py-6">
     <div class="max-w-5xl mx-auto px-6">
       <div class="flex flex-wrap items-center justify-center gap-8 text-center">
         <div class="flex items-center gap-2">
-          <span class="text-lg">🔒</span>
+          <span class="text-lg">&#128274;</span>
           <span class="body-sm text-neutral-600 dark:text-neutral-400" data-i18n="trust.privacy">Files never leave your browser</span>
         </div>
         <div class="flex items-center gap-2">
-          <span class="text-lg">⚡</span>
+          <span class="text-lg">&#9889;</span>
           <span class="body-sm text-neutral-600 dark:text-neutral-400" data-i18n="trust.instant">Instant processing</span>
         </div>
         <div class="flex items-center gap-2">
-          <span class="text-lg">♾️</span>
+          <span class="text-lg">&#8734;&#65039;</span>
           <span class="body-sm text-neutral-600 dark:text-neutral-400" data-i18n="trust.noLimits">No file limits</span>
         </div>
         <div class="flex items-center gap-2">
-          <span class="text-lg">📱</span>
+          <span class="text-lg">&#128241;</span>
           <span class="body-sm text-neutral-600 dark:text-neutral-400" data-i18n="trust.mobile">Works on mobile</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-lg">&#10003;</span>
+          <span class="body-sm text-neutral-600 dark:text-neutral-400">No account needed</span>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Information Section (SEO - internal links high in DOM) -->
+  <!-- ─── Most Popular Tools ─── -->
+  <section class="max-w-5xl mx-auto px-6 pt-12 pb-4">
+    <div class="text-center mb-8">
+      <span class="caption-mono text-neutral-500 uppercase">&#128293; Most Popular</span>
+      <h2 class="display-lg text-neutral-900 dark:text-neutral-100 mt-2">Top tools our users love</h2>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      {popularTools.map(tool => (
+        <ToolCard
+          title={tool.title}
+          description={tool.description}
+          href={tool.href}
+          icon={tool.icon}
+          category={tool.category}
+        />
+      ))}
+    </div>
+  </section>
+
+  <!-- ─── SEO Internal Links ─── -->
   <section class="border-t border-neutral-200 dark:border-neutral-800">
     <div class="max-w-5xl mx-auto px-6 py-8">
       <div class="flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-center">
@@ -213,7 +264,7 @@ const faqJsonLd = {
     </div>
   </section>
 
-  <!-- Tools Grid -->
+  <!-- ─── All Tools Grid ─── -->
   <section id="tools" class="max-w-5xl mx-auto px-6 py-16 md:py-24">
     <div class="text-center mb-10">
       <span class="caption-mono text-neutral-500 uppercase" data-i18n="tools.eyebrow">All Tools</span>
@@ -233,7 +284,7 @@ const faqJsonLd = {
     </div>
   </section>
 
-  <!-- Privacy Section (Dark polarity-flip band) -->
+  <!-- ─── Privacy Band ─── -->
   <section class="bg-neutral-900 dark:bg-neutral-800 text-white py-20 md:py-28">
     <div class="max-w-5xl mx-auto px-6 text-center">
       <span class="caption-mono text-neutral-400 uppercase" data-i18n="privacy.eyebrow">Privacy First</span>
@@ -245,7 +296,8 @@ const faqJsonLd = {
     </div>
   </section>
 
-  <!-- Image Tools Section -->
+  <!-- ─── SEO Category Sections ─── -->
+  <!-- Image Tools -->
   <section class="max-w-5xl mx-auto px-6 py-16 md:py-20">
     <div class="text-center mb-10">
       <span class="caption-mono text-neutral-500 uppercase">Image Tools</span>
@@ -254,9 +306,14 @@ const faqJsonLd = {
         Edit, convert, and optimize images online for free. Our image tools support JPG, PNG, WebP, HEIC, and more. Compress images to reduce file size, remove backgrounds with AI, crop and resize photos, add watermarks, and convert between formats all without uploading files to any server. Whether you are a blogger, designer, or business owner, these browser-based image editors help you prepare web-ready visuals in seconds.
       </p>
     </div>
+    <div class="flex flex-wrap justify-center gap-3">
+      {tools.filter(t => t.category === 'Image').map(t => (
+        <a href={t.href} class="body-sm text-neutral-600 dark:text-neutral-400 no-underline hover:text-blue-600 dark:hover:text-blue-400 px-3 py-1.5 rounded-full bg-neutral-100 dark:bg-neutral-800 hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">{t.title}</a>
+      ))}
+    </div>
   </section>
 
-  <!-- PDF Tools Section -->
+  <!-- PDF Tools -->
   <section class="bg-neutral-100 dark:bg-neutral-900 py-16 md:py-20">
     <div class="max-w-5xl mx-auto px-6 text-center">
       <span class="caption-mono text-neutral-500 uppercase">PDF Tools</span>
@@ -265,9 +322,15 @@ const faqJsonLd = {
         Work with PDF documents directly in your browser. Merge multiple PDFs into one file, split large PDFs into separate pages, convert JPG images to PDF documents, rotate pages, and extract PDF pages as images. All PDF tools process files client-side, so your documents never leave your device. Fast, secure, and completely free no software installation required.
       </p>
     </div>
+    <div class="flex flex-wrap justify-center gap-3 mt-6">
+      {tools.filter(t => t.category === 'PDF').map(t => (
+        <a href={t.href} class="body-sm text-neutral-600 dark:text-neutral-400 no-underline hover:text-blue-600 dark:hover:text-blue-400 px-3 py-1.5 rounded-full bg-white dark:bg-neutral-800 hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">{t.title}</a>
+      ))}
+      <span class="body-sm text-neutral-400 px-3 py-1.5">&#9654; Try <a href="/pdf/merge-pdf/" class="text-blue-600 dark:text-blue-400 no-underline hover:underline">Merge PDF</a> next</span>
+    </div>
   </section>
 
-  <!-- Finance Tools Section -->
+  <!-- Finance Tools -->
   <section class="max-w-5xl mx-auto px-6 py-16 md:py-20">
     <div class="text-center mb-10">
       <span class="caption-mono text-neutral-500 uppercase">Finance Tools</span>
@@ -276,23 +339,44 @@ const faqJsonLd = {
         Convert financial data files with ease. Our finance tools let you convert OFX and QFX bank statements to Excel spreadsheets, transform Excel files to CSV format, convert CSV data back to Excel, clean and format CSV data, remove duplicate transactions, map bank columns to standard formats, and extract transactions from PDF bank statements. Perfect for accountants, bookkeepers, and anyone managing personal finances. Process sensitive financial documents securely in your browser with no data upload.
       </p>
     </div>
+    <div class="flex flex-wrap justify-center gap-3 mt-6">
+      {tools.filter(t => t.category === 'Finance').map(t => (
+        <a href={t.href} class="body-sm text-neutral-600 dark:text-neutral-400 no-underline hover:text-blue-600 dark:hover:text-blue-400 px-3 py-1.5 rounded-full bg-neutral-100 dark:bg-neutral-800 hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">{t.title}</a>
+      ))}
+    </div>
   </section>
 
-  <!-- Why Use Online Tools Section -->
+  <!-- Dev & Utility -->
   <section class="bg-neutral-100 dark:bg-neutral-900 py-16 md:py-20">
     <div class="max-w-5xl mx-auto px-6 text-center">
+      <span class="caption-mono text-neutral-500 uppercase">Dev &amp; Utility Tools</span>
+      <h2 class="display-md text-neutral-900 dark:text-neutral-100 mt-2">Free Online Developer Tools</h2>
+      <p class="body-md text-neutral-600 dark:text-neutral-400 mt-2 max-w-3xl mx-auto">
+        Everyday utilities for developers and power users. Encode and decode Base64 and URL strings, format and validate JSON, count characters and words in any text, and capture web pages as JPG, PNG, or PDF screenshots. All tools run entirely in your browser with no server uploads.
+      </p>
+    </div>
+    <div class="flex flex-wrap justify-center gap-3 mt-6">
+      {tools.filter(t => t.category === 'Dev' || t.category === 'Utility').map(t => (
+        <a href={t.href} class="body-sm text-neutral-600 dark:text-neutral-400 no-underline hover:text-blue-600 dark:hover:text-blue-400 px-3 py-1.5 rounded-full bg-white dark:bg-neutral-800 hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">{t.title}</a>
+      ))}
+    </div>
+  </section>
+
+  <!-- ─── Why Woorkeasy ─── -->
+  <section class="max-w-5xl mx-auto px-6 py-16 md:py-20">
+    <div class="text-center">
       <span class="caption-mono text-neutral-500 uppercase">Why Woorkeasy</span>
       <h2 class="display-md text-neutral-900 dark:text-neutral-100 mt-2">Why Use Free Online Tools?</h2>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-10 text-left">
-        <div class="bg-white dark:bg-neutral-800 rounded-xl p-6 shadow-level-2">
+        <div class="bg-white dark:bg-neutral-900 rounded-xl p-6 shadow-level-2">
           <h3 class="body-lg font-semibold text-neutral-900 dark:text-neutral-100">100% Free, No Sign-Up</h3>
           <p class="body-sm text-neutral-600 dark:text-neutral-400 mt-2">Every tool on Woorkeasy is completely free to use. No subscriptions, no hidden fees, no account required.</p>
         </div>
-        <div class="bg-white dark:bg-neutral-800 rounded-xl p-6 shadow-level-2">
+        <div class="bg-white dark:bg-neutral-900 rounded-xl p-6 shadow-level-2">
           <h3 class="body-lg font-semibold text-neutral-900 dark:text-neutral-100">Browser-Based and Fast</h3>
           <p class="body-sm text-neutral-600 dark:text-neutral-400 mt-2">All tools run directly in your browser with instant processing. No downloads, no installations, no waiting.</p>
         </div>
-        <div class="bg-white dark:bg-neutral-800 rounded-xl p-6 shadow-level-2">
+        <div class="bg-white dark:bg-neutral-900 rounded-xl p-6 shadow-level-2">
           <h3 class="body-lg font-semibold text-neutral-900 dark:text-neutral-100">Privacy and Security</h3>
           <p class="body-sm text-neutral-600 dark:text-neutral-400 mt-2">Your files are processed client-side and never uploaded to any server. Your data stays on your device, always.</p>
         </div>
@@ -300,7 +384,21 @@ const faqJsonLd = {
     </div>
   </section>
 
-  <!-- FAQ Section -->
+  <!-- ─── Related Tools / Retention Loop ─── -->
+  <section class="bg-neutral-100 dark:bg-neutral-900 py-12">
+    <div class="max-w-5xl mx-auto px-6 text-center">
+      <h2 class="display-md text-neutral-900 dark:text-neutral-100">Keep exploring</h2>
+      <div class="flex flex-wrap justify-center gap-3 mt-6">
+        <a href="/finance/ofx-to-excel/" class="body-sm font-medium text-white bg-neutral-900 dark:bg-white dark:text-neutral-900 px-5 py-2.5 rounded-full no-underline hover:opacity-85 transition-opacity">OFX to Excel &rarr;</a>
+        <a href="/finance/pdf-statement-to-excel/" class="body-sm font-medium text-neutral-600 dark:text-neutral-400 bg-white dark:bg-neutral-800 px-5 py-2.5 rounded-full no-underline hover:text-neutral-900 dark:hover:text-neutral-100 hover:shadow-level-2 transition-all">PDF Statement to Excel &rarr;</a>
+        <a href="/pdf/merge-pdf/" class="body-sm font-medium text-neutral-600 dark:text-neutral-400 bg-white dark:bg-neutral-800 px-5 py-2.5 rounded-full no-underline hover:text-neutral-900 dark:hover:text-neutral-100 hover:shadow-level-2 transition-all">Merge PDF &rarr;</a>
+        <a href="/image/compress/" class="body-sm font-medium text-neutral-600 dark:text-neutral-400 bg-white dark:bg-neutral-800 px-5 py-2.5 rounded-full no-underline hover:text-neutral-900 dark:hover:text-neutral-100 hover:shadow-level-2 transition-all">Compress Image &rarr;</a>
+        <a href="/finance/bank-statement-parser/" class="body-sm font-medium text-neutral-600 dark:text-neutral-400 bg-white dark:bg-neutral-800 px-5 py-2.5 rounded-full no-underline hover:text-neutral-900 dark:hover:text-neutral-100 hover:shadow-level-2 transition-all">Bank Statement Parser &rarr;</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── FAQ ─── -->
   <section class="max-w-3xl mx-auto px-6 py-16 md:py-20">
     <div class="text-center mb-10">
       <span class="caption-mono text-neutral-500 uppercase">FAQs</span>
@@ -352,7 +450,7 @@ const faqJsonLd = {
     </div>
   </section>
 
-  <!-- Request / Contact Section -->
+  <!-- ─── Contact CTA ─── -->
   <section class="max-w-5xl mx-auto px-6 py-16 md:py-24 text-center">
     <span class="caption-mono text-neutral-500 uppercase" data-i18n="contact.eyebrow">Need Something Else?</span>
     <h2 class="display-md text-neutral-900 dark:text-neutral-100 mt-2" data-i18n="contact.heading">Request a tool.</h2>

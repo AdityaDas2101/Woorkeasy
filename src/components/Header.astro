@@ -8,6 +8,23 @@ import LanguageSwitcher from './LanguageSwitcher.astro';
 
 const navDropdowns = [
   {
+    label: 'Finance',
+    i18nKey: 'nav.finance',
+    description: 'Process financial statements and convert formats.',
+    items: [
+      { name: 'OFX to Excel', href: '/finance/ofx-to-excel' },
+      { name: 'QFX to Excel', href: '/finance/qfx-to-excel' },
+      { name: 'Excel to CSV', href: '/finance/excel-to-csv' },
+      { name: 'CSV to Excel', href: '/finance/csv-to-excel' },
+      { name: 'CSV Cleaner', href: '/finance/csv-cleaner' },
+      { name: 'CSV Formatter', href: '/finance/csv-formatter' },
+      { name: 'Transaction Deduplicator', href: '/finance/transaction-deduplicator' },
+      { name: 'Column Mapper', href: '/finance/column-mapper' },
+      { name: 'PDF Statement to Excel', href: '/finance/pdf-statement-to-excel' },
+      { name: 'Bank Statement Parser', href: '/finance/bank-statement-parser' },
+    ],
+  },
+  {
     label: 'Image Tools',
     i18nKey: 'nav.imageTools',
     description: 'Convert, edit, and optimize your images with ease.',
@@ -34,23 +51,6 @@ const navDropdowns = [
       { name: 'Merge PDF', href: '/pdf/merge-pdf' },
       { name: 'Split PDF', href: '/pdf/split-pdf' },
       { name: 'Rotate PDF', href: '/pdf/rotate-pdf' },
-    ],
-  },
-  {
-    label: 'Finance',
-    i18nKey: 'nav.finance',
-    description: 'Process financial statements and convert formats.',
-    items: [
-      { name: 'OFX to Excel', href: '/finance/ofx-to-excel' },
-      { name: 'QFX to Excel', href: '/finance/qfx-to-excel' },
-      { name: 'Excel to CSV', href: '/finance/excel-to-csv' },
-      { name: 'CSV to Excel', href: '/finance/csv-to-excel' },
-      { name: 'CSV Cleaner', href: '/finance/csv-cleaner' },
-      { name: 'CSV Formatter', href: '/finance/csv-formatter' },
-      { name: 'Transaction Deduplicator', href: '/finance/transaction-deduplicator' },
-      { name: 'Column Mapper', href: '/finance/column-mapper' },
-      { name: 'PDF Statement to Excel', href: '/finance/pdf-statement-to-excel' },
-      { name: 'Bank Statement Parser', href: '/finance/bank-statement-parser' },
     ],
   },
   {

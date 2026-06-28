@@ -106,24 +106,26 @@ const softwareJsonLd = {
     <header class="mb-6">
       <h1 class="display-lg text-neutral-900 dark:text-neutral-100">{heading}</h1>
       <p class="body-lg text-neutral-600 dark:text-neutral-400 mt-2 max-w-2xl">{description}</p>
+      <div class="flex flex-wrap gap-2 mt-3">
+        <span class="inline-flex items-center gap-1 text-xs font-medium text-green-700 dark:text-green-400 bg-green-50 dark:bg-green-900/30 px-2.5 py-1 rounded-full">No upload required</span>
+        <span class="inline-flex items-center gap-1 text-xs font-medium text-blue-700 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 px-2.5 py-1 rounded-full">100% free</span>
+        <span class="inline-flex items-center gap-1 text-xs font-medium text-purple-700 dark:text-purple-400 bg-purple-50 dark:bg-purple-900/30 px-2.5 py-1 rounded-full">Browser-based</span>
+      </div>
     </header>
-
-    <!-- AD: Top Banner (below heading, centered, full width) -->
-    <Ad slot="YOUR_AD_SLOT_ID" format="horizontal" layout="top" />
 
     <!-- Desktop two-column: main content + sticky sidebar -->
     <div class="lg:grid lg:grid-cols-[1fr_336px] lg:gap-8">
-      <!-- Left: Tool Content + Inline/Bottom Ads -->
+      <!-- Left: Tool Content + Ads + Info -->
       <div class="min-w-0 space-y-6">
-        <!-- Tool Card (default slot: upload, options, results, about section) -->
+        <!-- Tool Card — FIRST (above the fold, no ad before it) -->
         <div class="bg-white dark:bg-neutral-900 rounded-xl p-6 md:p-8 shadow-level-3 dark:border dark:border-neutral-800">
           <slot />
         </div>
 
-        <!-- AD: Inline (between tool card and info slot) -->
-        <Ad slot="YOUR_AD_SLOT_ID" format="rectangle" layout="inline" />
+        <!-- AD: Below tool (replaces former top banner position) -->
+        <Ad slot="YOUR_AD_SLOT_ID" format="horizontal" layout="top" />
 
-        <!-- Tips / Info content (how-to, FAQ, about extension) -->
+        <!-- Tips / Info content (how-to, FAQ, related tools) -->
         <slot name="info" />
 
         <!-- AD: Bottom (after all content) -->

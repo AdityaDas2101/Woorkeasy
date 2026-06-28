@@ -48,7 +48,9 @@ import ToolLayout from '../../components/ToolLayout.astro';
       </div>
 
       <!-- File list preview -->
-      <div id="file-list" class="mt-4 flex flex-col gap-2"></div>
+      <div id="file-list" class="mt-4 flex flex-col gap-2">
+        <p class="body-sm text-neutral-500 mb-1">Drag items or use arrows to reorder:</p>
+      </div>
 
       <button id="convert-btn" class="btn-primary mt-6">
         Create PDF
@@ -84,6 +86,7 @@ import ToolLayout from '../../components/ToolLayout.astro';
       <h2 class="display-sm text-neutral-900 dark:text-neutral-100">How to Use JPG to PDF Converter</h2>
       <ol class="list-decimal list-inside space-y-2 mt-4 body-md text-neutral-700 dark:text-neutral-300">
         <li>Upload your images " Drag & drop JPG, PNG, or WebP images or click to browse.</li>
+        <li>Reorder pages " Drag items or use the arrow buttons to arrange them in your desired order.</li>
         <li>Customize settings " Choose page size (A4, Letter, or Fit to Image) and orientation.</li>
         <li>Convert and download " Click "Create PDF" and download your combined PDF instantly.</li>
       </ol>
@@ -91,6 +94,7 @@ import ToolLayout from '../../components/ToolLayout.astro';
       <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">Features</h2>
       <ul class="list-disc list-inside space-y-2 mt-4 body-md text-neutral-700 dark:text-neutral-300">
         <li>Multiple image formats " Supports JPG, PNG, and WebP images.</li>
+        <li>Drag-and-drop reordering " Arrange pages in any order before conversion.</li>
         <li>Customizable page size " A4, Letter, or auto-fit to image dimensions.</li>
         <li>Portrait or landscape orientation " Flexible layout for any document type.</li>
         <li>100% browser-based " No files uploaded to servers, complete privacy.</li>
@@ -113,6 +117,10 @@ import ToolLayout from '../../components/ToolLayout.astro';
         <div>
           <h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Can I combine multiple images into one PDF?</h3>
           <p class="body-md text-neutral-700 dark:text-neutral-300">Yes, upload multiple images and each becomes a separate page in your combined PDF document.</p>
+        </div>
+        <div>
+          <h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Can I reorder images before converting?</h3>
+          <p class="body-md text-neutral-700 dark:text-neutral-300">Yes, drag and drop images or use the arrow buttons to rearrange them in any order you like.</p>
         </div>
         <div>
           <h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Are my images uploaded to a server?</h3>
@@ -172,6 +180,14 @@ import ToolLayout from '../../components/ToolLayout.astro';
     },
     {
       "@type": "Question",
+      "name": "Can I reorder images before converting?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, drag and drop images or use the arrow buttons to rearrange them in any order you like."
+      }
+    },
+    {
+      "@type": "Question",
       "name": "Are my images uploaded to a server?",
       "acceptedAnswer": {
         "@type": "Answer",
@@ -198,6 +214,25 @@ import ToolLayout from '../../components/ToolLayout.astro';
 }
 </script>
 
+<style>
+  .file-item { transition: opacity 0.15s; }
+  .file-item.dragging { opacity: 0.4; }
+  .file-item.drag-over { border-color: var(--color-primary, #2563eb) !important; background: rgba(37,99,235,0.05); }
+  .drag-handle { cursor: grab; touch-action: none; user-select: none; }
+  .drag-handle:active { cursor: grabbing; }
+  .file-thumb { width: 36px; height: 36px; object-fit: cover; border-radius: 4px; flex-shrink: 0; }
+  .reorder-btn { padding: 2px 8px; border: 1px solid #d4d4d8; border-radius: 4px; background: white; cursor: pointer; font-size: 13px; line-height: 1.4; color: #52525b; }
+  .reorder-btn:hover { background: #f4f4f5; }
+  .reorder-btn:disabled { opacity: 0.3; cursor: default; }
+  .remove-btn { padding: 2px 8px; border: 1px solid #fecaca; border-radius: 4px; background: white; cursor: pointer; font-size: 13px; line-height: 1.4; color: #ef4444; }
+  .remove-btn:hover { background: #fef2f2; }
+  .dark .reorder-btn { background: #27272a; border-color: #3f3f46; color: #d4d4d8; }
+  .dark .reorder-btn:hover { background: #3f3f46; }
+  .dark .remove-btn { background: #27272a; border-color: #7f1d1d; color: #fca5a5; }
+  .dark .remove-btn:hover { background: #3f1f1f; }
+  .dark .file-item.drag-over { border-color: var(--color-primary, #60a5fa) !important; background: rgba(96,165,250,0.1); }
+</style>
+
 <script>
   import { jsPDF } from 'jspdf';
 
@@ -215,6 +250,7 @@ import ToolLayout from '../../components/ToolLayout.astro';
   const downloadBtn = document.getElementById('download-btn') as HTMLAnchorElement;
 
   let files: File[] = [];
+  let dragIndex: number | null = null;
 
   uploadZone.addEventListener('click', () => fileInput.click());
   uploadZone.addEventListener('dragover', (e) => { e.preventDefault(); uploadZone.classList.add('dragover'); });
@@ -230,12 +266,93 @@ import ToolLayout from '../../components/ToolLayout.astro';
     files = newFiles.filter(f => f.type.startsWith('image/'));
     if (files.length > 0) {
       controls.classList.remove('hidden');
-      fileList.innerHTML = files.map((f, i) => `
-        <div class="flex items-center gap-2 body-sm text-neutral-600">
-          <span class="caption-mono text-neutral-500">${i + 1}.</span> ${f.name}
-        </div>
-      `).join('');
+      result.classList.add('hidden');
+      renderFileList();
     }
+  }
+
+  function renderFileList() {
+    fileList.innerHTML = files.map((f, i) => `
+      <div class="file-item flex items-center gap-2 body-sm text-neutral-600 bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg px-3 py-2" draggable="true" data-index="${i}">
+        <span class="drag-handle text-neutral-400 dark:text-neutral-500 text-lg leading-none">⠿</span>
+        <img class="file-thumb" src="${URL.createObjectURL(f)}" alt="" />
+        <span class="flex-1 truncate">${f.name}</span>
+        <span class="caption-mono text-neutral-400 dark:text-neutral-500">${formatBytes(f.size)}</span>
+        <button class="reorder-btn move-up" data-index="${i}" ${i === 0 ? 'disabled' : ''} title="Move up">↑</button>
+        <button class="reorder-btn move-down" data-index="${i}" ${i === files.length - 1 ? 'disabled' : ''} title="Move down">↓</button>
+        <button class="remove-btn" data-index="${i}" title="Remove">✕</button>
+      </div>
+    `).join('');
+
+    const items = fileList.querySelectorAll<HTMLElement>('.file-item');
+    items.forEach(item => {
+      item.addEventListener('dragstart', onDragStart);
+      item.addEventListener('dragend', onDragEnd);
+      item.addEventListener('dragover', onDragOver);
+      item.addEventListener('dragleave', onDragLeave);
+      item.addEventListener('drop', onDrop);
+    });
+
+    fileList.querySelectorAll('.move-up').forEach(btn =>
+      btn.addEventListener('click', () => moveItem(Number((btn as HTMLElement).dataset.index), -1)));
+    fileList.querySelectorAll('.move-down').forEach(btn =>
+      btn.addEventListener('click', () => moveItem(Number((btn as HTMLElement).dataset.index), 1)));
+    fileList.querySelectorAll('.remove-btn').forEach(btn =>
+      btn.addEventListener('click', () => removeItem(Number((btn as HTMLElement).dataset.index))));
+  }
+
+  function moveItem(index: number, direction: number) {
+    const newIndex = index + direction;
+    if (newIndex < 0 || newIndex >= files.length) return;
+    [files[index], files[newIndex]] = [files[newIndex], files[index]];
+    renderFileList();
+  }
+
+  function removeItem(index: number) {
+    files.splice(index, 1);
+    if (files.length === 0) {
+      controls.classList.add('hidden');
+      result.classList.add('hidden');
+      fileList.innerHTML = '<p class="body-sm text-neutral-500 mb-1">Drag items or use arrows to reorder:</p>';
+      return;
+    }
+    renderFileList();
+  }
+
+  function onDragStart(e: DragEvent) {
+    const item = (e.currentTarget as HTMLElement);
+    dragIndex = Number(item.dataset.index);
+    item.classList.add('dragging');
+    e.dataTransfer?.setData('text/plain', String(dragIndex));
+    if (e.dataTransfer) e.dataTransfer.effectAllowed = 'move';
+  }
+
+  function onDragEnd(e: DragEvent) {
+    (e.currentTarget as HTMLElement).classList.remove('dragging');
+    fileList.querySelectorAll('.file-item').forEach(el => el.classList.remove('drag-over'));
+    dragIndex = null;
+  }
+
+  function onDragOver(e: DragEvent) {
+    e.preventDefault();
+    if (e.dataTransfer) e.dataTransfer.dropEffect = 'move';
+    (e.currentTarget as HTMLElement).classList.add('drag-over');
+  }
+
+  function onDragLeave(e: DragEvent) {
+    (e.currentTarget as HTMLElement).classList.remove('drag-over');
+  }
+
+  function onDrop(e: DragEvent) {
+    e.preventDefault();
+    const target = (e.currentTarget as HTMLElement);
+    target.classList.remove('drag-over');
+    const fromIndex = dragIndex;
+    const toIndex = Number(target.dataset.index);
+    if (fromIndex === null || fromIndex === toIndex) return;
+    const [moved] = files.splice(fromIndex, 1);
+    files.splice(toIndex, 0, moved);
+    renderFileList();
   }
 
   convertBtn.addEventListener('click', async () => {
@@ -263,7 +380,6 @@ import ToolLayout from '../../components/ToolLayout.astro';
         const pageW = doc.internal.pageSize.getWidth();
         const pageH = doc.internal.pageSize.getHeight();
 
-        // Fit image within page with margins
         const margin = 10;
         const maxW = pageW - margin * 2;
         const maxH = pageH - margin * 2;

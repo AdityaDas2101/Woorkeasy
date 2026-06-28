@@ -117,6 +117,21 @@ When adding a new tool page, update **all 4 locations**:
 
 ## Page Patterns
 
+## Homepage Layout
+
+The homepage (`src/pages/index.astro`) follows this engagement-optimized structure:
+
+1. **Hero**: Strong value-prop headline (`"Free Online Tools for Work & Finance"`), trust badge, clear CTAs
+2. **Featured Tool Card**: Visual drag-and-drop zone linking to the top finance tool (OFX to Excel) — immediate interaction above the fold
+3. **Trust Strip**: 5 trust signals (privacy, instant, no limits, mobile, no account)
+4. **Most Popular Section**: Top 3 tools highlighted (OFX to Excel, Merge PDF, Bank Statement Parser)
+5. **All Tools Grid**: Full 30-tool grid using `ToolCard` component
+6. **SEO Category Sections**: Per-category SEO content with tag links and retention CTAs (e.g. "Try Merge PDF next")
+7. **Retention Loop**: "Keep exploring" row of related tool buttons
+8. **Why Woorkeasy**: 3-column feature cards
+9. **FAQ**: Expandable Q&A section
+10. **Contact CTA**: Request-a-tool button
+
 ### Tool Pages (30 pages)
 Every tool page follows this structure:
 1. **Frontmatter**: JSDoc comment + `import ToolLayout` + component call with `title`, `metaTitle`, `description`, `heading`, `category` props
