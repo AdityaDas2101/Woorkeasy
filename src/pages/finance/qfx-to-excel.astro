@@ -1,0 +1,297 @@
+﻿---
+/**
+ * QFX to Excel/CSV Converter
+ * Parses QFX (Quicken Financial Exchange) files using string parsing.
+ * QFX is essentially OFX with a Quicken-specific header.
+ * Generates downloadable CSV/Excel-compatible output.
+ */
+import ToolLayout from '../../components/ToolLayout.astro';
+---
+
+<ToolLayout
+  title="QFX to Excel"
+  metaTitle="QFX to Excel Converter Free - Quicken to XLSX | Woorkeasy"
+  description="Convert QFX Quicken files to Excel online free. Transform financial QFX data into XLSX spreadsheets. No upload, browser-based, free."
+  heading="Convert QFX to Excel"
+  category="Finance"
+>
+  <div id="qfx-app">
+    <!-- Upload Zone -->
+    <div id="upload-zone" class="upload-zone p-12 text-center cursor-pointer">
+      <div class="flex flex-col items-center gap-4">
+        <svg class="w-12 h-12 text-neutral-500" viewBox="0 0 48 48" fill="none">
+          <path d="M24 32V16m0 0l-6 6m6-6l6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <rect x="8" y="8" width="32" height="32" rx="4" stroke="currentColor" stroke-width="2"/>
+        </svg>
+        <p class="body-md text-neutral-600">Drag & drop QFX file here, or <span class="text-blue-600 font-medium">browse</span></p>
+        <p class="body-sm text-neutral-500">Supports .qfx files from Quicken / banks</p>
+      </div>
+      <input type="file" id="file-input" accept=".qfx" class="hidden" />
+    </div>
+
+    <!-- Controls -->
+    <div id="controls" class="hidden mt-6">
+      <div class="flex items-center gap-4">
+        <button id="download-csv" class="btn-primary">Download CSV</button>
+        <button id="download-excel" class="btn-secondary">Download Excel (TSV)</button>
+      </div>
+    </div>
+
+    <!-- Preview Table -->
+    <div id="preview" class="hidden mt-8 overflow-x-auto">
+      <h2 class="display-sm text-neutral-900 mb-4">Transaction Preview</h2>
+      <p id="summary" class="body-sm text-neutral-600 mb-4"></p>
+      <table id="preview-table" class="w-full border-collapse">
+        <thead id="table-head"></thead>
+        <tbody id="table-body"></tbody>
+      </table>
+    </div>
+
+    <!-- Error -->
+    <div id="error" class="hidden mt-6 p-4 bg-red-50 rounded-lg">
+      <p id="error-text" class="body-sm text-red-600"></p>
+    </div>
+  </div>
+</ToolLayout>
+
+  <div slot="info">
+    <section class="bg-white dark:bg-neutral-900 rounded-xl p-6 md:p-8 shadow-level-3 dark:border dark:border-neutral-800 mt-6">
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100">How to Use QFX to Excel Converter</h2>
+      <ol class="list-decimal list-inside space-y-2 mt-4 body-md text-neutral-700 dark:text-neutral-300">
+        <li>Upload or drag & drop your QFX Quicken file onto the converter.</li>
+        <li>Review the parsed transactions including check numbers in the preview table.</li>
+        <li>Download as CSV or Excel (TSV) for analysis in your spreadsheet software.</li>
+      </ol>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">Features</h2>
+      <ul class="list-disc list-inside space-y-2 mt-4 body-md text-neutral-700 dark:text-neutral-300">
+        <li><strong>Quicken Data Parsing</strong> - extracts date, amount, type, name, memo, and check numbers from QFX files.</li>
+        <li><strong>Dual Export</strong> - download as CSV or TSV (compatible with Excel and Google Sheets).</li>
+        <li><strong>Transaction Preview</strong> - review all entries with color-coded amounts before downloading.</li>
+        <li><strong>Private & Secure</strong> - all processing happens in your browser. No data upload required.</li>
+      </ul>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">Why Use Our QFX to Excel Converter</h2>
+      <p class="body-md text-neutral-700 dark:text-neutral-300 mt-4">Quicken users often need to export their financial data for tax preparation, budgeting, or in-depth analysis. Our QFX to Excel converter extracts every transaction detail from Quicken's QFX format - including check numbers - and presents it in a clean spreadsheet format. No need for expensive software or cloud subscriptions. With instant preview and dual export options, you can work with your financial data exactly how you need to.</p>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">FAQs</h2>
+      <div class="space-y-4 mt-4">
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">What's the difference between QFX and OFX?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">QFX is Quicken's variant of the OFX format with additional fields like check numbers. Our tool handles both formats' specific structures and provides all available data fields in the output.</p></div>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Can I import the CSV back into Quicken?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">This tool is designed for exporting from Quicken to Excel. For importing data into Quicken, use your bank's direct QFX download or Quicken's built-in import features.</p></div>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Is my data secure?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">Absolutely. All processing is done locally in your browser. Your QFX financial data never leaves your device, ensuring complete privacy and security.</p></div>
+      </div>
+    </section>
+
+    <!-- Related Tools -->
+    <section class="bg-white dark:bg-neutral-900 rounded-xl p-6 md:p-8 shadow-level-3 dark:border dark:border-neutral-800 mt-6">
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100">Related Tools</h2>
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mt-4">
+        <a href="/finance/ofx-to-excel/" class="px-4 py-3 bg-neutral-100 dark:bg-neutral-800 rounded-lg body-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors text-center">OFX to Excel</a>
+        <a href="/finance/csv-to-excel/" class="px-4 py-3 bg-neutral-100 dark:bg-neutral-800 rounded-lg body-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors text-center">CSV to Excel</a>
+        <a href="/finance/excel-to-csv/" class="px-4 py-3 bg-neutral-100 dark:bg-neutral-800 rounded-lg body-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors text-center">Excel to CSV</a>
+        <a href="/finance/csv-cleaner/" class="px-4 py-3 bg-neutral-100 dark:bg-neutral-800 rounded-lg body-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors text-center">CSV Cleaner</a>
+        <a href="/finance/csv-formatter/" class="px-4 py-3 bg-neutral-100 dark:bg-neutral-800 rounded-lg body-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors text-center">CSV Formatter</a>
+        <a href="/finance/bank-statement-parser/" class="px-4 py-3 bg-neutral-100 dark:bg-neutral-800 rounded-lg body-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors text-center">Bank Statement Parser</a>
+      </div>
+    </section>
+  </div>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What's the difference between QFX and OFX?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "QFX is Quicken's variant of the OFX format with additional fields like check numbers. Our tool handles both formats' specific structures and provides all available data fields in the output."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I import the CSV back into Quicken?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "This tool is designed for exporting from Quicken to Excel. For importing data into Quicken, use your bank's direct QFX download or Quicken's built-in import features."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is my data secure?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Absolutely. All processing is done locally in your browser. Your QFX financial data never leaves your device, ensuring complete privacy and security."
+        }
+      }
+    ]
+  }
+  </script>
+
+<style>
+  #preview-table th {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    text-transform: uppercase;
+    background: var(--color-canvas-soft-2);
+    padding: 8px 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--color-hairline);
+  }
+  #preview-table td {
+    font-size: 14px;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--color-hairline);
+  }
+  #preview-table tr:hover td {
+    background: var(--color-canvas-soft);
+  }
+</style>
+
+<script>
+  const uploadZone = document.getElementById('upload-zone')!;
+  const fileInput = document.getElementById('file-input') as HTMLInputElement;
+  const controls = document.getElementById('controls')!;
+  const downloadCSVBtn = document.getElementById('download-csv')!;
+  const downloadExcelBtn = document.getElementById('download-excel')!;
+  const preview = document.getElementById('preview')!;
+  const summary = document.getElementById('summary')!;
+  const tableHead = document.getElementById('table-head')!;
+  const tableBody = document.getElementById('table-body')!;
+  const errorDiv = document.getElementById('error')!;
+  const errorText = document.getElementById('error-text')!;
+
+  interface Transaction {
+    date: string;
+    amount: string;
+    type: string;
+    name: string;
+    memo: string;
+    fitid: string;
+    checkNum: string;
+  }
+
+  let transactions: Transaction[] = [];
+
+  // Upload zone event listeners
+  uploadZone.addEventListener('click', () => fileInput.click());
+  uploadZone.addEventListener('dragover', (e) => { e.preventDefault(); uploadZone.classList.add('dragover'); });
+  uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('dragover'));
+  uploadZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    uploadZone.classList.remove('dragover');
+    if (e.dataTransfer?.files[0]) handleFile(e.dataTransfer.files[0]);
+  });
+  fileInput.addEventListener('change', () => { if (fileInput.files?.[0]) handleFile(fileInput.files[0]); });
+
+  async function handleFile(file: File) {
+    try {
+      const text = await file.text();
+      transactions = parseQFX(text);
+
+      if (transactions.length === 0) {
+        throw new Error('No transactions found in QFX file. Make sure the file contains STMTTRN entries.');
+      }
+
+      renderTable();
+      controls.classList.remove('hidden');
+      preview.classList.remove('hidden');
+      errorDiv.classList.add('hidden');
+      summary.textContent = `Found ${transactions.length} transaction(s)`;
+    } catch (err) {
+      errorDiv.classList.remove('hidden');
+      errorText.textContent = (err as Error).message;
+      controls.classList.add('hidden');
+      preview.classList.add('hidden');
+    }
+  }
+
+  function parseQFX(text: string): Transaction[] {
+    // QFX/OFX format uses SGML-like tags. Parse STMTTRN blocks.
+    const results: Transaction[] = [];
+    const stmtTrnRegex = /<STMTTRN>([\s\S]*?)<\/STMTTRN>/gi;
+    let match;
+
+    while ((match = stmtTrnRegex.exec(text)) !== null) {
+      const block = match[1];
+      results.push({
+        date: formatDate(extractTag(block, 'DTPOSTED')),
+        amount: extractTag(block, 'TRNAMT'),
+        type: extractTag(block, 'TRNTYPE'),
+        name: extractTag(block, 'NAME'),
+        memo: extractTag(block, 'MEMO'),
+        fitid: extractTag(block, 'FITID'),
+        checkNum: extractTag(block, 'CHECKNUM'),
+      });
+    }
+
+    return results;
+  }
+
+  function extractTag(block: string, tag: string): string {
+    const regex = new RegExp(`<${tag}>([^<\\n\\r]+)`, 'i');
+    const match = block.match(regex);
+    return match ? match[1].trim() : '';
+  }
+
+  function formatDate(dateStr: string): string {
+    if (dateStr.length >= 8) {
+      const year = dateStr.substring(0, 4);
+      const month = dateStr.substring(4, 6);
+      const day = dateStr.substring(6, 8);
+      return `${year}-${month}-${day}`;
+    }
+    return dateStr;
+  }
+
+  function renderTable() {
+    const headers = ['Date', 'Amount', 'Type', 'Name', 'Memo', 'Check #'];
+    tableHead.innerHTML = `<tr>${headers.map(h => `<th>${h}</th>`).join('')}</tr>`;
+    tableBody.innerHTML = transactions.slice(0, 100).map(t => `
+      <tr>
+        <td>${t.date}</td>
+        <td class="${parseFloat(t.amount) < 0 ? 'text-red-600' : 'text-blue-600'}">${t.amount}</td>
+        <td>${t.type}</td>
+        <td>${t.name}</td>
+        <td>${t.memo}</td>
+        <td>${t.checkNum}</td>
+      </tr>
+    `).join('');
+  }
+
+  function toCSV(): string {
+    const headers = 'Date,Amount,Type,Name,Memo,FITID,Check Number';
+    const rows = transactions.map(t =>
+      `"${t.date}","${t.amount}","${t.type}","${t.name.replace(/"/g, '""')}","${t.memo.replace(/"/g, '""')}","${t.fitid}","${t.checkNum}"`
+    );
+    return [headers, ...rows].join('\n');
+  }
+
+  function toTSV(): string {
+    const headers = 'Date\tAmount\tType\tName\tMemo\tFITID\tCheck Number';
+    const rows = transactions.map(t =>
+      `${t.date}\t${t.amount}\t${t.type}\t${t.name}\t${t.memo}\t${t.fitid}\t${t.checkNum}`
+    );
+    return [headers, ...rows].join('\n');
+  }
+
+  function downloadFile(content: string, filename: string, mime: string) {
+    const blob = new Blob([content], { type: mime });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = filename;
+    link.click();
+  }
+
+  downloadCSVBtn.addEventListener('click', () => {
+    downloadFile(toCSV(), 'qfx-transactions.csv', 'text/csv');
+  });
+
+  downloadExcelBtn.addEventListener('click', () => {
+    downloadFile(toTSV(), 'qfx-transactions.xls', 'application/vnd.ms-excel');
+  });
+</script>
+
+
+

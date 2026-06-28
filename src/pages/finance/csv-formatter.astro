@@ -1,0 +1,667 @@
+---
+/**
+ * CSV Formatter
+ * Format CSV files: normalize dates, clean currency symbols, reorder columns, format numbers.
+ * 100% client-side processing in the browser.
+ */
+import ToolLayout from '../../components/ToolLayout.astro';
+---
+
+<ToolLayout
+  title="CSV Formatter"
+  metaTitle="CSV Formatter Free - Format Dates, Currency & Columns Online | Woorkeasy"
+  description="Format CSV files online free. Normalize dates, clean currency symbols, reorder columns. Browser-based CSV formatter, no upload needed."
+  heading="CSV Formatter"
+  category="Finance"
+>
+  <div id="csv-formatter-app" class="flex flex-col gap-6">
+    <!-- Upload Zone -->
+    <div id="upload-zone" class="upload-zone p-12 text-center cursor-pointer">
+      <div class="flex flex-col items-center gap-4">
+        <svg class="w-12 h-12 text-neutral-500" viewBox="0 0 48 48" fill="none">
+          <path d="M24 32V16m0 0l-6 6m6-6l6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <rect x="8" y="8" width="32" height="32" rx="4" stroke="currentColor" stroke-width="2"/>
+        </svg>
+        <p class="body-md text-neutral-600">Drag & drop CSV file here, or <span class="text-blue-600 font-medium">browse</span></p>
+        <p class="body-sm text-neutral-500">Supports .csv files</p>
+      </div>
+      <input type="file" id="file-input" accept=".csv,text/csv" class="hidden" />
+    </div>
+
+    <!-- Options Panel -->
+    <div id="options-panel" class="hidden">
+      <div class="bg-white dark:bg-neutral-900 rounded-xl border border-neutral-200 dark:border-neutral-700 shadow-level-3 overflow-hidden">
+        <!-- Date Format Conversion -->
+        <div class="p-5 border-b border-neutral-200 dark:border-neutral-700">
+          <h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100 mb-3">Date Format Conversion</h3>
+          <div class="flex flex-wrap items-center gap-4">
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input type="checkbox" id="enable-date-format" class="accent-neutral-900" />
+              <span class="body-sm text-neutral-700 dark:text-neutral-300">Convert dates</span>
+            </label>
+            <div class="flex items-center gap-2">
+              <span class="body-sm text-neutral-500">Target:</span>
+              <select id="target-date-format" class="px-3 py-1.5 border border-neutral-200 dark:border-neutral-700 rounded-md text-sm bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100">
+                <option value="YYYY-MM-DD">YYYY-MM-DD</option>
+                <option value="MM/DD/YYYY">MM/DD/YYYY</option>
+                <option value="DD/MM/YYYY">DD/MM/YYYY</option>
+                <option value="DD-MM-YYYY">DD-MM-YYYY</option>
+                <option value="MM-DD-YYYY">MM-DD-YYYY</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Currency Format -->
+        <div class="p-5 border-b border-neutral-200 dark:border-neutral-700">
+          <h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100 mb-3">Currency Format</h3>
+          <div class="flex flex-wrap items-center gap-4">
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input type="checkbox" id="enable-currency-cleanup" checked class="accent-neutral-900" />
+              <span class="body-sm text-neutral-700 dark:text-neutral-300">Remove currency symbols ($, £, €)</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Number Format -->
+        <div class="p-5 border-b border-neutral-200 dark:border-neutral-700">
+          <h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100 mb-3">Number Format</h3>
+          <div class="flex flex-wrap items-center gap-4">
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input type="checkbox" id="enable-number-format" checked class="accent-neutral-900" />
+              <span class="body-sm text-neutral-700 dark:text-neutral-300">Remove commas from numbers</span>
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input type="checkbox" id="enable-percent-decimal" checked class="accent-neutral-900" />
+              <span class="body-sm text-neutral-700 dark:text-neutral-300">Convert percentage to decimal</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Column Operations -->
+        <div class="p-5">
+          <h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100 mb-3">Column Operations</h3>
+          <div id="column-ops" class="space-y-2">
+            <p class="body-sm text-neutral-500">Upload a CSV file to customize columns.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Controls -->
+    <div id="controls" class="hidden">
+      <div class="flex flex-wrap items-center gap-3">
+        <button id="download-btn" class="btn-primary">Download Formatted CSV</button>
+        <button id="reset-btn" class="btn-secondary">Reset</button>
+      </div>
+    </div>
+
+    <!-- File Info -->
+    <div id="file-info" class="hidden">
+      <div class="flex items-center gap-3 p-4 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg">
+        <span class="text-lg text-neutral-500">"</span>
+        <div class="flex-1 min-w-0">
+          <p id="file-name" class="body-sm font-medium text-neutral-900 dark:text-neutral-100 truncate"></p>
+          <p id="file-stats" class="caption-mono text-neutral-500"></p>
+        </div>
+        <button id="clear-btn" class="text-neutral-400 hover:text-red-500 transition-colors text-lg leading-none">&times;</button>
+      </div>
+    </div>
+
+    <!-- Preview Table -->
+    <div id="preview" class="hidden overflow-x-auto">
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mb-4">Preview</h2>
+      <table id="preview-table" class="w-full border-collapse">
+        <thead id="table-head"></thead>
+        <tbody id="table-body"></tbody>
+      </table>
+    </div>
+
+    <!-- Error -->
+    <div id="error" class="hidden mt-2 p-4 bg-red-50 dark:bg-red-900/20 rounded-lg">
+      <p id="error-text" class="body-sm text-red-600 dark:text-red-400"></p>
+    </div>
+  </div>
+</ToolLayout>
+
+  <div slot="info">
+    <section class="bg-white dark:bg-neutral-900 rounded-xl p-6 md:p-8 shadow-level-3 dark:border dark:border-neutral-800 mt-6">
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100">How to Use CSV Formatter</h2>
+      <ol class="list-decimal list-inside space-y-2 mt-4 body-md text-neutral-700 dark:text-neutral-300">
+        <li>Upload or drag & drop your CSV file onto the formatter area.</li>
+        <li>Configure formatting options: date format, currency cleanup, number formatting, and column reordering.</li>
+        <li>Preview the formatted data in the table and click "Download Formatted CSV" to save.</li>
+      </ol>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">Features</h2>
+      <ul class="list-disc list-inside space-y-2 mt-4 body-md text-neutral-700 dark:text-neutral-300">
+        <li><strong>Date Format Conversion</strong> - auto-detects common date formats and converts to your preferred target format.</li>
+        <li><strong>Currency Cleanup</strong> - strips $, £, € symbols and converts monetary values to plain numbers.</li>
+        <li><strong>Column Reordering</strong> - reorder columns and rename them with custom headers.</li>
+        <li><strong>Number Formatting</strong> - removes commas from numbers and converts percentages to decimals.</li>
+        <li><strong>Private & Secure</strong> - all processing is done locally in your browser. No data upload required.</li>
+      </ul>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">Why Use Our CSV Formatter</h2>
+      <p class="body-md text-neutral-700 dark:text-neutral-300 mt-4">Working with CSV data from different sources often means inconsistent formats - dates in different styles, currency symbols mixed with numbers, and columns in the wrong order. Our CSV Formatter solves all of these problems in one place. Unlike spreadsheet software that requires manual cell-by-cell editing, this tool applies bulk transformations automatically. Whether you're cleaning bank exports, preparing data for import, or standardizing reports, the formatter handles the grunt work so you can focus on analysis.</p>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">FAQs</h2>
+      <div class="space-y-4 mt-4">
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">What date formats are supported?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">The tool auto-detects common date formats including YYYY-MM-DD, MM/DD/YYYY, DD/MM/YYYY, and more. You can choose your target output format from the options panel, and the formatter will convert all detected dates accordingly.</p></div>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Can I remove currency symbols?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">Yes, the currency cleanup option strips $, £, € and other common currency symbols from your data and converts the values to plain numbers, making them ready for calculations in spreadsheet applications.</p></div>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Is my data secure?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">Absolutely. All processing is done locally in your browser using JavaScript. Your CSV data never leaves your device, ensuring complete privacy and security for sensitive financial data.</p></div>
+      </div>
+    </section>
+
+    <!-- Related Tools -->
+    <section class="bg-white dark:bg-neutral-900 rounded-xl p-6 md:p-8 shadow-level-3 dark:border dark:border-neutral-800 mt-6">
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100">Related Tools</h2>
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mt-4">
+        <a href="/finance/csv-cleaner/" class="px-4 py-3 bg-neutral-100 dark:bg-neutral-800 rounded-lg body-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors text-center">CSV Cleaner</a>
+        <a href="/finance/csv-to-excel/" class="px-4 py-3 bg-neutral-100 dark:bg-neutral-800 rounded-lg body-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors text-center">CSV to Excel</a>
+        <a href="/finance/transaction-deduplicator/" class="px-4 py-3 bg-neutral-100 dark:bg-neutral-800 rounded-lg body-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors text-center">Transaction Deduplicator</a>
+        <a href="/finance/column-mapper/" class="px-4 py-3 bg-neutral-100 dark:bg-neutral-800 rounded-lg body-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors text-center">Column Mapper</a>
+      </div>
+    </section>
+  </div>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What date formats are supported?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The tool auto-detects common date formats including YYYY-MM-DD, MM/DD/YYYY, DD/MM/YYYY, and more. You can choose your target output format from the options panel, and the formatter will convert all detected dates accordingly."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I remove currency symbols?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, the currency cleanup option strips $, £, € and other common currency symbols from your data and converts the values to plain numbers, making them ready for calculations in spreadsheet applications."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is my data secure?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Absolutely. All processing is done locally in your browser using JavaScript. Your CSV data never leaves your device, ensuring complete privacy and security for sensitive financial data."
+        }
+      }
+    ]
+  }
+  </script>
+
+<style>
+  #preview-table th {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    text-transform: uppercase;
+    background: var(--color-canvas-soft-2);
+    padding: 8px 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--color-hairline);
+    white-space: nowrap;
+  }
+  #preview-table td {
+    font-size: 14px;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--color-hairline);
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  #preview-table tr:hover td {
+    background: var(--color-canvas-soft);
+  }
+  #column-ops .col-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 0;
+  }
+  #column-ops .col-row input[type="text"] {
+    flex: 1;
+    min-width: 0;
+    padding: 4px 8px;
+    border: 1px solid var(--color-hairline);
+    border-radius: 4px;
+    font-size: 13px;
+    background: var(--color-canvas);
+    color: var(--color-text);
+  }
+  #column-ops .col-row select {
+    padding: 4px 8px;
+    border: 1px solid var(--color-hairline);
+    border-radius: 4px;
+    font-size: 13px;
+    background: var(--color-canvas);
+    color: var(--color-text);
+  }
+  #column-ops .col-row .col-order {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--color-text-soft);
+    min-width: 48px;
+  }
+  #column-ops .col-row .col-reorder-btn {
+    cursor: pointer;
+    padding: 2px 6px;
+    border: 1px solid var(--color-hairline);
+    border-radius: 3px;
+    background: var(--color-canvas);
+    color: var(--color-text-soft);
+    font-size: 12px;
+    line-height: 1.2;
+  }
+  #column-ops .col-row .col-reorder-btn:hover {
+    background: var(--color-canvas-soft-2);
+  }
+  #column-ops .col-row .col-reorder-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+</style>
+
+<script>
+  const uploadZone = document.getElementById('upload-zone')!;
+  const fileInput = document.getElementById('file-input') as HTMLInputElement;
+  const optionsPanel = document.getElementById('options-panel')!;
+  const controls = document.getElementById('controls')!;
+  const downloadBtn = document.getElementById('download-btn')!;
+  const resetBtn = document.getElementById('reset-btn')!;
+  const fileInfo = document.getElementById('file-info')!;
+  const fileNameEl = document.getElementById('file-name')!;
+  const fileStats = document.getElementById('file-stats')!;
+  const preview = document.getElementById('preview')!;
+  const tableHead = document.getElementById('table-head')!;
+  const tableBody = document.getElementById('table-body')!;
+  const errorDiv = document.getElementById('error')!;
+  const errorText = document.getElementById('error-text')!;
+  const clearBtn = document.getElementById('clear-btn')!;
+  const columnOps = document.getElementById('column-ops')!;
+
+  const enableDateFormat = document.getElementById('enable-date-format') as HTMLInputElement;
+  const targetDateFormat = document.getElementById('target-date-format') as HTMLSelectElement;
+  const enableCurrencyCleanup = document.getElementById('enable-currency-cleanup') as HTMLInputElement;
+  const enableNumberFormat = document.getElementById('enable-number-format') as HTMLInputElement;
+  const enablePercentDecimal = document.getElementById('enable-percent-decimal') as HTMLInputElement;
+
+  let rawRows: string[][] = [];
+  let headers: string[] = [];
+  let colOrder: number[] = [];
+  let colNames: string[] = [];
+
+  // Upload zone event listeners
+  uploadZone.addEventListener('click', () => fileInput.click());
+  uploadZone.addEventListener('dragover', (e) => { e.preventDefault(); uploadZone.classList.add('dragover'); });
+  uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('dragover'));
+  uploadZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    uploadZone.classList.remove('dragover');
+    if (e.dataTransfer?.files[0]) handleFile(e.dataTransfer.files[0]);
+  });
+  fileInput.addEventListener('change', () => { if (fileInput.files?.[0]) handleFile(fileInput.files[0]); });
+
+  // Option change listeners
+  enableDateFormat.addEventListener('change', renderPreview);
+  targetDateFormat.addEventListener('change', renderPreview);
+  enableCurrencyCleanup.addEventListener('change', renderPreview);
+  enableNumberFormat.addEventListener('change', renderPreview);
+  enablePercentDecimal.addEventListener('change', renderPreview);
+
+  async function handleFile(file: File) {
+    try {
+      const text = await file.text();
+      const rows = parseCSV(text);
+      if (rows.length < 1) throw new Error('CSV file appears empty.');
+
+      rawRows = rows;
+      headers = rows[0].slice();
+      colOrder = headers.map((_, i) => i);
+      colNames = headers.slice();
+
+      fileNameEl.textContent = file.name;
+      fileStats.textContent = `${rows.length - 1} rows - ${headers.length} columns`;
+      buildColumnOps();
+      renderPreview();
+      fileInfo.classList.remove('hidden');
+      optionsPanel.classList.remove('hidden');
+      controls.classList.remove('hidden');
+      preview.classList.remove('hidden');
+      errorDiv.classList.add('hidden');
+      uploadZone.classList.add('hidden');
+    } catch (err) {
+      errorDiv.classList.remove('hidden');
+      errorText.textContent = (err as Error).message;
+      controls.classList.add('hidden');
+      preview.classList.add('hidden');
+      optionsPanel.classList.add('hidden');
+      fileInfo.classList.add('hidden');
+    }
+  }
+
+  function parseCSV(text: string): string[][] {
+    const rows: string[][] = [];
+    let current = '';
+    let inQuotes = false;
+    let row: string[] = [];
+
+    for (let i = 0; i < text.length; i++) {
+      const char = text[i];
+      const next = text[i + 1];
+
+      if (char === '"') {
+        if (inQuotes && next === '"') {
+          current += '"';
+          i++;
+        } else {
+          inQuotes = !inQuotes;
+        }
+      } else if (char === ',' && !inQuotes) {
+        row.push(current);
+        current = '';
+      } else if ((char === '\n' || (char === '\r' && next === '\n')) && !inQuotes) {
+        row.push(current);
+        current = '';
+        if (row.some(cell => cell.trim() !== '')) rows.push(row);
+        row = [];
+        if (char === '\r') i++;
+      } else if (char === '\r' && !inQuotes) {
+        // bare \r
+        row.push(current);
+        current = '';
+        if (row.some(cell => cell.trim() !== '')) rows.push(row);
+        row = [];
+      } else {
+        current += char;
+      }
+    }
+    // Last field
+    row.push(current);
+    if (row.some(cell => cell.trim() !== '')) rows.push(row);
+
+    return rows;
+  }
+
+  function buildColumnOps() {
+    if (headers.length === 0) return;
+    let html = '';
+    headers.forEach((h, i) => {
+      html += `<div class="col-row" data-col="${i}">
+        <span class="col-order">#${i + 1}</span>
+        <button class="col-reorder-btn" data-move="up" ${i === 0 ? 'disabled' : ''}>&#9650;</button>
+        <button class="col-reorder-btn" data-move="down" ${i === headers.length - 1 ? 'disabled' : ''}>&#9660;</button>
+        <input type="text" class="col-rename" value="${escapeAttr(h)}" placeholder="Column name" />
+        <select class="col-visible">
+          <option value="show">Show</option>
+          <option value="hide">Hide</option>
+        </select>
+      </div>`;
+    });
+    columnOps.innerHTML = html;
+
+    // Reorder buttons
+    columnOps.querySelectorAll('.col-reorder-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const btnEl = e.currentTarget as HTMLElement;
+        const rowEl = btnEl.closest('.col-row') as HTMLElement;
+        const idx = parseInt(rowEl.dataset.col || '0');
+        const dir = btnEl.dataset.move as string;
+
+        const targetIdx = dir === 'up' ? idx - 1 : idx + 1;
+        if (targetIdx < 0 || targetIdx >= colOrder.length) return;
+
+        // Swap in colOrder
+        const aIdx = colOrder.indexOf(idx);
+        const bIdx = colOrder.indexOf(targetIdx);
+        [colOrder[aIdx], colOrder[bIdx]] = [colOrder[bIdx], colOrder[aIdx]];
+
+        buildColumnOps();
+        renderPreview();
+      });
+    });
+
+    // Rename inputs
+    columnOps.querySelectorAll('.col-rename').forEach(input => {
+      input.addEventListener('input', (e) => {
+        const inputEl = e.currentTarget as HTMLInputElement;
+        const rowEl = inputEl.closest('.col-row') as HTMLElement;
+        const idx = parseInt(rowEl.dataset.col || '0');
+        colNames[idx] = inputEl.value || headers[idx];
+        renderPreview();
+      });
+    });
+
+    // Visibility selects
+    columnOps.querySelectorAll('.col-visible').forEach(sel => {
+      sel.addEventListener('change', renderPreview);
+    });
+  }
+
+  function getVisibleCols(): number[] {
+    const rows = columnOps.querySelectorAll('.col-row');
+    const visible: number[] = [];
+    rows.forEach((row, i) => {
+      const sel = row.querySelector('.col-visible') as HTMLSelectElement;
+      if (sel.value === 'show') {
+        visible.push(colOrder[i]);
+      }
+    });
+    return visible;
+  }
+
+  function renderPreview() {
+    if (rawRows.length === 0) return;
+
+    const visibleCols = getVisibleCols();
+    const dataRows = rawRows.slice(1);
+
+    // Build formatted preview data
+    const formatted = applyFormatting(dataRows, visibleCols);
+
+    // Header row
+    const displayHeaders = visibleCols.map(i => colNames[i] || headers[i]);
+    tableHead.innerHTML = `<tr>${displayHeaders.map(h => `<th>${escapeHtml(h)}</th>`).join('')}</tr>`;
+
+    // Preview rows (first 50)
+    const previewRows = formatted.slice(0, 50);
+    tableBody.innerHTML = previewRows.map(row => `
+      <tr>${row.map(cell => `<td>${escapeHtml(cell)}</td>`).join('')}</tr>
+    `).join('');
+
+    // Footer if more rows
+    const total = formatted.length;
+    if (total > 50) {
+      fileStats.textContent = `${dataRows.length} rows - ${visibleCols.length} columns (showing first 50)`;
+    } else {
+      fileStats.textContent = `${dataRows.length} rows - ${visibleCols.length} columns`;
+    }
+  }
+
+  function applyFormatting(rows: string[][], visibleCols: number[]): string[][] {
+    return rows.map(row => {
+      return visibleCols.map(colIdx => {
+        let val = row[colIdx] || '';
+
+        // Date format conversion
+        if (enableDateFormat.checked) {
+          val = convertDateFormat(val, targetDateFormat.value);
+        }
+
+        // Currency cleanup
+        if (enableCurrencyCleanup.checked) {
+          val = cleanCurrency(val);
+        }
+
+        // Number format: remove commas
+        if (enableNumberFormat.checked) {
+          val = removeNumberCommas(val);
+        }
+
+        // Percentage to decimal
+        if (enablePercentDecimal.checked) {
+          val = percentToDecimal(val);
+        }
+
+        return val;
+      });
+    });
+  }
+
+  function convertDateFormat(val: string, target: string): string {
+    const trimmed = val.trim();
+
+    // Already in target format YYYY-MM-DD
+    if (/^\d{4}-\d{2}-\d{2}$/.test(trimmed)) {
+      if (target === 'YYYY-MM-DD') return trimmed;
+      const parts = trimmed.split('-');
+      return formatDate(parts[0], parts[1], parts[2], target);
+    }
+
+    // MM/DD/YYYY or DD/MM/YYYY or M/D/YYYY etc
+    let m = trimmed.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
+    if (m) {
+      const a = m[1].padStart(2, '0');
+      const b = m[2].padStart(2, '0');
+      const y = m[3];
+      // Try to disambiguate: if first part > 12, it's DD/MM/YYYY
+      if (parseInt(m[1]) > 12) {
+        return formatDate(y, b, a, target);
+      }
+      if (parseInt(m[2]) > 12) {
+        return formatDate(y, a, b, target);
+      }
+      // Ambiguous: treat as MM/DD/YYYY (US convention)
+      return formatDate(y, a, b, target);
+    }
+
+    // DD-Mon-YYYY format (e.g., "15-Jan-2024")
+    m = trimmed.match(/^(\d{1,2})[-\/](\w{3})[-\/](\d{4})$/i);
+    if (m) {
+      const months: Record<string, string> = {
+        jan: '01', feb: '02', mar: '03', apr: '04', may: '05', jun: '06',
+        jul: '07', aug: '08', sep: '09', oct: '10', nov: '11', dec: '12'
+      };
+      const month = months[m[2].toLowerCase().substring(0, 3)];
+      if (month) {
+        return formatDate(m[3], month, m[1].padStart(2, '0'), target);
+      }
+    }
+
+    // YYYYMMDD (compact)
+    m = trimmed.match(/^(\d{4})(\d{2})(\d{2})$/);
+    if (m) {
+      return formatDate(m[1], m[2], m[3], target);
+    }
+
+    return val;
+  }
+
+  function formatDate(year: string, month: string, day: string, target: string): string {
+    const targets: Record<string, string> = {
+      'YYYY-MM-DD': `${year}-${month}-${day}`,
+      'MM/DD/YYYY': `${month}/${day}/${year}`,
+      'DD/MM/YYYY': `${day}/${month}/${year}`,
+      'DD-MM-YYYY': `${day}-${month}-${year}`,
+      'MM-DD-YYYY': `${month}-${day}-${year}`,
+    };
+    return targets[target] || `${year}-${month}-${day}`;
+  }
+
+  function cleanCurrency(val: string): string {
+    return val.replace(/[$£€¥₩₽₹]/g, '').trim();
+  }
+
+  function removeNumberCommas(val: string): string {
+    // Only remove commas from numbers (not from text)
+    // Check if the value looks like a number (possibly with currency already stripped)
+    const trimmed = val.trim();
+    if (/^[\d,.%\-+()]+$/.test(trimmed)) {
+      return trimmed.replace(/,/g, '');
+    }
+    return val;
+  }
+
+  function percentToDecimal(val: string): string {
+    const trimmed = val.trim();
+    const m = trimmed.match(/^([+-]?\d+(?:\.\d+)?)\s*%$/);
+    if (m) {
+      const num = parseFloat(m[1]) / 100;
+      return String(num);
+    }
+    // Handle already-decimal percentages like "0.15" that were meant to be percentages
+    // but only if the original had a % sign — already covered above
+    return val;
+  }
+
+  function getFormattedData(): string[][] {
+    const visibleCols = getVisibleCols();
+    const headerRow = visibleCols.map(i => colNames[i] || headers[i]);
+    const dataRows = applyFormatting(rawRows.slice(1), visibleCols);
+    return [headerRow, ...dataRows];
+  }
+
+  function escapeHtml(str: string): string {
+    return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  function escapeAttr(str: string): string {
+    return str.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  function toCSV(rows: string[][]): string {
+    return rows.map(row =>
+      row.map(cell => {
+        if (cell.includes(',') || cell.includes('"') || cell.includes('\n')) {
+          return `"${cell.replace(/"/g, '""')}"`;
+        }
+        return cell;
+      }).join(',')
+    ).join('\n');
+  }
+
+  function downloadFile(content: string, filename: string, mime: string) {
+    const blob = new Blob([content], { type: mime });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = filename;
+    link.click();
+  }
+
+  downloadBtn.addEventListener('click', () => {
+    const data = getFormattedData();
+    if (data.length < 2) return;
+    const csv = toCSV(data);
+    const baseName = (fileNameEl.textContent || 'formatted').replace(/\.csv$/i, '');
+    downloadFile(csv, `${baseName}-formatted.csv`, 'text/csv;charset=utf-8;');
+  });
+
+  clearBtn.addEventListener('click', resetAll);
+
+  resetBtn.addEventListener('click', resetAll);
+
+  function resetAll() {
+    rawRows = [];
+    headers = [];
+    colOrder = [];
+    colNames = [];
+    fileInfo.classList.add('hidden');
+    optionsPanel.classList.add('hidden');
+    controls.classList.add('hidden');
+    preview.classList.add('hidden');
+    errorDiv.classList.add('hidden');
+    uploadZone.classList.remove('hidden');
+    tableHead.innerHTML = '';
+    tableBody.innerHTML = '';
+    columnOps.innerHTML = '<p class="body-sm text-neutral-500">Upload a CSV file to customize columns.</p>';
+    fileInput.value = '';
+  }
+</script>

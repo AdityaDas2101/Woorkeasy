@@ -1,0 +1,190 @@
+---
+/**
+ * Base Layout for Woorkeasy
+ * Provides consistent HTML structure, SEO meta, header, and footer.
+ */
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import RequestToolModal from '../components/RequestToolModal.astro';
+import StickyAd from '../components/StickyAd.astro';
+import '../styles/global.css';
+import { languages } from '../i18n/translations.js';
+
+export interface Props {
+  title: string;
+  description: string;
+  canonicalURL?: string;
+  image?: string;
+  jsonLd?: object | object[];
+  noIndex?: boolean;
+}
+
+const {
+  title,
+  description,
+  canonicalURL,
+  image = '/og-default.png',
+  jsonLd,
+  noIndex,
+} = Astro.props;
+
+const siteURL = 'https://woorkeasy.com';
+const siteName = 'Woorkeasy';
+const canonical = canonicalURL || new URL(Astro.url.pathname, siteURL).href;
+
+const defaultJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  name: title,
+  description,
+  url: canonical,
+  publisher: {
+    '@type': 'Organization',
+    name: siteName,
+    url: siteURL,
+  },
+};
+
+const jsonLdScript = jsonLd
+  ? Array.isArray(jsonLd)
+    ? JSON.stringify([defaultJsonLd, ...jsonLd])
+    : JSON.stringify(jsonLd)
+  : JSON.stringify(defaultJsonLd);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <meta name="robots" content={noIndex ? 'noindex, nofollow' : 'index, follow'} />
+    <link rel="canonical" href={canonical} />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)" />
+
+    <!-- Hreflang -->
+    <link rel="alternate" hreflang="x-default" href={canonical} />
+    {languages.map(lang => (
+      <link rel="alternate" hreflang={lang.code} href={canonical} />
+    ))}
+
+    <!-- Dark mode: apply before paint to prevent flash -->
+    <script is:inline>
+      (function() {
+        const stored = localStorage.getItem('theme');
+        if (stored === 'dark') {
+          document.documentElement.classList.add('dark');
+        }
+      })();
+    </script>
+
+    <!-- Open Graph -->
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={siteName} />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:image" content={new URL(image, siteURL).href} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={title} />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={new URL(image, siteURL).href} />
+
+    <title>{title}</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json" set:html={jsonLdScript}></script>
+
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-EW7GHQT4X4"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-EW7GHQT4X4');
+    </script>
+
+    <!-- AdSense (lazy-loaded after first user interaction for speed) -->
+    <script>
+      function loadAdSense() {
+        const s = document.createElement('script');
+        s.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-YOUR_PUBLISHER_ID';
+        s.crossOrigin = 'anonymous';
+        s.async = true;
+        s.onload = () => { (window.adsbygoogle = window.adsbygoogle || []).push({}); };
+        document.head.appendChild(s);
+      }
+      ['scroll', 'click', 'touchstart', 'keydown'].forEach(event =>
+        document.addEventListener(event, loadAdSense, { once: true })
+      );
+    </script>
+  </head>
+  <body class="min-h-screen flex flex-col bg-neutral-50 dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 font-sans antialiased transition-colors duration-200">
+    <Header />
+    <main class="flex-1">
+      <slot />
+    </main>
+    <Footer />
+
+    <StickyAd />
+
+    <RequestToolModal />
+
+    <!-- i18n Translation Engine -->
+    <script>
+      import { translations } from '../i18n/translations.js';
+
+      function applyTranslations(lang) {
+        const t = translations[lang];
+        if (!t) return;
+
+        document.querySelectorAll('[data-i18n]').forEach((el) => {
+          const key = el.getAttribute('data-i18n');
+          if (key && t[key]) {
+            const childNodes = el.childNodes;
+            let textNodeFound = false;
+            for (let i = 0; i < childNodes.length; i++) {
+              if (childNodes[i].nodeType === Node.TEXT_NODE && childNodes[i].textContent.trim()) {
+                childNodes[i].textContent = t[key];
+                textNodeFound = true;
+                break;
+              }
+            }
+            if (!textNodeFound && el.children.length === 0) {
+              el.textContent = t[key];
+            }
+          }
+        });
+
+        document.documentElement.setAttribute('lang', lang);
+
+        if (lang === 'ar') {
+          document.documentElement.setAttribute('dir', 'rtl');
+        } else {
+          document.documentElement.setAttribute('dir', 'ltr');
+        }
+      }
+
+      const savedLang = localStorage.getItem('woorkeasy-lang') || 'en';
+      if (savedLang !== 'en') {
+        applyTranslations(savedLang);
+      }
+
+      window.addEventListener('language-changed', (e) => {
+        const lang = (e as CustomEvent).detail.lang;
+        applyTranslations(lang);
+      });
+    </script>
+  </body>
+</html>

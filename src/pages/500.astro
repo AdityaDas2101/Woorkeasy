@@ -1,0 +1,49 @@
+---
+/**
+ * 500 Internal Server Error
+ */
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout
+  title="Server Error (500) | Woorkeasy"
+  description="Something went wrong on our end. Please try again or contact us for help."
+  noIndex
+>
+  <section class="flex-1 flex items-center justify-center px-6 py-16 md:py-24">
+    <div class="max-w-lg w-full">
+      <div class="bg-white dark:bg-neutral-900 rounded-2xl shadow-level-4 dark:border dark:border-neutral-800 p-8 md:p-12 text-center">
+        <p class="text-7xl md:text-8xl font-bold bg-gradient-to-br from-red-500 via-orange-500 to-amber-500 bg-clip-text text-transparent select-none">
+          500
+        </p>
+        <div class="w-16 h-16 mx-auto mt-6 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center">
+          <svg class="w-8 h-8 text-red-600 dark:text-red-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+            <line x1="12" y1="9" x2="12" y2="13"/>
+            <line x1="12" y1="17" x2="12.01" y2="17"/>
+          </svg>
+        </div>
+        <h1 class="display-md text-neutral-900 dark:text-neutral-100 mt-4">Server Error</h1>
+        <p class="body-md text-neutral-600 dark:text-neutral-400 mt-2">
+          Something went wrong on our end. Please try again later.
+        </p>
+        <div class="flex flex-wrap items-center justify-center gap-3 mt-8">
+          <a href="/" class="btn-primary no-underline">Go Home</a>
+          <a href="/contact/" class="btn-secondary no-underline">Report Issue</a>
+        </div>
+        <p class="body-sm text-neutral-500 dark:text-neutral-500 mt-5">
+          If the issue persists, email <a href="mailto:woorkeasy@gmail.com" class="text-blue-600 dark:text-blue-400 hover:underline">woorkeasy@gmail.com</a>
+        </p>
+      </div>
+      <div class="mt-6 p-4 bg-neutral-100 dark:bg-neutral-900 rounded-xl border border-neutral-200 dark:border-neutral-800">
+        <p class="caption-mono text-neutral-500 text-center">Try these tools while we fix things</p>
+        <div class="flex flex-wrap justify-center gap-2 mt-3">
+          <a href="/image/jpg-to-png" class="px-3 py-1.5 bg-white dark:bg-neutral-800 rounded-lg body-sm text-neutral-600 dark:text-neutral-400 no-underline hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors shadow-level-1">JPG to PNG</a>
+          <a href="/image/compress" class="px-3 py-1.5 bg-white dark:bg-neutral-800 rounded-lg body-sm text-neutral-600 dark:text-neutral-400 no-underline hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors shadow-level-1">Compress</a>
+          <a href="/pdf/merge-pdf" class="px-3 py-1.5 bg-white dark:bg-neutral-800 rounded-lg body-sm text-neutral-600 dark:text-neutral-400 no-underline hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors shadow-level-1">Merge PDF</a>
+          <a href="/dev/json-formatter" class="px-3 py-1.5 bg-white dark:bg-neutral-800 rounded-lg body-sm text-neutral-600 dark:text-neutral-400 no-underline hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors shadow-level-1">JSON Format</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>

@@ -1,0 +1,418 @@
+﻿---
+/**
+ * Watermark Image Tool
+ * Add text or image watermarks to photos.
+ * Customize position, opacity, size, color, and font.
+ * Uses HTML Canvas for rendering.
+ */
+import ToolLayout from '../../components/ToolLayout.astro';
+---
+
+<ToolLayout
+  title="Add Watermark"
+  metaTitle="Add Watermark to Image Free - Online Watermark Tool | Woorkeasy"
+  description="Add text or image watermarks to photos online free. Adjust opacity, position, and size. Protect your images instantly in your browser."
+  heading="Add Watermark to Image"
+  category="Image Tools"
+>
+  <div id="watermark-app">
+    <!-- Upload Zone -->
+    <div id="upload-zone" class="upload-zone p-12 text-center cursor-pointer">
+      <div class="flex flex-col items-center gap-4">
+        <svg class="w-12 h-12 text-neutral-400" viewBox="0 0 48 48" fill="none">
+          <path d="M24 32V16m0 0l-6 6m6-6l6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <rect x="8" y="8" width="32" height="32" rx="4" stroke="currentColor" stroke-width="2"/>
+        </svg>
+        <p class="text-base text-neutral-600">Drag & drop an image here, or <span class="text-blue-600 font-medium">browse</span></p>
+        <p class="text-sm text-neutral-500">Supports JPG, PNG, WebP</p>
+      </div>
+      <input type="file" id="file-input" accept="image/jpeg,image/png,image/webp" class="hidden" />
+    </div>
+
+    <!-- Watermark Controls -->
+    <div id="controls" class="hidden mt-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Left: Settings -->
+        <div class="flex flex-col gap-4">
+          <!-- Watermark Type -->
+          <div>
+            <label class="text-sm text-neutral-600 font-medium block mb-2">Watermark Type</label>
+            <div class="flex gap-2">
+              <button id="type-text" class="wm-type-btn active text-sm px-4 py-2 rounded-full bg-neutral-900 text-white border border-neutral-900">Text</button>
+              <button id="type-image" class="wm-type-btn text-sm px-4 py-2 rounded-full border border-neutral-200 hover:border-neutral-900 transition-colors">Image/Logo</button>
+            </div>
+          </div>
+
+          <!-- Text Settings -->
+          <div id="text-settings">
+            <label class="text-sm text-neutral-600 font-medium block mb-2">Watermark Text</label>
+            <input type="text" id="wm-text" value=" Woorkeasy" class="w-full px-3 py-2 border border-neutral-200 rounded-md text-sm" placeholder="Enter watermark text..." />
+
+            <div class="grid grid-cols-2 gap-3 mt-3">
+              <div>
+                <label class="text-xs text-neutral-500 block mb-1">Font Size</label>
+                <input type="number" id="wm-font-size" value="32" min="8" max="200" class="w-full px-3 py-2 border border-neutral-200 rounded-md text-sm" />
+              </div>
+              <div>
+                <label class="text-xs text-neutral-500 block mb-1">Color</label>
+                <input type="color" id="wm-color" value="#ffffff" class="w-full h-9 rounded-md border border-neutral-200 cursor-pointer" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Image Settings (hidden by default) -->
+          <div id="image-settings" class="hidden">
+            <label class="text-sm text-neutral-600 font-medium block mb-2">Upload Logo/Watermark Image</label>
+            <input type="file" id="wm-image-input" accept="image/*" class="w-full text-sm text-neutral-600" />
+          </div>
+
+          <!-- Shared Settings -->
+          <div>
+            <label class="text-sm text-neutral-600 font-medium block mb-2">
+              Opacity: <span id="opacity-value">50</span>%
+            </label>
+            <input type="range" id="wm-opacity" min="5" max="100" value="50" class="w-full accent-neutral-900" />
+          </div>
+
+          <div>
+            <label class="text-sm text-neutral-600 font-medium block mb-2">Position</label>
+            <div class="grid grid-cols-3 gap-1">
+              <button data-pos="top-left" class="pos-btn text-xs py-2 border border-neutral-200 rounded hover:bg-neutral-100">- Top Left</button>
+              <button data-pos="top-center" class="pos-btn text-xs py-2 border border-neutral-200 rounded hover:bg-neutral-100">' Top</button>
+              <button data-pos="top-right" class="pos-btn text-xs py-2 border border-neutral-200 rounded hover:bg-neutral-100">- Top Right</button>
+              <button data-pos="center-left" class="pos-btn text-xs py-2 border border-neutral-200 rounded hover:bg-neutral-100"> Left</button>
+              <button data-pos="center" class="pos-btn active text-xs py-2 border border-neutral-900 bg-neutral-900 text-white rounded">Center</button>
+              <button data-pos="center-right" class="pos-btn text-xs py-2 border border-neutral-200 rounded hover:bg-neutral-100">' Right</button>
+              <button data-pos="bottom-left" class="pos-btn text-xs py-2 border border-neutral-200 rounded hover:bg-neutral-100"> Bot Left</button>
+              <button data-pos="bottom-center" class="pos-btn text-xs py-2 border border-neutral-200 rounded hover:bg-neutral-100">" Bottom</button>
+              <button data-pos="bottom-right" class="pos-btn text-xs py-2 border border-neutral-200 rounded hover:bg-neutral-100"> Bot Right</button>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <input type="checkbox" id="wm-tile" class="accent-neutral-900" />
+            <label for="wm-tile" class="text-sm text-neutral-600">Tile watermark (repeat across image)</label>
+          </div>
+        </div>
+
+        <!-- Right: Preview -->
+        <div>
+          <p class="text-sm text-neutral-500 font-medium mb-2">Preview</p>
+          <div class="border border-neutral-200 rounded-lg overflow-hidden bg-neutral-100">
+            <canvas id="preview-canvas" class="block w-full"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action -->
+      <div class="flex items-center gap-3 mt-6">
+        <button id="apply-btn" class="btn-primary">Apply & Download</button>
+      </div>
+    </div>
+  </div>
+
+  <div slot="info">
+    <section class="bg-white dark:bg-neutral-900 rounded-xl p-6 md:p-8 shadow-level-3 dark:border dark:border-neutral-800 mt-6">
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100">How to Use Watermark Tool</h2>
+      <ol class="list-decimal list-inside space-y-2 mt-4 body-md text-neutral-700 dark:text-neutral-300">
+        <li>Drop or browse an image to watermark</li>
+        <li>Choose text or image watermark type and customize settings</li>
+        <li>Click "Apply & Download" to save your watermarked image</li>
+      </ol>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">Features</h2>
+      <ul class="list-disc list-inside space-y-2 mt-4 body-md text-neutral-700 dark:text-neutral-300">
+        <li>Text watermark with custom font size and color</li>
+        <li>Image/logo watermark upload support</li>
+        <li>Adjustable opacity from 5% to 100%</li>
+        <li>9 position presets plus tile mode</li>
+        <li>Live preview before downloading</li>
+      </ul>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">Why Use Our Watermark Tool</h2>
+      <p class="body-md text-neutral-700 dark:text-neutral-300 mt-4">Protect your photos and artwork from unauthorized use by adding visible watermarks. Our tool supports both text and image watermarks with full control over opacity, position, size, and tiling. Since everything runs in your browser, your original images stay private and secure.</p>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">FAQs</h2>
+      <div class="space-y-4 mt-4">
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Can I use an image as a watermark?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">Yes, upload your logo or any image file to use as a watermark.</p></div>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">How do I adjust watermark opacity?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">Use the opacity slider from 5% to 100% to control transparency.</p></div>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Can I tile the watermark?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">Yes, enable "Tile watermark" to repeat it across the entire image.</p></div>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">What positions are available?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">9 positions: four corners, four edges, and center.</p></div>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Is it free?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">Yes, completely free with no watermarks added by us.</p></div>
+      </div>
+    </section>
+
+    <!-- Related Tools -->
+    <section class="bg-white dark:bg-neutral-900 rounded-xl p-6 md:p-8 shadow-level-3 dark:border dark:border-neutral-800 mt-6">
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100">Related Tools</h2>
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mt-4">
+        <a href="/image/crop" class="btn-secondary text-center no-underline text-sm">Crop Image</a>
+        <a href="/image/compress" class="btn-secondary text-center no-underline text-sm">Compress Image</a>
+        <a href="/image/rotate" class="btn-secondary text-center no-underline text-sm">Rotate Image</a>
+        <a href="/image/background-remover" class="btn-secondary text-center no-underline text-sm">Background Remover</a>
+      </div>
+    </section>
+  </div>
+</ToolLayout>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Can I use an image as a watermark?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes, upload your logo or any image file to use as a watermark." }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I adjust watermark opacity?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Use the opacity slider from 5% to 100% to control transparency." }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I tile the watermark?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes, enable Tile watermark to repeat it across the entire image." }
+    },
+    {
+      "@type": "Question",
+      "name": "What positions are available?",
+      "acceptedAnswer": { "@type": "Answer", "text": "9 positions: four corners, four edges, and center." }
+    },
+    {
+      "@type": "Question",
+      "name": "Is it free?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes, completely free with no watermarks added by us." }
+    }
+  ]
+}
+</script>
+
+<script>
+  const uploadZone = document.getElementById('upload-zone')!;
+  const fileInput = document.getElementById('file-input') as HTMLInputElement;
+  const controls = document.getElementById('controls')!;
+  const previewCanvas = document.getElementById('preview-canvas') as HTMLCanvasElement;
+  const applyBtn = document.getElementById('apply-btn')!;
+  const typeText = document.getElementById('type-text')!;
+  const typeImage = document.getElementById('type-image')!;
+  const textSettings = document.getElementById('text-settings')!;
+  const imageSettings = document.getElementById('image-settings')!;
+  const wmText = document.getElementById('wm-text') as HTMLInputElement;
+  const wmFontSize = document.getElementById('wm-font-size') as HTMLInputElement;
+  const wmColor = document.getElementById('wm-color') as HTMLInputElement;
+  const wmImageInput = document.getElementById('wm-image-input') as HTMLInputElement;
+  const wmOpacity = document.getElementById('wm-opacity') as HTMLInputElement;
+  const opacityValue = document.getElementById('opacity-value')!;
+  const wmTile = document.getElementById('wm-tile') as HTMLInputElement;
+
+  let img: HTMLImageElement | null = null;
+  let wmImg: HTMLImageElement | null = null;
+  let wmType: 'text' | 'image' = 'text';
+  let position = 'center';
+
+  // Upload
+  uploadZone.addEventListener('click', () => fileInput.click());
+  uploadZone.addEventListener('dragover', (e) => { e.preventDefault(); uploadZone.classList.add('dragover'); });
+  uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('dragover'));
+  uploadZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    uploadZone.classList.remove('dragover');
+    if (e.dataTransfer?.files[0]) loadImage(e.dataTransfer.files[0]);
+  });
+  fileInput.addEventListener('change', () => { if (fileInput.files?.[0]) loadImage(fileInput.files[0]); });
+
+  function loadImage(file: File) {
+    img = new Image();
+    img.onload = () => {
+      controls.classList.remove('hidden');
+      renderPreview();
+    };
+    img.src = URL.createObjectURL(file);
+  }
+
+  // Watermark type toggle
+  typeText.addEventListener('click', () => {
+    wmType = 'text';
+    typeText.classList.add('active', 'bg-neutral-900', 'text-white', 'border-neutral-900');
+    typeText.classList.remove('border-neutral-200');
+    typeImage.classList.remove('active', 'bg-neutral-900', 'text-white', 'border-neutral-900');
+    typeImage.classList.add('border-neutral-200');
+    textSettings.classList.remove('hidden');
+    imageSettings.classList.add('hidden');
+    renderPreview();
+  });
+
+  typeImage.addEventListener('click', () => {
+    wmType = 'image';
+    typeImage.classList.add('active', 'bg-neutral-900', 'text-white', 'border-neutral-900');
+    typeImage.classList.remove('border-neutral-200');
+    typeText.classList.remove('active', 'bg-neutral-900', 'text-white', 'border-neutral-900');
+    typeText.classList.add('border-neutral-200');
+    imageSettings.classList.remove('hidden');
+    textSettings.classList.add('hidden');
+    renderPreview();
+  });
+
+  // Watermark image upload
+  wmImageInput.addEventListener('change', () => {
+    if (wmImageInput.files?.[0]) {
+      wmImg = new Image();
+      wmImg.onload = () => renderPreview();
+      wmImg.src = URL.createObjectURL(wmImageInput.files[0]);
+    }
+  });
+
+  // Position buttons
+  document.querySelectorAll('.pos-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.pos-btn').forEach(b => {
+        b.classList.remove('active', 'bg-neutral-900', 'text-white', 'border-neutral-900');
+        b.classList.add('border-neutral-200');
+      });
+      btn.classList.add('active', 'bg-neutral-900', 'text-white', 'border-neutral-900');
+      btn.classList.remove('border-neutral-200');
+      position = (btn as HTMLElement).dataset.pos!;
+      renderPreview();
+    });
+  });
+
+  // Live preview on settings change
+  wmText.addEventListener('input', () => renderPreview());
+  wmFontSize.addEventListener('input', () => renderPreview());
+  wmColor.addEventListener('input', () => renderPreview());
+  wmOpacity.addEventListener('input', () => {
+    opacityValue.textContent = wmOpacity.value;
+    renderPreview();
+  });
+  wmTile.addEventListener('change', () => renderPreview());
+
+  function renderPreview() {
+    if (!img) return;
+
+    // Scale to fit preview (max 500px)
+    const maxW = 500;
+    const scale = img.width > maxW ? maxW / img.width : 1;
+    previewCanvas.width = img.width * scale;
+    previewCanvas.height = img.height * scale;
+
+    const ctx = previewCanvas.getContext('2d')!;
+    ctx.drawImage(img, 0, 0, previewCanvas.width, previewCanvas.height);
+
+    // Apply watermark
+    applyWatermark(ctx, previewCanvas.width, previewCanvas.height, scale);
+  }
+
+  function applyWatermark(ctx: CanvasRenderingContext2D, w: number, h: number, scale: number) {
+    const opacity = parseInt(wmOpacity.value) / 100;
+    ctx.globalAlpha = opacity;
+
+    if (wmTile.checked) {
+      // Tile mode
+      drawTiled(ctx, w, h, scale);
+    } else {
+      // Single position
+      drawAtPosition(ctx, w, h, scale);
+    }
+
+    ctx.globalAlpha = 1;
+  }
+
+  function drawAtPosition(ctx: CanvasRenderingContext2D, w: number, h: number, scale: number) {
+    const padding = 20 * scale;
+
+    if (wmType === 'text') {
+      const fontSize = parseInt(wmFontSize.value) * scale;
+      ctx.font = `${fontSize}px 'Geist', Inter, sans-serif`;
+      ctx.fillStyle = wmColor.value;
+      const text = wmText.value || ' Watermark';
+      const metrics = ctx.measureText(text);
+      const textW = metrics.width;
+      const textH = fontSize;
+
+      const { x, y } = getPosition(w, h, textW, textH, padding);
+      ctx.fillText(text, x, y + textH * 0.8);
+    } else if (wmImg) {
+      const wmScale = scale * 0.3;
+      const wmW = wmImg.width * wmScale;
+      const wmH = wmImg.height * wmScale;
+      const { x, y } = getPosition(w, h, wmW, wmH, padding);
+      ctx.drawImage(wmImg, x, y, wmW, wmH);
+    }
+  }
+
+  function drawTiled(ctx: CanvasRenderingContext2D, w: number, h: number, scale: number) {
+    const gap = 100 * scale;
+
+    ctx.save();
+    ctx.rotate(-0.3); // Slight diagonal tilt
+
+    if (wmType === 'text') {
+      const fontSize = parseInt(wmFontSize.value) * scale * 0.7;
+      ctx.font = `${fontSize}px 'Geist', Inter, sans-serif`;
+      ctx.fillStyle = wmColor.value;
+      const text = wmText.value || ' Watermark';
+      const metrics = ctx.measureText(text);
+
+      for (let y = -h; y < h * 2; y += fontSize + gap) {
+        for (let x = -w; x < w * 2; x += metrics.width + gap) {
+          ctx.fillText(text, x, y);
+        }
+      }
+    } else if (wmImg) {
+      const wmScale = scale * 0.15;
+      const wmW = wmImg.width * wmScale;
+      const wmH = wmImg.height * wmScale;
+
+      for (let y = -h; y < h * 2; y += wmH + gap) {
+        for (let x = -w; x < w * 2; x += wmW + gap) {
+          ctx.drawImage(wmImg, x, y, wmW, wmH);
+        }
+      }
+    }
+
+    ctx.restore();
+  }
+
+  function getPosition(canvasW: number, canvasH: number, elemW: number, elemH: number, padding: number) {
+    let x = 0, y = 0;
+
+    switch (position) {
+      case 'top-left': x = padding; y = padding; break;
+      case 'top-center': x = (canvasW - elemW) / 2; y = padding; break;
+      case 'top-right': x = canvasW - elemW - padding; y = padding; break;
+      case 'center-left': x = padding; y = (canvasH - elemH) / 2; break;
+      case 'center': x = (canvasW - elemW) / 2; y = (canvasH - elemH) / 2; break;
+      case 'center-right': x = canvasW - elemW - padding; y = (canvasH - elemH) / 2; break;
+      case 'bottom-left': x = padding; y = canvasH - elemH - padding; break;
+      case 'bottom-center': x = (canvasW - elemW) / 2; y = canvasH - elemH - padding; break;
+      case 'bottom-right': x = canvasW - elemW - padding; y = canvasH - elemH - padding; break;
+    }
+
+    return { x, y };
+  }
+
+  // Apply & Download at full resolution
+  applyBtn.addEventListener('click', () => {
+    if (!img) return;
+
+    const fullCanvas = document.createElement('canvas');
+    fullCanvas.width = img.width;
+    fullCanvas.height = img.height;
+    const ctx = fullCanvas.getContext('2d')!;
+    ctx.drawImage(img, 0, 0);
+    applyWatermark(ctx, img.width, img.height, 1);
+
+    fullCanvas.toBlob((blob) => {
+      if (blob) {
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'watermarked-image.png';
+        link.click();
+      }
+    }, 'image/png');
+  });
+</script>
+
+

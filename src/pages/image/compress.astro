@@ -1,0 +1,304 @@
+﻿---
+/**
+ * Image Compressor Tool
+ * Uses HTML5 Canvas to compress images with adjustable quality.
+ * Supports crop, resize, and quality control.
+ */
+import ToolLayout from '../../components/ToolLayout.astro';
+---
+
+<ToolLayout
+  title="Compress Image"
+  metaTitle="Compress Image Online Free - Reduce Image File Size | Woorkeasy"
+  description="Compress images online free. Reduce JPG, PNG, and WebP file size without losing quality. Client-side image compression, no upload."
+  heading="Compress Image Online"
+  category="Image Tools"
+>
+  <div id="compress-app">
+    <!-- Upload Zone -->
+    <div id="upload-zone" class="upload-zone p-12 text-center cursor-pointer">
+      <div class="flex flex-col items-center gap-4">
+        <svg class="w-12 h-12 text-neutral-400" viewBox="0 0 48 48" fill="none">
+          <path d="M24 32V16m0 0l-6 6m6-6l6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <rect x="8" y="8" width="32" height="32" rx="4" stroke="currentColor" stroke-width="2"/>
+        </svg>
+        <p class="text-base text-neutral-600">Drag & drop images here, or <span class="text-blue-600 font-medium">browse</span></p>
+        <p class="text-sm text-neutral-500">Supports JPG, PNG, WebP " up to 50MB</p>
+      </div>
+      <input type="file" id="file-input" accept="image/jpeg,image/png,image/webp" multiple class="hidden" />
+    </div>
+
+    <!-- Controls (hidden until file loaded) -->
+    <div id="controls" class="hidden mt-6">
+      <div class="flex flex-col sm:flex-row gap-6">
+        <!-- Quality Slider -->
+        <div class="flex-1">
+          <label class="text-sm text-neutral-600 font-medium block mb-2">
+            Quality: <span id="quality-value">80</span>%
+          </label>
+          <input type="range" id="quality-slider" min="10" max="100" value="80" class="w-full accent-neutral-900" />
+        </div>
+        <!-- Max Width -->
+        <div class="flex-1">
+          <label class="text-sm text-neutral-600 font-medium block mb-2">
+            Max Width (px)
+          </label>
+          <input type="number" id="max-width" placeholder="Original" class="w-full px-3 py-2 border border-neutral-200 rounded-md text-sm" />
+        </div>
+        <!-- Output Format -->
+        <div class="flex-1">
+          <label class="text-sm text-neutral-600 font-medium block mb-2">
+            Output Format
+          </label>
+          <select id="output-format" class="w-full px-3 py-2 border border-neutral-200 rounded-md text-sm bg-white">
+            <option value="image/jpeg">JPEG</option>
+            <option value="image/png">PNG</option>
+            <option value="image/webp">WebP</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Action Button -->
+      <button id="compress-btn" class="btn-primary mt-6">
+        Compress Images
+      </button>
+    </div>
+
+    <!-- Loading Indicator -->
+    <div id="loading" class="hidden mt-6 text-center">
+      <div class="inline-flex items-center gap-3">
+        <svg class="animate-spin w-5 h-5 text-neutral-900" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" class="opacity-25"/>
+          <path d="M4 12a8 8 0 018-8" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+        <span class="text-sm text-neutral-600">Compressing...</span>
+      </div>
+    </div>
+
+    <!-- Results -->
+    <div id="results" class="hidden mt-8">
+      <h2 class="display-sm text-neutral-900 mb-4">Results</h2>
+      <div id="results-list" class="flex flex-col gap-4"></div>
+    </div>
+  </div>
+
+  <div slot="info">
+    <section class="bg-white dark:bg-neutral-900 rounded-xl p-6 md:p-8 shadow-level-3 dark:border dark:border-neutral-800 mt-6">
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100">How to Use Image Compressor</h2>
+      <ol class="list-decimal list-inside space-y-2 mt-4 body-md text-neutral-700 dark:text-neutral-300">
+        <li>Drop or browse JPG, PNG, or WebP images</li>
+        <li>Adjust quality, max width, and output format</li>
+        <li>Click "Compress Images" and download</li>
+      </ol>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">Features</h2>
+      <ul class="list-disc list-inside space-y-2 mt-4 body-md text-neutral-700 dark:text-neutral-300">
+        <li>Compress JPG, PNG, and WebP formats</li>
+        <li>Adjustable quality from 10% to 100%</li>
+        <li>Resize by max width option</li>
+        <li>Choose output format independent of input</li>
+        <li>Batch compress multiple images at once</li>
+      </ul>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">Why Use Our Image Compressor</h2>
+      <p class="body-md text-neutral-700 dark:text-neutral-300 mt-4">Large images slow down your website and take up valuable storage space. Our image compressor reduces file size by up to 80% while maintaining visual quality. With adjustable compression, resize options, and format conversion built in, you can optimize your entire image library in minutes " all in your browser.</p>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">FAQs</h2>
+      <div class="space-y-4 mt-4">
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">How much can I compress an image?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">Typically 50-80% size reduction with minimal visible quality loss.</p></div>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Does compression reduce quality?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">It depends on the quality setting. Higher quality preserves more detail but results in larger files.</p></div>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Can I change the output format?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">Yes, you can output as JPG, PNG, or WebP regardless of the input format.</p></div>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">What is the maximum file size?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">Files up to 50MB are supported for compression.</p></div>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Are my images uploaded?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">No, all processing is done locally in your browser. Your files stay completely private.</p></div>
+      </div>
+    </section>
+
+    <!-- Related Tools -->
+    <section class="bg-white dark:bg-neutral-900 rounded-xl p-6 md:p-8 shadow-level-3 dark:border dark:border-neutral-800 mt-6">
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100">Related Tools</h2>
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mt-4">
+        <a href="/image/jpg-to-png" class="btn-secondary text-center no-underline text-sm">JPG to PNG</a>
+        <a href="/image/png-to-jpg" class="btn-secondary text-center no-underline text-sm">PNG to JPG</a>
+        <a href="/image/webp-converter" class="btn-secondary text-center no-underline text-sm">WebP Converter</a>
+        <a href="/image/crop" class="btn-secondary text-center no-underline text-sm">Crop Image</a>
+      </div>
+    </section>
+  </div>
+</ToolLayout>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How much can I compress an image?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Typically 50-80% size reduction with minimal visible quality loss." }
+    },
+    {
+      "@type": "Question",
+      "name": "Does compression reduce quality?",
+      "acceptedAnswer": { "@type": "Answer", "text": "It depends on the quality setting. Higher quality preserves more detail but results in larger files." }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I change the output format?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes, you can output as JPG, PNG, or WebP regardless of the input format." }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the maximum file size?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Files up to 50MB are supported for compression." }
+    },
+    {
+      "@type": "Question",
+      "name": "Are my images uploaded?",
+      "acceptedAnswer": { "@type": "Answer", "text": "No, all processing is done locally in your browser. Your files stay completely private." }
+    }
+  ]
+}
+</script>
+
+<script>
+  // Image Compressor Logic
+  const uploadZone = document.getElementById('upload-zone')!;
+  const fileInput = document.getElementById('file-input') as HTMLInputElement;
+  const controls = document.getElementById('controls')!;
+  const qualitySlider = document.getElementById('quality-slider') as HTMLInputElement;
+  const qualityValue = document.getElementById('quality-value')!;
+  const maxWidthInput = document.getElementById('max-width') as HTMLInputElement;
+  const outputFormat = document.getElementById('output-format') as HTMLSelectElement;
+  const compressBtn = document.getElementById('compress-btn')!;
+  const loading = document.getElementById('loading')!;
+  const results = document.getElementById('results')!;
+  const resultsList = document.getElementById('results-list')!;
+
+  let files: File[] = [];
+
+  // Upload zone interactions
+  uploadZone.addEventListener('click', () => fileInput.click());
+  uploadZone.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    uploadZone.classList.add('dragover');
+  });
+  uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('dragover'));
+  uploadZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    uploadZone.classList.remove('dragover');
+    const dt = e.dataTransfer;
+    if (dt?.files) handleFiles(Array.from(dt.files));
+  });
+  fileInput.addEventListener('change', () => {
+    if (fileInput.files) handleFiles(Array.from(fileInput.files));
+  });
+
+  // Quality slider
+  qualitySlider.addEventListener('input', () => {
+    qualityValue.textContent = qualitySlider.value;
+  });
+
+  function handleFiles(newFiles: File[]) {
+    files = newFiles.filter(f => f.type.startsWith('image/'));
+    if (files.length > 0) {
+      controls.classList.remove('hidden');
+      uploadZone.querySelector('p')!.textContent = `${files.length} file(s) selected`;
+    }
+  }
+
+  // Compress logic
+  compressBtn.addEventListener('click', async () => {
+    if (files.length === 0) return;
+
+    loading.classList.remove('hidden');
+    results.classList.add('hidden');
+    resultsList.innerHTML = '';
+
+    const quality = parseInt(qualitySlider.value) / 100;
+    const maxWidth = maxWidthInput.value ? parseInt(maxWidthInput.value) : null;
+    const format = outputFormat.value;
+
+    for (const file of files) {
+      try {
+        const compressed = await compressImage(file, quality, maxWidth, format);
+        addResult(file, compressed, format);
+      } catch (err) {
+        addError(file, err as Error);
+      }
+    }
+
+    loading.classList.add('hidden');
+    results.classList.remove('hidden');
+  });
+
+  function compressImage(file: File, quality: number, maxWidth: number | null, format: string): Promise<Blob> {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        let w = img.width;
+        let h = img.height;
+
+        if (maxWidth && w > maxWidth) {
+          h = Math.round((maxWidth / w) * h);
+          w = maxWidth;
+        }
+
+        canvas.width = w;
+        canvas.height = h;
+        const ctx = canvas.getContext('2d')!;
+        ctx.drawImage(img, 0, 0, w, h);
+
+        canvas.toBlob(
+          (blob) => {
+            if (blob) resolve(blob);
+            else reject(new Error('Compression failed'));
+          },
+          format,
+          quality
+        );
+      };
+      img.onerror = () => reject(new Error('Failed to load image'));
+      img.src = URL.createObjectURL(file);
+    });
+  }
+
+  function addResult(original: File, compressed: Blob, format: string) {
+    const savings = ((1 - compressed.size / original.size) * 100).toFixed(1);
+    const ext = format.split('/')[1] === 'jpeg' ? 'jpg' : format.split('/')[1];
+    const fileName = original.name.replace(/\.[^.]+$/, `-compressed.${ext}`);
+
+    const div = document.createElement('div');
+    div.className = 'flex items-center justify-between p-4 bg-neutral-50 rounded-lg';
+    div.innerHTML = `
+      <div>
+        <p class="body-sm text-neutral-900 font-medium">${original.name}</p>
+        <p class="caption-mono text-neutral-500">
+          ${formatBytes(original.size)} ' ${formatBytes(compressed.size)} (${savings}% smaller)
+        </p>
+      </div>
+      <a class="btn-primary text-sm no-underline" style="padding: 6px 16px;" download="${fileName}">Download</a>
+    `;
+    const link = div.querySelector('a')!;
+    link.href = URL.createObjectURL(compressed);
+    resultsList.appendChild(div);
+  }
+
+  function addError(file: File, error: Error) {
+    const div = document.createElement('div');
+    div.className = 'p-4 bg-red-50 rounded-lg';
+    div.innerHTML = `<p class="body-sm text-red-600">${file.name}: ${error.message}</p>`;
+    resultsList.appendChild(div);
+  }
+
+  function formatBytes(bytes: number): string {
+    if (bytes === 0) return '0 B';
+    const k = 1024;
+    const sizes = ['B', 'KB', 'MB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+  }
+</script>
+
+
+

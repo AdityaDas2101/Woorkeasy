@@ -1,0 +1,365 @@
+﻿---
+/**
+ * Split PDF Tool
+ * Split a PDF into individual pages or custom page ranges.
+ * Uses pdf-lib for PDF manipulation.
+ */
+import ToolLayout from '../../components/ToolLayout.astro';
+---
+
+<ToolLayout
+  title="Split PDF"
+  metaTitle="Split PDF Online Free - Extract PDF Pages | Woorkeasy"
+  description="Split PDF files online free. Extract specific pages or divide multi-page PDFs into separate documents. No upload, no limits, secure browser-based PDF splitter."
+  heading="Split PDF"
+  category="PDF Tools"
+>
+  <div id="split-pdf-app" class="flex flex-col gap-6">
+    <!-- Upload Zone -->
+    <div
+      id="upload-zone"
+      class="upload-zone flex flex-col items-center justify-center gap-3 p-12 border-2 border-dashed border-neutral-300 rounded-lg cursor-pointer hover:border-neutral-400 transition-colors"
+    >
+      <span class="text-4xl"></span>
+      <p class="body-md text-neutral-600 dark:text-neutral-400 text-center">
+        Drop a PDF file here or <span class="text-neutral-900 dark:text-neutral-100 font-medium underline">browse</span>
+      </p>
+      <p class="body-sm text-neutral-500">Single PDF file</p>
+      <input id="file-input" type="file" accept=".pdf,application/pdf" class="hidden" />
+    </div>
+
+    <!-- File Info -->
+    <div id="file-info" class="hidden p-4 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg">
+      <div class="flex items-center gap-3">
+        <span class="text-lg">"</span>
+        <div class="flex-1 min-w-0">
+          <p id="file-name" class="body-sm font-medium text-neutral-900 dark:text-neutral-100 truncate"></p>
+          <p id="file-pages" class="caption-mono text-neutral-500"></p>
+        </div>
+        <button id="clear-btn" class="text-neutral-400 hover:text-red-500 transition-colors text-lg leading-none">&times;</button>
+      </div>
+    </div>
+
+    <!-- Split Options -->
+    <div id="options-panel" class="hidden p-4 bg-neutral-50 dark:bg-neutral-800 rounded-lg border border-neutral-200 dark:border-neutral-700">
+      <div class="flex flex-col gap-4">
+        <div class="flex flex-wrap gap-4">
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="radio" name="split-mode" value="all" checked class="accent-neutral-900" />
+            <span class="body-sm text-neutral-700 dark:text-neutral-300">Extract every page</span>
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="radio" name="split-mode" value="range" class="accent-neutral-900" />
+            <span class="body-sm text-neutral-700 dark:text-neutral-300">Custom page ranges</span>
+          </label>
+        </div>
+        <div id="range-input-group" class="hidden">
+          <label for="range-input" class="body-sm text-neutral-600 dark:text-neutral-400 mb-1 block">
+            Enter page numbers or ranges (e.g., <code class="bg-neutral-200 dark:bg-neutral-700 px-1 rounded">1,3,5-8,12</code>)
+          </label>
+          <input
+            id="range-input"
+            type="text"
+            placeholder="1-3, 5, 7-10"
+            class="w-full px-4 py-2 border border-neutral-200 dark:border-neutral-700 rounded-lg body-sm bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 focus:outline-none focus:border-neutral-900 dark:focus:border-neutral-400"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div id="action-bar" class="hidden flex flex-wrap items-center gap-3">
+      <button id="split-btn" class="btn-primary">Split PDF</button>
+    </div>
+
+    <!-- Status -->
+    <div id="status" class="hidden body-sm text-neutral-600 dark:text-neutral-400 flex items-center gap-2">
+      <svg class="animate-spin h-4 w-4 text-neutral-500" viewBox="0 0 24 24" fill="none">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+      </svg>
+      <span id="status-text">Splitting...</span>
+    </div>
+
+    <!-- Results -->
+    <div id="results" class="hidden flex flex-col gap-3"></div>
+  </div>
+
+  <div slot="info">
+    <section class="bg-white dark:bg-neutral-900 rounded-xl p-6 md:p-8 shadow-level-3 dark:border dark:border-neutral-800 mt-6">
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100">How to Use Split PDF Tool</h2>
+      <ol class="list-decimal list-inside space-y-2 mt-4 body-md text-neutral-700 dark:text-neutral-300">
+        <li>Upload your PDF " Drag & drop a PDF file or click to browse.</li>
+        <li>Choose split mode " Extract every page as separate PDFs or specify custom page ranges.</li>
+        <li>Split and download " Click "Split PDF" and download individual pages or extracts.</li>
+      </ol>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">Features</h2>
+      <ul class="list-disc list-inside space-y-2 mt-4 body-md text-neutral-700 dark:text-neutral-300">
+        <li>Extract every page " Split a PDF into individual one-page files automatically.</li>
+        <li>Custom page ranges " Extract specific pages like 1-3, 5, 7-10 into a single PDF.</li>
+        <li>Preserved formatting " All text, images, and layout remain exactly as in the original.</li>
+        <li>Fast extraction " Quickly splits even large multi-page documents.</li>
+        <li>Secure and private " 100% browser-based processing with no server uploads.</li>
+      </ul>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">Why Use Our PDF Splitter</h2>
+      <p class="body-md text-neutral-700 dark:text-neutral-300 mt-4">Our free split PDF online tool makes it easy to extract pages from any PDF. Separate a multi-page document into individual files, or extract specific page ranges for sharing. Perfect for pulling out key chapters, removing unnecessary pages, or reorganizing documents. All processing happens in your browser " no uploads, no limits, completely free.</p>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">FAQs</h2>
+      <div class="space-y-4 mt-4">
+        <div>
+          <h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Can I extract specific pages from a PDF?</h3>
+          <p class="body-md text-neutral-700 dark:text-neutral-300">Yes, use "Custom page ranges" to extract specific pages like 1-3, 5, 7-10 into a single PDF.</p>
+        </div>
+        <div>
+          <h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Does splitting affect PDF quality?</h3>
+          <p class="body-md text-neutral-700 dark:text-neutral-300">No, all content maintains its original quality, formatting, and resolution.</p>
+        </div>
+        <div>
+          <h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Are my files uploaded to a server?</h3>
+          <p class="body-md text-neutral-700 dark:text-neutral-300">No, all processing happens in your browser. Your files stay private and secure.</p>
+        </div>
+        <div>
+          <h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Can I split a PDF into individual pages?</h3>
+          <p class="body-md text-neutral-700 dark:text-neutral-300">Yes, choose "Extract every page" to create one separate PDF file per page.</p>
+        </div>
+        <div>
+          <h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Is there a limit on PDF size or pages?</h3>
+          <p class="body-md text-neutral-700 dark:text-neutral-300">No, you can split PDFs of any size with no restrictions or limitations.</p>
+        </div>
+        <div>
+          <h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Can I download all pages at once?</h3>
+          <p class="body-md text-neutral-700 dark:text-neutral-300">Yes, use the "Download All" button to download all extracted files simultaneously.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-white dark:bg-neutral-900 rounded-xl p-6 md:p-8 shadow-level-3 dark:border dark:border-neutral-800 mt-6">
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100">Related Tools</h2>
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mt-4">
+        <a href="/pdf/merge-pdf" class="btn-secondary text-center no-underline text-sm">Merge PDF</a>
+        <a href="/pdf/pdf-to-image" class="btn-secondary text-center no-underline text-sm">PDF to Image</a>
+        <a href="/pdf/rotate-pdf" class="btn-secondary text-center no-underline text-sm">Rotate PDF</a>
+        <a href="/pdf/jpg-to-pdf" class="btn-secondary text-center no-underline text-sm">JPG to PDF</a>
+      </div>
+    </section>
+  </div>
+</ToolLayout>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Can I extract specific pages from a PDF?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, use Custom page ranges to extract specific pages like 1-3, 5, 7-10 into a single PDF."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does splitting affect PDF quality?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No, all content maintains its original quality, formatting, and resolution."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Are my files uploaded to a server?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No, all processing happens in your browser. Your files stay private and secure."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I split a PDF into individual pages?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, choose Extract every page to create one separate PDF file per page."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is there a limit on PDF size or pages?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No, you can split PDFs of any size with no restrictions or limitations."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I download all pages at once?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, use the Download All button to download all extracted files simultaneously."
+      }
+    }
+  ]
+}
+</script>
+
+<script>
+  import { PDFDocument } from 'pdf-lib';
+
+  const uploadZone = document.getElementById('upload-zone')!;
+  const fileInput = document.getElementById('file-input') as HTMLInputElement;
+  const fileInfo = document.getElementById('file-info')!;
+  const fileName = document.getElementById('file-name')!;
+  const filePages = document.getElementById('file-pages')!;
+  const clearBtn = document.getElementById('clear-btn') as HTMLButtonElement;
+  const optionsPanel = document.getElementById('options-panel')!;
+  const rangeInputGroup = document.getElementById('range-input-group')!;
+  const rangeInput = document.getElementById('range-input') as HTMLInputElement;
+  const actionBar = document.getElementById('action-bar')!;
+  const splitBtn = document.getElementById('split-btn') as HTMLButtonElement;
+  const statusEl = document.getElementById('status')!;
+  const statusText = document.getElementById('status-text')!;
+  const results = document.getElementById('results')!;
+
+  let pdfBytes: ArrayBuffer | null = null;
+  let totalPages = 0;
+
+  // Split mode toggle
+  document.querySelectorAll('input[name="split-mode"]').forEach(r => {
+    r.addEventListener('change', () => {
+      const mode = (document.querySelector('input[name="split-mode"]:checked') as HTMLInputElement)?.value;
+      rangeInputGroup.classList.toggle('hidden', mode !== 'range');
+    });
+  });
+
+  uploadZone.addEventListener('click', () => fileInput.click());
+  uploadZone.addEventListener('dragover', e => { e.preventDefault(); uploadZone.classList.add('border-neutral-500'); });
+  uploadZone.addEventListener('dragleave', () => { uploadZone.classList.remove('border-neutral-500'); });
+  uploadZone.addEventListener('drop', e => { e.preventDefault(); uploadZone.classList.remove('border-neutral-500'); if (e.dataTransfer?.files[0]) loadFile(e.dataTransfer.files[0]); });
+  fileInput.addEventListener('change', () => { if (fileInput.files?.[0]) loadFile(fileInput.files[0]); });
+
+  async function loadFile(file: File) {
+    pdfBytes = await file.arrayBuffer();
+    const pdf = await PDFDocument.load(pdfBytes);
+    totalPages = pdf.getPageCount();
+    fileName.textContent = file.name;
+    filePages.textContent = `${totalPages} page${totalPages > 1 ? 's' : ''}`;
+    fileInfo.classList.remove('hidden');
+    optionsPanel.classList.remove('hidden');
+    actionBar.classList.remove('hidden');
+    uploadZone.classList.add('hidden');
+    results.classList.add('hidden');
+    results.innerHTML = '';
+  }
+
+  clearBtn.addEventListener('click', () => {
+    pdfBytes = null; totalPages = 0;
+    fileInfo.classList.add('hidden');
+    optionsPanel.classList.add('hidden');
+    actionBar.classList.add('hidden');
+    results.classList.add('hidden');
+    results.innerHTML = '';
+    uploadZone.classList.remove('hidden');
+    fileInput.value = '';
+  });
+
+  function parseRanges(input: string, max: number): number[] {
+    const pages: Set<number> = new Set();
+    const parts = input.split(',').map(s => s.trim()).filter(Boolean);
+    for (const part of parts) {
+      if (part.includes('-')) {
+        const [start, end] = part.split('-').map(n => parseInt(n.trim()));
+        if (!isNaN(start) && !isNaN(end)) {
+          for (let i = Math.max(1, start); i <= Math.min(max, end); i++) pages.add(i);
+        }
+      } else {
+        const n = parseInt(part);
+        if (!isNaN(n) && n >= 1 && n <= max) pages.add(n);
+      }
+    }
+    return Array.from(pages).sort((a, b) => a - b);
+  }
+
+  splitBtn.addEventListener('click', async () => {
+    if (!pdfBytes) return;
+    const mode = (document.querySelector('input[name="split-mode"]:checked') as HTMLInputElement)?.value;
+
+    statusEl.classList.remove('hidden');
+    results.classList.add('hidden');
+    results.innerHTML = '';
+    splitBtn.disabled = true;
+
+    try {
+      if (mode === 'all') {
+        // Extract every page as a separate PDF
+        const outputFiles: { name: string; blob: Blob }[] = [];
+        for (let i = 0; i < totalPages; i++) {
+          statusText.textContent = `Extracting page ${i + 1} of ${totalPages}...`;
+          const newPdf = await PDFDocument.create();
+          const [page] = await newPdf.copyPages(await PDFDocument.load(pdfBytes!), [i]);
+          newPdf.addPage(page);
+          const bytes = await newPdf.save();
+          outputFiles.push({
+            name: `page-${String(i + 1).padStart(3, '0')}.pdf`,
+            blob: new Blob([bytes], { type: 'application/pdf' })
+          });
+        }
+        showResults(outputFiles);
+      } else {
+        // Custom range " create a single PDF with selected pages
+        const pages = parseRanges(rangeInput.value, totalPages);
+        if (pages.length === 0) { alert('No valid pages specified.'); statusEl.classList.add('hidden'); splitBtn.disabled = false; return; }
+
+        statusText.textContent = `Extracting ${pages.length} page(s)...`;
+        const sourcePdf = await PDFDocument.load(pdfBytes!);
+        const newPdf = await PDFDocument.create();
+        const copiedPages = await newPdf.copyPages(sourcePdf, pages.map(p => p - 1));
+        copiedPages.forEach(p => newPdf.addPage(p));
+        const bytes = await newPdf.save();
+        const blob = new Blob([bytes], { type: 'application/pdf' });
+        showResults([{ name: `extracted-pages.pdf`, blob }]);
+      }
+    } catch (err: any) {
+      alert('Error: ' + (err.message || 'Failed to split PDF'));
+    }
+
+    statusEl.classList.add('hidden');
+    splitBtn.disabled = false;
+  });
+
+  function showResults(files: { name: string; blob: Blob }[]) {
+    results.classList.remove('hidden');
+    results.innerHTML = files.map((f, i) => `
+      <div class="flex items-center gap-3 p-3 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg">
+        <span class="text-lg">"</span>
+        <div class="flex-1 min-w-0">
+          <p class="body-sm font-medium text-neutral-900 dark:text-neutral-100 truncate">${f.name}</p>
+          <p class="caption-mono text-neutral-500">${(f.blob.size / 1024).toFixed(1)} KB</p>
+        </div>
+        <button data-dl="${i}" class="btn-secondary text-sm">Download</button>
+      </div>
+    `).join('') + (files.length > 1 ? `<button id="download-all-btn" class="btn-primary mt-2">Download All</button>` : '');
+
+    results.querySelectorAll('[data-dl]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const idx = parseInt((btn as HTMLElement).dataset.dl!);
+        downloadBlob(files[idx].blob, files[idx].name);
+      });
+    });
+
+    document.getElementById('download-all-btn')?.addEventListener('click', () => {
+      files.forEach((f, i) => setTimeout(() => downloadBlob(f.blob, f.name), i * 300));
+    });
+  }
+
+  function downloadBlob(blob: Blob, name: string) {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = name; a.click();
+    URL.revokeObjectURL(url);
+  }
+</script>
+
+
+

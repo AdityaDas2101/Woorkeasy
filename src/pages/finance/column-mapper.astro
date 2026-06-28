@@ -1,0 +1,598 @@
+---
+/**
+ * Column Mapper Tool
+ * Upload a CSV, auto-detect columns, map them to standard fields,
+ * preview the remapped data, and download a standardized CSV.
+ * 100% client-side browser processing.
+ */
+import ToolLayout from '../../components/ToolLayout.astro';
+---
+
+<ToolLayout
+  title="Column Mapper"
+  metaTitle="Column Mapper Free - Map Bank CSV Columns to Standard Format | Woorkeasy"
+  description="Map bank CSV columns to a standard format online free. Normalize financial data from different banks. Browser-based column mapper, no upload."
+  heading="Column Mapper"
+  category="Finance"
+>
+  <div id="mapper-app">
+    <!-- Upload Zone -->
+    <div id="upload-zone" class="upload-zone p-12 text-center cursor-pointer">
+      <div class="flex flex-col items-center gap-4">
+        <svg class="w-12 h-12 text-neutral-500" viewBox="0 0 48 48" fill="none">
+          <path d="M24 32V16m0 0l-6 6m6-6l6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <rect x="8" y="8" width="32" height="32" rx="4" stroke="currentColor" stroke-width="2"/>
+        </svg>
+        <p class="body-md text-neutral-600">Drag & drop CSV file here, or <span class="text-blue-600 font-medium">browse</span></p>
+        <p class="body-sm text-neutral-500">Supports .csv files from banks, payment apps, and accounting software</p>
+      </div>
+      <input type="file" id="file-input" accept=".csv" class="hidden" />
+    </div>
+
+    <!-- Mapping Panel -->
+    <div id="mapping-panel" class="hidden mt-6 space-y-4">
+      <h2 class="display-sm text-neutral-900">Column Mapping</h2>
+      <p class="body-sm text-neutral-600">Map each source column to a standard field. Unmapped columns will be excluded from output.</p>
+      <div id="mapping-list" class="space-y-3"></div>
+
+      <!-- Unmapped Warning -->
+      <div id="unmapped-warning" class="hidden p-4 bg-amber-50 rounded-lg">
+        <p id="unmapped-text" class="body-sm text-amber-700"></p>
+      </div>
+
+      <!-- Controls -->
+      <div class="flex items-center gap-4 pt-2">
+        <button id="download-csv" class="btn-primary">Download Mapped CSV</button>
+        <button id="reset-btn" class="btn-secondary">Reset Mapping</button>
+      </div>
+    </div>
+
+    <!-- Preview Table -->
+    <div id="preview" class="hidden mt-8 overflow-x-auto">
+      <h2 class="display-sm text-neutral-900 mb-4">Mapped Data Preview</h2>
+      <p id="summary" class="body-sm text-neutral-600 mb-4"></p>
+      <table id="preview-table" class="w-full border-collapse">
+        <thead id="table-head"></thead>
+        <tbody id="table-body"></tbody>
+      </table>
+    </div>
+
+    <!-- Error -->
+    <div id="error" class="hidden mt-6 p-4 bg-red-50 rounded-lg">
+      <p id="error-text" class="body-sm text-red-600"></p>
+    </div>
+  </div>
+</ToolLayout>
+
+  <div slot="info">
+    <section class="bg-white dark:bg-neutral-900 rounded-xl p-6 md:p-8 shadow-level-3 dark:border dark:border-neutral-800 mt-6">
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100">How to Use Column Mapper</h2>
+      <ol class="list-decimal list-inside space-y-2 mt-4 body-md text-neutral-700 dark:text-neutral-300">
+        <li>Upload or drag & drop your CSV file from your bank or financial institution.</li>
+        <li>Map each detected column to the corresponding standard field using the dropdown menus.</li>
+        <li>Preview the mapped data and download your standardized CSV file.</li>
+      </ol>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">Features</h2>
+      <ul class="list-disc list-inside space-y-2 mt-4 body-md text-neutral-700 dark:text-neutral-300">
+        <li><strong>Auto-Detect Columns</strong> - instantly reads your CSV headers and presents them in a clean mapping interface.</li>
+        <li><strong>Standard Field Mapping</strong> - map any source column to Date, Amount, Description, Type, Category, Reference, Memo, or Balance.</li>
+        <li><strong>Preview Mapped Data</strong> - review the remapped output in a table before downloading.</li>
+        <li><strong>Private & Secure</strong> - all processing happens in your browser. Your data never leaves your device.</li>
+      </ul>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">Why Use Our Column Mapper</h2>
+      <p class="body-md text-neutral-700 dark:text-neutral-300 mt-4">Every bank and financial institution exports CSV files with different column names and formats. Some call it "Transaction Date" while others use "Date Posted" or "Posting Date." Our Column Mapper normalizes all these variations into a consistent, standard format. Whether you're consolidating data from multiple accounts, preparing reports, or importing into accounting software, you no longer need to manually rearrange columns or write complex spreadsheet formulas.</p>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">FAQs</h2>
+      <div class="space-y-4 mt-4">
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">What standard fields are supported?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">Our mapper supports eight standard fields: Date, Amount, Description/Payee, Type (credit/debit), Category, Reference/Check#, Memo/Notes, and Balance. These cover the vast majority of financial CSV formats from banks and accounting software.</p></div>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Can I map multiple columns to the same field?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">No, each standard field can only be mapped from one source column. If multiple source columns map to the same field, only the last mapping will be used. We flag duplicate mappings and unmapped columns to help you avoid data loss.</p></div>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Is my data secure?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">Absolutely. All processing is done locally in your browser using JavaScript. Your CSV financial data is never uploaded to any server, ensuring complete privacy and security of your sensitive information.</p></div>
+      </div>
+    </section>
+
+    <!-- Related Tools -->
+    <section class="bg-white dark:bg-neutral-900 rounded-xl p-6 md:p-8 shadow-level-3 dark:border dark:border-neutral-800 mt-6">
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100">Related Tools</h2>
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mt-4">
+        <a href="/finance/csv-cleaner/" class="px-4 py-3 bg-neutral-100 dark:bg-neutral-800 rounded-lg body-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors text-center">CSV Cleaner</a>
+        <a href="/finance/csv-formatter/" class="px-4 py-3 bg-neutral-100 dark:bg-neutral-800 rounded-lg body-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors text-center">CSV Formatter</a>
+        <a href="/finance/transaction-deduplicator/" class="px-4 py-3 bg-neutral-100 dark:bg-neutral-800 rounded-lg body-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors text-center">Deduplicator</a>
+        <a href="/finance/csv-to-excel/" class="px-4 py-3 bg-neutral-100 dark:bg-neutral-800 rounded-lg body-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors text-center">CSV to Excel</a>
+        <a href="/finance/bank-statement-parser/" class="px-4 py-3 bg-neutral-100 dark:bg-neutral-800 rounded-lg body-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors text-center">Bank Statement Parser</a>
+      </div>
+    </section>
+  </div>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What standard fields are supported?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Our mapper supports eight standard fields: Date, Amount, Description/Payee, Type (credit/debit), Category, Reference/Check#, Memo/Notes, and Balance. These cover the vast majority of financial CSV formats from banks and accounting software."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I map multiple columns to the same field?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No, each standard field can only be mapped from one source column. If multiple source columns map to the same field, only the last mapping will be used. We flag duplicate mappings and unmapped columns to help you avoid data loss."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is my data secure?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Absolutely. All processing is done locally in your browser using JavaScript. Your CSV financial data is never uploaded to any server, ensuring complete privacy and security of your sensitive information."
+        }
+      }
+    ]
+  }
+  </script>
+
+<style>
+  #preview-table th {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    text-transform: uppercase;
+    background: var(--color-canvas-soft-2);
+    padding: 8px 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--color-hairline);
+  }
+  #preview-table td {
+    font-size: 14px;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--color-hairline);
+  }
+  #preview-table tr:hover td {
+    background: var(--color-canvas-soft);
+  }
+  .mapping-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    background: var(--color-canvas-soft);
+    border-radius: 8px;
+  }
+  .mapping-row .source-col {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 600;
+    min-width: 160px;
+    color: var(--color-neutral-900);
+  }
+  .mapping-row select {
+    flex: 1;
+    max-width: 280px;
+    padding: 6px 10px;
+    border: 1px solid var(--color-hairline);
+    border-radius: 6px;
+    font-size: 14px;
+    background: var(--color-canvas);
+    color: var(--color-neutral-900);
+  }
+  .mapping-row .status-badge {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-family: var(--font-mono);
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+  .status-badge.mapped {
+    background: #d1fae5;
+    color: #065f46;
+  }
+  .status-badge.unmapped {
+    background: #fef3c7;
+    color: #92400e;
+  }
+  .status-badge.duplicate {
+    background: #fce4ec;
+    color: #b71c1c;
+  }
+  .mapping-row .arrow {
+    color: var(--color-neutral-400);
+    font-size: 16px;
+  }
+  @media (prefers-color-scheme: dark) {
+    .mapping-row select {
+      background: var(--color-neutral-800);
+      color: var(--color-neutral-100);
+      border-color: var(--color-neutral-700);
+    }
+    .status-badge.mapped {
+      background: #064e3b;
+      color: #a7f3d0;
+    }
+    .status-badge.unmapped {
+      background: #78350f;
+      color: #fde68a;
+    }
+    .status-badge.duplicate {
+      background: #7f1d1d;
+      color: #fecaca;
+    }
+    .mapping-row .source-col {
+      color: var(--color-neutral-100);
+    }
+  }
+</style>
+
+<script>
+  const uploadZone = document.getElementById('upload-zone')!;
+  const fileInput = document.getElementById('file-input') as HTMLInputElement;
+  const mappingPanel = document.getElementById('mapping-panel')!;
+  const mappingList = document.getElementById('mapping-list')!;
+  const unmappedWarning = document.getElementById('unmapped-warning')!;
+  const unmappedText = document.getElementById('unmapped-text')!;
+  const downloadBtn = document.getElementById('download-csv')!;
+  const resetBtn = document.getElementById('reset-btn')!;
+  const preview = document.getElementById('preview')!;
+  const summary = document.getElementById('summary')!;
+  const tableHead = document.getElementById('table-head')!;
+  const tableBody = document.getElementById('table-body')!;
+  const errorDiv = document.getElementById('error')!;
+  const errorText = document.getElementById('error-text')!;
+
+  const STANDARD_FIELDS = [
+    { value: '', label: '— Skip / Unmapped —' },
+    { value: 'date', label: 'Date' },
+    { value: 'amount', label: 'Amount' },
+    { value: 'description', label: 'Description / Payee' },
+    { value: 'type', label: 'Type (credit/debit)' },
+    { value: 'category', label: 'Category' },
+    { value: 'reference', label: 'Reference / Check#' },
+    { value: 'memo', label: 'Memo / Notes' },
+    { value: 'balance', label: 'Balance' },
+  ];
+
+  const FIELD_LABELS: Record<string, string> = {
+    date: 'Date',
+    amount: 'Amount',
+    description: 'Description / Payee',
+    type: 'Type',
+    category: 'Category',
+    reference: 'Reference / Check#',
+    memo: 'Memo / Notes',
+    balance: 'Balance',
+  };
+
+  interface Mapping {
+    sourceIndex: number;
+    sourceName: string;
+    targetField: string;
+    used: boolean;
+  }
+
+  let rawHeaders: string[] = [];
+  let rawRows: string[][] = [];
+  let mappings: Mapping[] = [];
+
+  // Upload zone event listeners
+  uploadZone.addEventListener('click', () => fileInput.click());
+  uploadZone.addEventListener('dragover', (e) => { e.preventDefault(); uploadZone.classList.add('dragover'); });
+  uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('dragover'));
+  uploadZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    uploadZone.classList.remove('dragover');
+    if (e.dataTransfer?.files[0]) handleFile(e.dataTransfer.files[0]);
+  });
+  fileInput.addEventListener('change', () => { if (fileInput.files?.[0]) handleFile(fileInput.files[0]); });
+
+  resetBtn.addEventListener('click', resetAll);
+  downloadBtn.addEventListener('click', downloadMappedCSV);
+
+  function resetAll() {
+    mappings = [];
+    rawHeaders = [];
+    rawRows = [];
+    mappingPanel.classList.add('hidden');
+    preview.classList.add('hidden');
+    unmappedWarning.classList.add('hidden');
+    errorDiv.classList.add('hidden');
+    fileInput.value = '';
+  }
+
+  function handleFile(file: File) {
+    if (!file.name.endsWith('.csv') && !file.name.endsWith('.CSV') && file.type !== 'text/csv' && file.type !== 'application/vnd.ms-excel') {
+      showError('Please upload a valid CSV file (.csv)');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const text = e.target?.result as string;
+      processCSV(text);
+    };
+    reader.onerror = () => showError('Failed to read file');
+    reader.readAsText(file);
+  }
+
+  function processCSV(text: string) {
+    try {
+      const parsed = parseCSV(text);
+      if (parsed.headers.length === 0) {
+        throw new Error('CSV file appears to be empty or has no headers.');
+      }
+      if (parsed.rows.length === 0) {
+        throw new Error('CSV file has headers but no data rows.');
+      }
+
+      rawHeaders = parsed.headers;
+      rawRows = parsed.rows;
+      initMappings();
+      renderMappingUI();
+      renderPreview();
+      mappingPanel.classList.remove('hidden');
+      preview.classList.remove('hidden');
+      errorDiv.classList.add('hidden');
+    } catch (err) {
+      showError((err as Error).message);
+    }
+  }
+
+  function parseCSV(text: string): { headers: string[]; rows: string[][] } {
+    const lines = text.split(/\r?\n/).filter(line => line.trim().length > 0);
+    if (lines.length === 0) return { headers: [], rows: [] };
+
+    const headers = parseCSVLine(lines[0]);
+    const rows: string[][] = [];
+
+    for (let i = 1; i < lines.length; i++) {
+      const row = parseCSVLine(lines[i]);
+      if (row.length > 0) {
+        rows.push(row);
+      }
+    }
+
+    return { headers, rows };
+  }
+
+  function parseCSVLine(line: string): string[] {
+    const result: string[] = [];
+    let current = '';
+    let inQuotes = false;
+
+    for (let i = 0; i < line.length; i++) {
+      const ch = line[i];
+      if (inQuotes) {
+        if (ch === '"') {
+          if (i + 1 < line.length && line[i + 1] === '"') {
+            current += '"';
+            i++;
+          } else {
+            inQuotes = false;
+          }
+        } else {
+          current += ch;
+        }
+      } else {
+        if (ch === '"') {
+          inQuotes = true;
+        } else if (ch === ',') {
+          result.push(current.trim());
+          current = '';
+        } else {
+          current += ch;
+        }
+      }
+    }
+    result.push(current.trim());
+    return result;
+  }
+
+  function autoDetectMapping(header: string): string {
+    const h = header.toLowerCase().trim();
+    if (/date|posted|posting|trans\s*date|transaction\s*date|dtposted/i.test(h)) return 'date';
+    if (/amount|sum|value|transaction\s*amount|trnamt|txn_amt/i.test(h)) return 'amount';
+    if (/description|desc|name|payee|merchant|vendor|narrative|details|transaction\s*description/i.test(h)) return 'description';
+    if (/type|kind|crdr|debit.*credit|credit.*debit|txn_type|transaction\s*type|trntype/i.test(h)) return 'type';
+    if (/category|cat|class|group/i.test(h)) return 'category';
+    if (/reference|ref|check|chk|check\s*num|check\s*#|cheque|fitid|id|transaction\s*id|txn_id|num/i.test(h)) return 'reference';
+    if (/memo|notes|note|comment|memo\s*notes/i.test(h)) return 'memo';
+    if (/balance|bal|running\s*balance/i.test(h)) return 'balance';
+    return '';
+  }
+
+  function initMappings() {
+    mappings = rawHeaders.map((header, idx) => ({
+      sourceIndex: idx,
+      sourceName: header,
+      targetField: autoDetectMapping(header),
+      used: false,
+    }));
+
+    // Deduplicate auto-detected mappings: keep first of each field
+    const seen = new Set<string>();
+    for (const m of mappings) {
+      if (!m.targetField) continue;
+      if (seen.has(m.targetField)) {
+        m.targetField = '';
+      } else {
+        seen.add(m.targetField);
+      }
+    }
+  }
+
+  function renderMappingUI() {
+    mappingList.innerHTML = mappings.map((m, idx) => {
+      const options = STANDARD_FIELDS.map(f =>
+        `<option value="${f.value}" ${m.targetField === f.value ? 'selected' : ''}>${f.label}</option>`
+      ).join('');
+
+      const badge = m.targetField
+        ? '<span class="status-badge mapped">Mapped</span>'
+        : '<span class="status-badge unmapped">Unmapped</span>';
+
+      return `
+        <div class="mapping-row" data-index="${idx}">
+          <span class="source-col">${escapeHtml(m.sourceName)}</span>
+          <span class="arrow">→</span>
+          <select data-index="${idx}" class="mapping-select">
+            ${options}
+          </select>
+          <span class="status-badge-container">${badge}</span>
+        </div>
+      `;
+    }).join('');
+
+    // Attach change listeners
+    mappingList.querySelectorAll('.mapping-select').forEach(select => {
+      select.addEventListener('change', (e) => {
+        const target = e.target as HTMLSelectElement;
+        const idx = parseInt(target.dataset.index!, 10);
+        mappings[idx].targetField = target.value;
+        updateMappingUI();
+        renderPreview();
+      });
+    });
+
+    updateMappingUI();
+  }
+
+  function updateMappingUI() {
+    // Reset usage flags
+    const fieldUsage: Record<string, number> = {};
+    for (const m of mappings) {
+      m.used = false;
+      if (m.targetField) {
+        fieldUsage[m.targetField] = (fieldUsage[m.targetField] || 0) + 1;
+      }
+    }
+
+    // Update badges
+    const rows = mappingList.querySelectorAll('.mapping-row');
+    rows.forEach((row, idx) => {
+      const m = mappings[idx];
+      const badgeContainer = row.querySelector('.status-badge-container')!;
+      if (!m.targetField) {
+        badgeContainer.innerHTML = '<span class="status-badge unmapped">Unmapped</span>';
+      } else if (fieldUsage[m.targetField] > 1) {
+        badgeContainer.innerHTML = `<span class="status-badge duplicate">Duplicate → ${FIELD_LABELS[m.targetField] || m.targetField}</span>`;
+      } else {
+        m.used = true;
+        badgeContainer.innerHTML = `<span class="status-badge mapped">→ ${FIELD_LABELS[m.targetField] || m.targetField}</span>`;
+      }
+    });
+
+    // Unmapped warning
+    const unmapped = mappings.filter(m => !m.targetField);
+    const duplicates = mappings.filter(m => m.targetField && fieldUsage[m.targetField] > 1);
+    const warnings: string[] = [];
+    if (unmapped.length > 0) {
+      warnings.push(`${unmapped.length} column(s) are unmapped and will be excluded from output: ${unmapped.map(m => `"${m.sourceName}"`).join(', ')}.`);
+    }
+    if (duplicates.length > 0) {
+      const dupFields = [...new Set(duplicates.map(m => FIELD_LABELS[m.targetField] || m.targetField))];
+      warnings.push(`Duplicate mapping${dupFields.length > 1 ? 's' : ''} for: ${dupFields.join(', ')}. Only the last mapping will be used.`);
+    }
+    if (warnings.length > 0) {
+      unmappedWarning.classList.remove('hidden');
+      unmappedText.innerHTML = warnings.join('<br>');
+    } else {
+      unmappedWarning.classList.add('hidden');
+    }
+  }
+
+  function renderPreview() {
+    const mappedFields = getActiveMapping();
+    const targetHeaders = mappedFields.map(([field]) => FIELD_LABELS[field] || field);
+
+    // Build table header
+    tableHead.innerHTML = `<tr>${targetHeaders.map(h => `<th>${h}</th>`).join('')}</tr>`;
+
+    // Build table body (show first 100 rows)
+    tableBody.innerHTML = rawRows.slice(0, 100).map(row => {
+      const cells = mappedFields.map(([, idx]) => {
+        const val = row[idx] !== undefined ? row[idx] : '';
+        return `<td>${escapeHtml(val)}</td>`;
+      }).join('');
+      return `<tr>${cells}</tr>`;
+    }).join('');
+
+    summary.textContent = `Showing ${Math.min(rawRows.length, 100)} of ${rawRows.length} row(s) mapped to ${mappedFields.length} field(s)`;
+  }
+
+  function getActiveMapping(): Array<[string, number]> {
+    const fieldUsage: Record<string, number> = {};
+    for (const m of mappings) {
+      if (m.targetField) {
+        fieldUsage[m.targetField] = (fieldUsage[m.targetField] || 0) + 1;
+      }
+    }
+
+    const result: Array<[string, number]> = [];
+    const seen = new Set<string>();
+    // Process in order; for duplicates, take the last occurrence
+    for (const m of mappings) {
+      if (!m.targetField) continue;
+      if (fieldUsage[m.targetField] > 1) {
+        // Remove previous occurrence of this field
+        const prevIdx = result.findIndex(([f]) => f === m.targetField);
+        if (prevIdx !== -1) {
+          result.splice(prevIdx, 1);
+        }
+      }
+      result.push([m.targetField, m.sourceIndex]);
+    }
+    return result;
+  }
+
+  function downloadMappedCSV() {
+    const mappedFields = getActiveMapping();
+
+    if (mappedFields.length === 0) {
+      showError('No columns mapped. Please map at least one column before downloading.');
+      return;
+    }
+
+    const headerRow = mappedFields.map(([field]) => FIELD_LABELS[field] || field);
+    const dataRows = rawRows.map(row => {
+      return mappedFields.map(([, idx]) => {
+        const val = row[idx] !== undefined ? row[idx] : '';
+        return escapeCSVCell(val);
+      });
+    });
+
+    const csvLines = [headerRow.join(','), ...dataRows.map(r => r.join(','))];
+    const csvContent = csvLines.join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'mapped-data.csv';
+    link.click();
+  }
+
+  function escapeCSVCell(value: string): string {
+    const str = String(value);
+    if (str.includes(',') || str.includes('"') || str.includes('\n')) {
+      return `"${str.replace(/"/g, '""')}"`;
+    }
+    return str;
+  }
+
+  function escapeHtml(str: string): string {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  function showError(msg: string) {
+    errorDiv.classList.remove('hidden');
+    errorText.textContent = msg;
+    mappingPanel.classList.add('hidden');
+    preview.classList.add('hidden');
+  }
+</script>

@@ -1,0 +1,229 @@
+﻿---
+/**
+ * HEIC to JPG Converter
+ * Uses heic2any library to convert Apple HEIC/HEIF images to JPG.
+ * Library is loaded only when processing begins.
+ */
+import ToolLayout from '../../components/ToolLayout.astro';
+---
+
+<ToolLayout
+  title="HEIC to JPG"
+  metaTitle="HEIC to JPG Converter Free - Apple HEIC to JPEG | Woorkeasy"
+  description="Convert HEIC to JPG online free. Transform Apple HEIC photos to universal JPG format. No upload, instant conversion, 100% free."
+  heading="Convert HEIC to JPG"
+  category="Image Tools"
+>
+  <div id="heic-app">
+    <!-- Upload Zone -->
+    <div id="upload-zone" class="upload-zone p-12 text-center cursor-pointer">
+      <div class="flex flex-col items-center gap-4">
+        <svg class="w-12 h-12 text-neutral-500" viewBox="0 0 48 48" fill="none">
+          <path d="M24 32V16m0 0l-6 6m6-6l6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <rect x="8" y="8" width="32" height="32" rx="4" stroke="currentColor" stroke-width="2"/>
+        </svg>
+        <p class="body-md text-neutral-600">Drag & drop HEIC files here, or <span class="text-blue-600 font-medium">browse</span></p>
+        <p class="body-sm text-neutral-500">Supports .heic and .heif files from iPhone/iPad</p>
+      </div>
+      <input type="file" id="file-input" accept=".heic,.heif,image/heic,image/heif" multiple class="hidden" />
+    </div>
+
+    <!-- Quality Control -->
+    <div id="controls" class="hidden mt-6">
+      <label class="body-sm text-neutral-600 font-medium block mb-2">
+        Quality: <span id="quality-value">90</span>%
+      </label>
+      <input type="range" id="quality-slider" min="10" max="100" value="90" class="w-full accent-neutral-900" />
+      <button id="convert-btn" class="btn-primary mt-6">
+        Convert to JPG
+      </button>
+    </div>
+
+    <!-- Loading -->
+    <div id="loading" class="hidden mt-6 text-center">
+      <div class="inline-flex items-center gap-3">
+        <svg class="animate-spin w-5 h-5 text-[var(--color-primary)]" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" class="opacity-25"/>
+          <path d="M4 12a8 8 0 018-8" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+        <span class="body-sm text-neutral-600">Converting HEIC files...</span>
+      </div>
+    </div>
+
+    <!-- Results -->
+    <div id="results" class="hidden mt-8">
+      <h2 class="display-sm text-neutral-900 mb-4">Converted Files</h2>
+      <div id="results-list" class="flex flex-col gap-4"></div>
+    </div>
+  </div>
+
+  <div slot="info">
+    <section class="bg-white dark:bg-neutral-900 rounded-xl p-6 md:p-8 shadow-level-3 dark:border dark:border-neutral-800 mt-6">
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100">How to Use HEIC to JPG Converter</h2>
+      <ol class="list-decimal list-inside space-y-2 mt-4 body-md text-neutral-700 dark:text-neutral-300">
+        <li>Drop or browse HEIC/HEIF files from your iPhone/iPad</li>
+        <li>Adjust quality with the slider</li>
+        <li>Click "Convert to JPG" and download</li>
+      </ol>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">Features</h2>
+      <ul class="list-disc list-inside space-y-2 mt-4 body-md text-neutral-700 dark:text-neutral-300">
+        <li>Convert Apple HEIC/HEIF to universal JPG format</li>
+        <li>Adjustable output quality</li>
+        <li>Lazy-loads heic2any library for fast startup</li>
+        <li>Works on any device including iPhone</li>
+        <li>No upload, fully private processing</li>
+      </ul>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">Why Use Our HEIC to JPG Converter</h2>
+      <p class="body-md text-neutral-700 dark:text-neutral-300 mt-4">Apple devices capture photos in HEIC format which isn't compatible with many apps and websites. Convert HEIC to JPG for universal compatibility. Our tool uses the heic2any library to convert directly in your browser " no uploads, no privacy concerns, and instant results.</p>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">FAQs</h2>
+      <div class="space-y-4 mt-4">
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">What is HEIC?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">HEIC is Apple's default photo format, based on HEIF (High Efficiency Image File Format).</p></div>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Why convert HEIC to JPG?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">JPG is universally supported by all devices, software, and websites, unlike HEIC.</p></div>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Will I lose quality?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">Minimal loss. HEIC is already compressed, and JPG at high quality preserves detail well.</p></div>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Is it safe?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">Yes, all processing happens locally. Your photos never leave your device.</p></div>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Can I convert from my iPhone directly?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">Yes, open this page on your iPhone and convert photos straight from your camera roll.</p></div>
+      </div>
+    </section>
+
+    <!-- Related Tools -->
+    <section class="bg-white dark:bg-neutral-900 rounded-xl p-6 md:p-8 shadow-level-3 dark:border dark:border-neutral-800 mt-6">
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100">Related Tools</h2>
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mt-4">
+        <a href="/image/jpg-to-png" class="btn-secondary text-center no-underline text-sm">JPG to PNG</a>
+        <a href="/image/webp-converter" class="btn-secondary text-center no-underline text-sm">WebP Converter</a>
+        <a href="/image/compress" class="btn-secondary text-center no-underline text-sm">Compress Image</a>
+        <a href="/image/png-to-jpg" class="btn-secondary text-center no-underline text-sm">PNG to JPG</a>
+      </div>
+    </section>
+  </div>
+</ToolLayout>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is HEIC?",
+      "acceptedAnswer": { "@type": "Answer", "text": "HEIC is Apple's default photo format, based on HEIF (High Efficiency Image File Format)." }
+    },
+    {
+      "@type": "Question",
+      "name": "Why convert HEIC to JPG?",
+      "acceptedAnswer": { "@type": "Answer", "text": "JPG is universally supported by all devices, software, and websites, unlike HEIC." }
+    },
+    {
+      "@type": "Question",
+      "name": "Will I lose quality?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Minimal loss. HEIC is already compressed, and JPG at high quality preserves detail well." }
+    },
+    {
+      "@type": "Question",
+      "name": "Is it safe?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes, all processing happens locally. Your photos never leave your device." }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I convert from my iPhone directly?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes, open this page on your iPhone and convert photos straight from your camera roll." }
+    }
+  ]
+}
+</script>
+
+<script>
+  const uploadZone = document.getElementById('upload-zone')!;
+  const fileInput = document.getElementById('file-input') as HTMLInputElement;
+  const controls = document.getElementById('controls')!;
+  const qualitySlider = document.getElementById('quality-slider') as HTMLInputElement;
+  const qualityValue = document.getElementById('quality-value')!;
+  const convertBtn = document.getElementById('convert-btn')!;
+  const loading = document.getElementById('loading')!;
+  const results = document.getElementById('results')!;
+  const resultsList = document.getElementById('results-list')!;
+
+  let files: File[] = [];
+
+  uploadZone.addEventListener('click', () => fileInput.click());
+  uploadZone.addEventListener('dragover', (e) => { e.preventDefault(); uploadZone.classList.add('dragover'); });
+  uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('dragover'));
+  uploadZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    uploadZone.classList.remove('dragover');
+    if (e.dataTransfer?.files) handleFiles(Array.from(e.dataTransfer.files));
+  });
+  fileInput.addEventListener('change', () => { if (fileInput.files) handleFiles(Array.from(fileInput.files)); });
+  qualitySlider.addEventListener('input', () => { qualityValue.textContent = qualitySlider.value; });
+
+  function handleFiles(newFiles: File[]) {
+    files = newFiles.filter(f => f.name.match(/\.(heic|heif)$/i));
+    if (files.length > 0) {
+      controls.classList.remove('hidden');
+      uploadZone.querySelector('p')!.textContent = `${files.length} HEIC file(s) selected`;
+    }
+  }
+
+  convertBtn.addEventListener('click', async () => {
+    if (files.length === 0) return;
+    loading.classList.remove('hidden');
+    results.classList.add('hidden');
+    resultsList.innerHTML = '';
+
+    // Lazy-load heic2any
+    const heic2any = (await import('heic2any')).default;
+    const quality = parseInt(qualitySlider.value) / 100;
+
+    for (const file of files) {
+      try {
+        const blob = await heic2any({
+          blob: file,
+          toType: 'image/jpeg',
+          quality: quality,
+        }) as Blob;
+        addResult(file, blob);
+      } catch (err) {
+        addError(file, (err as Error).message);
+      }
+    }
+
+    loading.classList.add('hidden');
+    results.classList.remove('hidden');
+  });
+
+  function addResult(original: File, converted: Blob) {
+    const fileName = original.name.replace(/\.(heic|heif)$/i, '.jpg');
+    const div = document.createElement('div');
+    div.className = 'flex items-center justify-between p-4 bg-neutral-50 rounded-lg';
+    div.innerHTML = `
+      <div>
+        <p class="body-sm text-neutral-900 font-medium">${fileName}</p>
+        <p class="caption-mono text-neutral-500">${formatBytes(converted.size)}</p>
+      </div>
+      <a class="btn-primary text-sm no-underline" style="padding: 6px 16px;" download="${fileName}">Download JPG</a>
+    `;
+    div.querySelector('a')!.href = URL.createObjectURL(converted);
+    resultsList.appendChild(div);
+  }
+
+  function addError(file: File, message: string) {
+    const div = document.createElement('div');
+    div.className = 'p-4 bg-red-50 rounded-lg';
+    div.innerHTML = `<p class="body-sm text-red-600">${file.name}: ${message}</p>`;
+    resultsList.appendChild(div);
+  }
+
+  function formatBytes(bytes: number): string {
+    if (bytes === 0) return '0 B';
+    const k = 1024;
+    const sizes = ['B', 'KB', 'MB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+  }
+</script>
+
+
+

@@ -1,0 +1,48 @@
+---
+/**
+ * Ad.astro — AdSense ad unit.
+ *
+ * Props:
+ *   slot      — AdSense data-ad-slot (use placeholder until you have real IDs)
+ *   format    — 'auto' | 'rectangle' | 'banner' | 'horizontal' | 'sidebar'
+ *   layout    — 'top' | 'inline' | 'bottom' | 'sidebar'
+ *
+ * Usage:
+ *   <Ad slot="1234567890" format="rectangle" layout="sidebar" />
+ *
+ * Replace `client` below with your actual publisher ID.
+ */
+const { slot = 'YOUR_AD_SLOT_ID', format = 'auto', layout = 'inline' } = Astro.props;
+const client = 'ca-pub-YOUR_PUBLISHER_ID';
+
+let adStyle: string;
+
+switch (format) {
+  case 'rectangle':
+  case 'sidebar':
+    adStyle = 'width: 336px; height: 280px;';
+    break;
+  case 'banner':
+    adStyle = 'width: 728px; height: 90px;';
+    break;
+  case 'horizontal':
+    adStyle = 'width: 100%; max-width: 728px; height: 90px;';
+    break;
+  default:
+    adStyle = 'width: 100%; min-height: 90px;';
+}
+---
+
+<aside
+  class:list={[`ad ad-${layout}`, 'flex justify-center', layout === 'sidebar' ? '' : 'my-6']}
+  aria-label="Advertisement"
+>
+  <ins
+    class="adsbygoogle"
+    style={adStyle}
+    data-ad-client={client}
+    data-ad-slot={slot}
+    data-ad-format={format === 'sidebar' ? 'rectangle' : format === 'auto' ? 'auto' : 'rectangle'}
+    data-full-width-responsive="true"
+  ></ins>
+</aside>

@@ -1,0 +1,531 @@
+---
+/**
+ * Transaction Deduplicator
+ * Upload a CSV of transactions, auto-detect columns, find and remove
+ * duplicates using multiple match modes. 100% client-side.
+ */
+import ToolLayout from '../../components/ToolLayout.astro';
+---
+
+<ToolLayout
+  title="Transaction Deduplicator"
+  metaTitle="Transaction Deduplicator Free - Remove Duplicate Bank Transactions | Woorkeasy"
+  description="Remove duplicate transactions from CSV files online free. Deduplicate bank statements, credit card transactions. Browser-based, no upload."
+  heading="Transaction Deduplicator"
+  category="Finance"
+>
+  <div id="dedup-app">
+    <!-- Upload Zone -->
+    <div id="upload-zone" class="upload-zone p-12 text-center cursor-pointer">
+      <div class="flex flex-col items-center gap-4">
+        <svg class="w-12 h-12 text-neutral-500" viewBox="0 0 48 48" fill="none">
+          <path d="M24 32V16m0 0l-6 6m6-6l6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <rect x="8" y="8" width="32" height="32" rx="4" stroke="currentColor" stroke-width="2"/>
+        </svg>
+        <p class="body-md text-neutral-600">Drag & drop CSV file here, or <span class="text-blue-600 font-medium">browse</span></p>
+        <p class="body-sm text-neutral-500">Supports .csv files with transaction data</p>
+      </div>
+      <input type="file" id="file-input" accept=".csv" class="hidden" />
+    </div>
+
+    <!-- Column Mapping -->
+    <div id="column-mapping" class="hidden mt-6 p-4 bg-blue-50 rounded-lg">
+      <p class="body-sm text-blue-800 font-medium mb-2">Auto-detected columns:</p>
+      <div class="flex flex-wrap gap-4" id="column-detection"></div>
+      <div class="flex flex-wrap gap-4 mt-3" id="column-overrides"></div>
+    </div>
+
+    <!-- Options -->
+    <div id="options" class="hidden mt-6">
+      <div class="flex flex-wrap items-end gap-4">
+        <div>
+          <label class="body-sm font-medium text-neutral-700 block mb-1">Match on</label>
+          <select id="match-mode" class="px-3 py-2 rounded-lg border border-neutral-300 body-sm">
+            <option value="amount">Exact Amount</option>
+            <option value="amount-date" selected>Amount + Date</option>
+            <option value="amount-date-desc">Amount + Date + Description</option>
+            <option value="fuzzy">Fuzzy Match (Description)</option>
+          </select>
+        </div>
+        <div>
+          <label class="body-sm font-medium text-neutral-700 block mb-1">Keep</label>
+          <select id="keep-mode" class="px-3 py-2 rounded-lg border border-neutral-300 body-sm">
+            <option value="first">First Occurrence</option>
+            <option value="last">Last Occurrence</option>
+          </select>
+        </div>
+        <button id="run-dedup" class="btn-primary">Find Duplicates</button>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div id="stats" class="hidden mt-6 p-4 bg-white rounded-lg border border-neutral-200">
+      <p id="stats-text" class="body-md text-neutral-700"></p>
+    </div>
+
+    <!-- Duplicates Table -->
+    <div id="duplicates-section" class="hidden mt-8">
+      <h2 class="display-sm text-neutral-900 mb-4">Duplicates Found</h2>
+      <p id="duplicates-summary" class="body-sm text-neutral-600 mb-4"></p>
+      <div class="overflow-x-auto">
+        <table id="duplicates-table" class="w-full border-collapse">
+          <thead id="duplicates-head"></thead>
+          <tbody id="duplicates-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Clean Preview -->
+    <div id="clean-section" class="hidden mt-8">
+      <h2 class="display-sm text-neutral-900 mb-4">Cleaned Result Preview</h2>
+      <p id="clean-summary" class="body-sm text-neutral-600 mb-4"></p>
+      <div class="overflow-x-auto">
+        <table id="clean-table" class="w-full border-collapse">
+          <thead id="clean-head"></thead>
+          <tbody id="clean-body"></tbody>
+        </table>
+      </div>
+      <div class="flex items-center gap-4 mt-4">
+        <button id="download-clean" class="btn-primary">Download Deduplicated CSV</button>
+      </div>
+    </div>
+
+    <!-- Error -->
+    <div id="error" class="hidden mt-6 p-4 bg-red-50 rounded-lg">
+      <p id="error-text" class="body-sm text-red-600"></p>
+    </div>
+  </div>
+</ToolLayout>
+
+  <div slot="info">
+    <section class="bg-white dark:bg-neutral-900 rounded-xl p-6 md:p-8 shadow-level-3 dark:border dark:border-neutral-800 mt-6">
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100">How to Use the Transaction Deduplicator</h2>
+      <ol class="list-decimal list-inside space-y-2 mt-4 body-md text-neutral-700 dark:text-neutral-300">
+        <li>Upload your CSV transaction file — column names are detected automatically.</li>
+        <li>Choose your match criteria (Amount, Amount+Date, etc.) and whether to keep the first or last occurrence.</li>
+        <li>Review grouped duplicates highlighted in the table, then preview the cleaned result.</li>
+        <li>Download your deduplicated CSV file — no data ever leaves your browser.</li>
+      </ol>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">Features</h2>
+      <ul class="list-disc list-inside space-y-2 mt-4 body-md text-neutral-700 dark:text-neutral-300">
+        <li><strong>Smart Column Detection</strong> - automatically finds date, amount, and description columns regardless of naming convention.</li>
+        <li><strong>Multiple Match Modes</strong> - choose from exact amount, amount+date, amount+date+description, or fuzzy description matching.</li>
+        <li><strong>Grouped Duplicate Review</strong> - see which transactions are duplicated together with clear visual grouping.</li>
+        <li><strong>Preview Before Download</strong> - review both the duplicates and the cleaned result before exporting.</li>
+        <li><strong>100% Private</strong> - all processing happens locally in your browser. No data uploaded anywhere.</li>
+      </ul>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">Why Use Our Transaction Deduplicator</h2>
+      <p class="body-md text-neutral-700 dark:text-neutral-300 mt-4">Duplicate transactions in bank statements and credit card reports can cause budgeting errors, misreported expenses, and accounting headaches. Our Transaction Deduplicator intelligently groups and highlights duplicate entries so you can clean your data in seconds. Whether you're reconciling accounts, preparing tax documents, or analyzing spending patterns, you get precise control over how duplicates are identified and which entries to keep — all without uploading sensitive financial data to any server.</p>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">FAQs</h2>
+      <div class="space-y-4 mt-4">
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">How does duplicate detection work?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">The tool matches transactions by comparing the values in your chosen columns — amount, date, and payee/description. In fuzzy mode it uses a similarity algorithm to catch near-duplicate descriptions with minor differences.</p></div>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">What if my CSV has different column names?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">The tool auto-detects common column names like "Date", "Transaction Date", "Amount", "Debit", "Description", "Payee", "Name", etc. You can also manually override the column selection if needed.</p></div>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Is my financial data secure?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">Absolutely. All processing is done locally in your browser. Your financial data never leaves your device, ensuring complete privacy and security.</p></div>
+      </div>
+    </section>
+
+    <!-- Related Tools -->
+    <section class="bg-white dark:bg-neutral-900 rounded-xl p-6 md:p-8 shadow-level-3 dark:border dark:border-neutral-800 mt-6">
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100">Related Tools</h2>
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mt-4">
+        <a href="/finance/csv-cleaner/" class="px-4 py-3 bg-neutral-100 dark:bg-neutral-800 rounded-lg body-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors text-center">CSV Cleaner</a>
+        <a href="/finance/csv-formatter/" class="px-4 py-3 bg-neutral-100 dark:bg-neutral-800 rounded-lg body-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors text-center">CSV Formatter</a>
+        <a href="/finance/column-mapper/" class="px-4 py-3 bg-neutral-100 dark:bg-neutral-800 rounded-lg body-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors text-center">Column Mapper</a>
+        <a href="/finance/csv-to-excel/" class="px-4 py-3 bg-neutral-100 dark:bg-neutral-800 rounded-lg body-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors text-center">CSV to Excel</a>
+      </div>
+    </section>
+  </div>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How does duplicate detection work?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The tool matches transactions by comparing the values in your chosen columns — amount, date, and payee/description. In fuzzy mode it uses a similarity algorithm to catch near-duplicate descriptions with minor differences."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What if my CSV has different column names?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The tool auto-detects common column names like Date, Transaction Date, Amount, Debit, Description, Payee, Name, etc. You can also manually override the column selection if needed."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is my financial data secure?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Absolutely. All processing is done locally in your browser. Your financial data never leaves your device, ensuring complete privacy and security."
+        }
+      }
+    ]
+  }
+  </script>
+
+<style>
+  #duplicates-table th, #clean-table th {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    text-transform: uppercase;
+    background: var(--color-canvas-soft-2);
+    padding: 8px 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--color-hairline);
+  }
+  #duplicates-table td, #clean-table td {
+    font-size: 14px;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--color-hairline);
+  }
+  #duplicates-table tr:hover td, #clean-table tr:hover td {
+    background: var(--color-canvas-soft);
+  }
+  .dedup-group-header td {
+    background: var(--color-canvas-soft-2) !important;
+    font-weight: 600;
+  }
+  .dedup-duplicate td {
+    background: rgba(239, 68, 68, 0.06);
+  }
+</style>
+
+<script>
+  const uploadZone = document.getElementById('upload-zone')!;
+  const fileInput = document.getElementById('file-input') as HTMLInputElement;
+  const columnMapping = document.getElementById('column-mapping')!;
+  const columnDetection = document.getElementById('column-detection')!;
+  const columnOverrides = document.getElementById('column-overrides')!;
+  const options = document.getElementById('options')!;
+  const runBtn = document.getElementById('run-dedup')!;
+  const matchMode = document.getElementById('match-mode') as HTMLSelectElement;
+  const keepMode = document.getElementById('keep-mode') as HTMLSelectElement;
+  const stats = document.getElementById('stats')!;
+  const statsText = document.getElementById('stats-text')!;
+  const duplicatesSection = document.getElementById('duplicates-section')!;
+  const duplicatesSummary = document.getElementById('duplicates-summary')!;
+  const duplicatesHead = document.getElementById('duplicates-head')!;
+  const duplicatesBody = document.getElementById('duplicates-body')!;
+  const cleanSection = document.getElementById('clean-section')!;
+  const cleanSummary = document.getElementById('clean-summary')!;
+  const cleanHead = document.getElementById('clean-head')!;
+  const cleanBody = document.getElementById('clean-body')!;
+  const downloadBtn = document.getElementById('download-clean')!;
+  const errorDiv = document.getElementById('error')!;
+  const errorText = document.getElementById('error-text')!;
+
+  let rawRows: string[][] = [];
+  let headers: string[] = [];
+  let detectedDateCol = -1;
+  let detectedAmountCol = -1;
+  let detectedDescCol = -1;
+  let cleanedRows: string[][] = [];
+
+  // Upload zone event listeners
+  uploadZone.addEventListener('click', () => fileInput.click());
+  uploadZone.addEventListener('dragover', (e) => { e.preventDefault(); uploadZone.classList.add('dragover'); });
+  uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('dragover'));
+  uploadZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    uploadZone.classList.remove('dragover');
+    if (e.dataTransfer?.files[0]) handleFile(e.dataTransfer.files[0]);
+  });
+  fileInput.addEventListener('change', () => { if (fileInput.files?.[0]) handleFile(fileInput.files[0]); });
+
+  function parseCSV(text: string): string[][] {
+    const lines: string[][] = [];
+    let current: string[] = [];
+    let field = '';
+    let inQuotes = false;
+
+    for (let i = 0; i < text.length; i++) {
+      const c = text[i];
+      if (inQuotes) {
+        if (c === '"' && text[i + 1] === '"') { field += '"'; i++; }
+        else if (c === '"') { inQuotes = false; }
+        else { field += c; }
+      } else {
+        if (c === '"') { inQuotes = true; }
+        else if (c === ',') { current.push(field.trim()); field = ''; }
+        else if (c === '\n' || (c === '\r' && text[i + 1] === '\n')) { current.push(field.trim()); field = ''; lines.push(current); current = []; }
+        else if (c === '\r') { current.push(field.trim()); field = ''; lines.push(current); current = []; }
+        else { field += c; }
+      }
+    }
+    if (field || current.length) { current.push(field.trim()); lines.push(current); }
+    return lines.filter(l => l.some(f => f.length > 0));
+  }
+
+  function detectColumnIndex(headers: string[], keywords: string[]): number {
+    const lower = headers.map(h => h.toLowerCase().trim());
+    let bestIdx = -1;
+    let bestScore = 0;
+    for (let i = 0; i < lower.length; i++) {
+      const h = lower[i];
+      for (const kw of keywords) {
+        const score = h === kw ? 3 : h.includes(kw) ? 2 : 0;
+        if (score > bestScore) { bestScore = score; bestIdx = i; }
+      }
+    }
+    return bestIdx;
+  }
+
+  function handleFile(file: File) {
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const text = reader.result as string;
+        const lines = parseCSV(text);
+        if (lines.length < 2) throw new Error('CSV file must have a header row and at least one data row.');
+
+        headers = lines[0];
+        rawRows = lines.slice(1);
+
+        detectedDateCol = detectColumnIndex(headers, ['date', 'transaction date', 'posted date', 'trans date', 'post date', 'date posted']);
+        detectedAmountCol = detectColumnIndex(headers, ['amount', 'transaction amount', 'debit', 'credit', 'value', 'sum', 'total', 'trnamt']);
+        detectedDescCol = detectColumnIndex(headers, ['description', 'payee', 'name', 'memo', 'narration', 'particulars', 'details', 'merchant', 'vendor', 'beneficiary']);
+
+        renderColumnDetection();
+        columnMapping.classList.remove('hidden');
+        options.classList.remove('hidden');
+        stats.classList.add('hidden');
+        duplicatesSection.classList.add('hidden');
+        cleanSection.classList.add('hidden');
+        errorDiv.classList.add('hidden');
+      } catch (err) {
+        errorDiv.classList.remove('hidden');
+        errorText.textContent = (err as Error).message;
+        columnMapping.classList.add('hidden');
+        options.classList.add('hidden');
+        stats.classList.add('hidden');
+        duplicatesSection.classList.add('hidden');
+        cleanSection.classList.add('hidden');
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  function renderColumnDetection() {
+    const labels: Record<string, [number, string]> = {};
+    if (detectedDateCol >= 0) labels.date = [detectedDateCol, 'Date'];
+    if (detectedAmountCol >= 0) labels.amount = [detectedAmountCol, 'Amount'];
+    if (detectedDescCol >= 0) labels.desc = [detectedDescCol, 'Description'];
+
+    columnDetection.innerHTML = Object.entries(labels).map(([key, [idx, label]]) =>
+      `<span class="body-sm text-blue-700 bg-blue-100 px-2 py-1 rounded">${label}: <strong>${headers[idx]}</strong></span>`
+    ).join('');
+
+    // Manual override selects
+    columnOverrides.innerHTML = `
+      <div>
+        <label class="body-xs text-neutral-500 block mb-1">Date column</label>
+        <select id="override-date" class="px-2 py-1 rounded border border-neutral-300 body-sm">
+          ${headers.map((h, i) => `<option value="${i}" ${i === detectedDateCol ? 'selected' : ''}>${h}</option>`).join('')}
+        </select>
+      </div>
+      <div>
+        <label class="body-xs text-neutral-500 block mb-1">Amount column</label>
+        <select id="override-amount" class="px-2 py-1 rounded border border-neutral-300 body-sm">
+          ${headers.map((h, i) => `<option value="${i}" ${i === detectedAmountCol ? 'selected' : ''}>${h}</option>`).join('')}
+        </select>
+      </div>
+      <div>
+        <label class="body-xs text-neutral-500 block mb-1">Description column</label>
+        <select id="override-desc" class="px-2 py-1 rounded border border-neutral-300 body-sm">
+          ${headers.map((h, i) => `<option value="${i}" ${i === detectedDescCol ? 'selected' : ''}>${h}</option>`).join('')}
+        </select>
+      </div>
+    `;
+  }
+
+  function getOverrideValue(id: string): number {
+    const el = document.getElementById(id) as HTMLSelectElement;
+    return el ? parseInt(el.value) : -1;
+  }
+
+  // Levenshtein distance for fuzzy matching
+  function levenshtein(a: string, b: string): number {
+    const an = a.length;
+    const bn = b.length;
+    const matrix: number[][] = [];
+    for (let i = 0; i <= an; i++) { matrix[i] = [i]; }
+    for (let j = 0; j <= bn; j++) { matrix[0][j] = j; }
+    for (let i = 1; i <= an; i++) {
+      for (let j = 1; j <= bn; j++) {
+        const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+        matrix[i][j] = Math.min(matrix[i - 1][j] + 1, matrix[i][j - 1] + 1, matrix[i - 1][j - 1] + cost);
+      }
+    }
+    return matrix[an][bn];
+  }
+
+  function getMatchKey(row: string[], dateCol: number, amountCol: number, descCol: number, mode: string): string {
+    const parts: string[] = [];
+    if (mode === 'amount' || mode === 'amount-date' || mode === 'amount-date-desc' || mode === 'fuzzy') {
+      if (amountCol >= 0) parts.push(row[amountCol]?.trim().toLowerCase() || '');
+    }
+    if (mode === 'amount-date' || mode === 'amount-date-desc') {
+      if (dateCol >= 0) parts.push(row[dateCol]?.trim().toLowerCase() || '');
+    }
+    if (mode === 'amount-date-desc') {
+      if (descCol >= 0) parts.push(row[descCol]?.trim().toLowerCase() || '');
+    }
+    return parts.join('||');
+  }
+
+  function findDuplicates() {
+    const dateCol = getOverrideValue('override-date');
+    const amountCol = getOverrideValue('override-amount');
+    const descCol = getOverrideValue('override-desc');
+    const mode = matchMode.value;
+    const keep = keepMode.value;
+
+    const groups: Record<string, { row: string[]; idx: number }[]> = {};
+    rawRows.forEach((row, idx) => {
+      const key = getMatchKey(row, dateCol, amountCol, descCol, mode);
+      if (!groups[key]) groups[key] = [];
+      groups[key].push({ row, idx });
+    });
+
+    // If fuzzy mode, merge groups by similarity
+    if (mode === 'fuzzy' && descCol >= 0 && amountCol >= 0) {
+      const keys = Object.keys(groups);
+      for (let i = 0; i < keys.length; i++) {
+        for (let j = i + 1; j < keys.length; j++) {
+          const amountA = keys[i].split('||')[0];
+          const amountB = keys[j].split('||')[0];
+          const descA = rawRows[groups[keys[i]][0].idx][descCol]?.trim().toLowerCase() || '';
+          const descB = rawRows[groups[keys[j]][0].idx][descCol]?.trim().toLowerCase() || '';
+          const maxLen = Math.max(descA.length, descB.length);
+          if (amountA === amountB && maxLen > 0 && levenshtein(descA, descB) / maxLen < 0.3) {
+            groups[keys[i]].push(...groups[keys[j]]);
+            delete groups[keys[j]];
+          }
+        }
+      }
+    }
+
+    const duplicateGroups: { key: string; entries: { row: string[]; idx: number }[] }[] = [];
+    const cleaned: string[][] = [];
+
+    for (const [key, entries] of Object.entries(groups)) {
+      if (entries.length > 1) {
+        duplicateGroups.push({ key, entries });
+      }
+      entries.sort((a, b) => a.idx - b.idx);
+      if (keep === 'first') {
+        cleaned.push(entries[0].row);
+      } else {
+        cleaned.push(entries[entries.length - 1].row);
+      }
+    }
+
+    // Add non-duplicate rows
+    const seenIndices = new Set<number>();
+    for (const [, entries] of Object.entries(groups)) {
+      if (entries.length === 1) {
+        seenIndices.add(entries[0].idx);
+        continue;
+      }
+      for (const e of entries) seenIndices.add(e.idx);
+    }
+    // Rebuild cleaned properly: all entries sorted by original index
+    const allEntries: { row: string[]; idx: number; key: string }[] = [];
+    for (const [key, entries] of Object.entries(groups)) {
+      for (const e of entries) allEntries.push({ row: e.row, idx: e.idx, key });
+    }
+    allEntries.sort((a, b) => a.idx - b.idx);
+
+    // Get keys that are duplicates
+    const dupKeys = new Set(duplicateGroups.map(g => g.key));
+
+    cleaned.length = 0;
+    const seenClean = new Set<string>();
+    for (const entry of allEntries) {
+      if (dupKeys.has(entry.key)) {
+        if (seenClean.has(entry.key)) continue;
+        seenClean.add(entry.key);
+        cleaned.push(entry.row);
+      } else {
+        cleaned.push(entry.row);
+      }
+    }
+
+    const totalDups = duplicateGroups.reduce((sum, g) => sum + g.entries.length, 0);
+
+    // Render stats
+    statsText.textContent = `Total rows: ${rawRows.length} | Unique transactions: ${rawRows.length - totalDups + duplicateGroups.length} | Duplicates found: ${totalDups - duplicateGroups.length} in ${duplicateGroups.length} group(s)`;
+    stats.classList.remove('hidden');
+
+    // Render duplicates table
+    renderDuplicatesTable(duplicateGroups, dateCol, amountCol, descCol);
+    duplicatesSummary.textContent = `Showing ${duplicateGroups.length} duplicate group(s) with ${totalDups - duplicateGroups.length} extra transaction(s).`;
+    duplicatesSection.classList.remove('hidden');
+
+    // Render cleaned
+    cleanSummary.textContent = `Showing ${Math.min(cleaned.length, 100)} of ${cleaned.length} transaction(s) after deduplication.`;
+    renderCleanTable(cleaned);
+    cleanSection.classList.remove('hidden');
+
+    cleanedRows = cleaned;
+  }
+
+  function renderDuplicatesTable(groups: { key: string; entries: { row: string[]; idx: number }[] }[], dateCol: number, amountCol: number, descCol: number) {
+    const allHeaders = [...headers, 'Status'];
+    duplicatesHead.innerHTML = `<tr>${allHeaders.map(h => `<th>${h}</th>`).join('')}</tr>`;
+
+    duplicatesBody.innerHTML = groups.map((group, gi) => {
+      const rows = group.entries.map((e, ei) => `
+        <tr class="${ei === 0 ? 'dedup-group-header' : 'dedup-duplicate'}">
+          ${headers.map(h => `<td>${escapeHtml(e.row[headers.indexOf(h)] || '')}</td>`).join('')}
+          <td>${ei === 0 ? '<span class="text-green-600 font-medium">Kept</span>' : '<span class="text-red-500">Duplicate</span>'}</td>
+        </tr>
+      `).join('');
+      if (gi < groups.length - 1) {
+        return rows + `<tr class="bg-neutral-50"><td colspan="${headers.length + 1}" class="text-center body-xs text-neutral-400 py-1">— Group ${gi + 2} —</td></tr>`;
+      }
+      return rows;
+    }).join('');
+  }
+
+  function renderCleanTable(rows: string[][]) {
+    cleanHead.innerHTML = `<tr>${headers.map(h => `<th>${h}</th>`).join('')}</tr>`;
+    cleanBody.innerHTML = rows.slice(0, 100).map(r =>
+      `<tr>${headers.map(h => `<td>${escapeHtml(r[headers.indexOf(h)] || '')}</td>`).join('')}</tr>`
+    ).join('');
+  }
+
+  function escapeHtml(s: string): string {
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  function toCSV(rows: string[][]): string {
+    const esc = (v: string) => `"${v.replace(/"/g, '""')}"`;
+    const headerRow = headers.map(h => esc(h)).join(',');
+    const dataRows = rows.map(r => r.map(v => esc(v)).join(','));
+    return [headerRow, ...dataRows].join('\r\n');
+  }
+
+  function downloadFile(content: string, filename: string, mime: string) {
+    const blob = new Blob([content], { type: mime });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = filename;
+    link.click();
+  }
+
+  runBtn.addEventListener('click', findDuplicates);
+
+  downloadBtn.addEventListener('click', () => {
+    downloadFile(toCSV(cleanedRows), 'deduplicated-transactions.csv', 'text/csv');
+  });
+</script>

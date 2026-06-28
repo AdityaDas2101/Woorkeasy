@@ -1,0 +1,43 @@
+---
+/**
+ * ToolCard Component
+ * Reusable card for displaying a tool in the homepage grid.
+ * Follows Vercel card-marketing style: hairline border, stacked shadow, rounded-md.
+ */
+export interface Props {
+  title: string;
+  description: string;
+  href: string;
+  icon: string; // Emoji or SVG string
+  category?: string;
+}
+
+const { title, description, href, icon, category } = Astro.props;
+---
+
+<a
+  href={href}
+  class="group block bg-white dark:bg-neutral-900 rounded-lg p-6 no-underline shadow-level-2 hover:shadow-level-4 transition-all duration-200 dark:border dark:border-neutral-800"
+>
+  <div class="flex items-start gap-4">
+    <div class="shrink-0 w-10 h-10 rounded-md bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center text-xl">
+      {icon}
+    </div>
+    <div class="flex-1 min-w-0">
+      {category && (
+        <span class="caption-mono text-neutral-500 uppercase">
+          {category}
+        </span>
+      )}
+      <h3 class="text-base font-medium text-neutral-900 dark:text-neutral-100 mt-0.5 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+        {title}
+      </h3>
+      <p class="text-sm text-neutral-600 dark:text-neutral-400 mt-0.5">
+        {description}
+      </p>
+    </div>
+    <svg class="shrink-0 w-4 h-4 text-neutral-400 group-hover:text-neutral-900 dark:group-hover:text-neutral-100 transition-colors mt-1" viewBox="0 0 16 16" fill="none">
+      <path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+</a>

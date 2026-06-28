@@ -1,0 +1,142 @@
+---
+/**
+ * ToolLayout Component
+ * Wraps every tool page with consistent structure: heading, description,
+ * breadcrumb, upload zone, action area, and output/download area.
+ * Includes SEO metadata, structured data, and high-CTR ad placements.
+ *
+ * Desktop layout (lg+):
+ *   [ TOP BANNER AD ]
+ *   ┌─────────────────────────────┬──────────────────┐
+ *   │  TOOL CONTENT + ADS        │  STICKY SIDEBAR  │
+ *   │  (tool card, sections,     │  (2 ad units)    │
+ *   │   inline/bottom ads)       │                  │
+ *   └─────────────────────────────┴──────────────────┘
+ */
+import Layout from '../layouts/Layout.astro';
+import Ad from './Ad.astro';
+
+export interface Props {
+  title: string;
+  metaTitle: string;
+  description: string;
+  heading: string;
+  canonicalURL?: string;
+  image?: string;
+  category?: string;
+}
+
+const { title, metaTitle, description, heading, canonicalURL, image, category } = Astro.props;
+const siteURL = 'https://woorkeasy.com';
+const pathname = Astro.url.pathname;
+const fullUrl = new URL(pathname, siteURL).href;
+
+const breadcrumbItems = [
+  { position: 1, name: 'Home', item: siteURL },
+];
+
+if (category) {
+  breadcrumbItems.push({ position: 2, name: category, item: new URL('/#' + category.toLowerCase(), siteURL).href });
+}
+
+breadcrumbItems.push({ position: breadcrumbItems.length + 1, name: title, item: fullUrl });
+
+const breadcrumbJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: breadcrumbItems.map(item => ({
+    '@type': 'ListItem',
+    position: item.position,
+    name: item.name,
+    item: item.item,
+  })),
+};
+
+const categorySchemaMap: Record<string, string> = {
+  'Image Tools': 'Multimedia',
+  'PDF Tools': 'GraphicsApplication',
+  'Finance': 'BusinessApplication',
+  'Dev Tools': 'DeveloperApplication',
+  'Utility': 'UtilitiesApplication',
+};
+
+const applicationCategory = categorySchemaMap[category || ''] || 'Multimedia';
+
+const softwareJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: title,
+  description,
+  url: fullUrl,
+  applicationCategory,
+  operatingSystem: 'All',
+  browserRequirements: 'Modern browser with JavaScript enabled',
+  offers: {
+    '@type': 'Offer',
+    price: '0',
+    priceCurrency: 'USD',
+  },
+};
+---
+
+<Layout
+  title={metaTitle}
+  description={description}
+  canonicalURL={canonicalURL}
+  image={image}
+  jsonLd={[breadcrumbJsonLd, softwareJsonLd]}
+>
+  <div class="max-w-6xl mx-auto px-6 pt-12 pb-24 md:pb-16">
+    <!-- Breadcrumb -->
+    <nav aria-label="Breadcrumb" class="mb-6">
+      <ol class="flex items-center gap-2 list-none p-0 m-0">
+        <li><a href="/" class="text-sm text-neutral-500 no-underline hover:text-neutral-900 dark:hover:text-neutral-100">Home</a></li>
+        <li class="text-sm text-neutral-400">/</li>
+        {category && (
+          <>
+            <li><span class="text-sm text-neutral-500">{category}</span></li>
+            <li class="text-sm text-neutral-400">/</li>
+          </>
+        )}
+        <li class="text-sm text-neutral-900 dark:text-neutral-100" aria-current="page">{title}</li>
+      </ol>
+    </nav>
+
+    <!-- Page Header -->
+    <header class="mb-6">
+      <h1 class="display-lg text-neutral-900 dark:text-neutral-100">{heading}</h1>
+      <p class="body-lg text-neutral-600 dark:text-neutral-400 mt-2 max-w-2xl">{description}</p>
+    </header>
+
+    <!-- AD: Top Banner (below heading, centered, full width) -->
+    <Ad slot="YOUR_AD_SLOT_ID" format="horizontal" layout="top" />
+
+    <!-- Desktop two-column: main content + sticky sidebar -->
+    <div class="lg:grid lg:grid-cols-[1fr_336px] lg:gap-8">
+      <!-- Left: Tool Content + Inline/Bottom Ads -->
+      <div class="min-w-0 space-y-6">
+        <!-- Tool Card (default slot: upload, options, results, about section) -->
+        <div class="bg-white dark:bg-neutral-900 rounded-xl p-6 md:p-8 shadow-level-3 dark:border dark:border-neutral-800">
+          <slot />
+        </div>
+
+        <!-- AD: Inline (between tool card and info slot) -->
+        <Ad slot="YOUR_AD_SLOT_ID" format="rectangle" layout="inline" />
+
+        <!-- Tips / Info content (how-to, FAQ, about extension) -->
+        <slot name="info" />
+
+        <!-- AD: Bottom (after all content) -->
+        <Ad slot="YOUR_AD_SLOT_ID" format="rectangle" layout="bottom" />
+      </div>
+
+      <!-- Right: Desktop Sidebar (sticky, 2 ads) -->
+      <aside class="hidden lg:block" aria-label="Sidebar">
+        <div class="sticky top-20 space-y-6">
+          <Ad slot="YOUR_AD_SLOT_ID" format="rectangle" layout="sidebar" />
+          <Ad slot="YOUR_AD_SLOT_ID" format="rectangle" layout="sidebar" />
+        </div>
+      </aside>
+    </div>
+  </div>
+</Layout>

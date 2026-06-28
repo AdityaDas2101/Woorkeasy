@@ -1,0 +1,265 @@
+﻿---
+/**
+ * Merge PDF Tool
+ * Uses pdf-lib to combine multiple PDF files into one.
+ */
+import ToolLayout from '../../components/ToolLayout.astro';
+---
+
+<ToolLayout
+  title="Merge PDF"
+  metaTitle="Merge PDF Online Free - Combine PDF Files | Woorkeasy"
+  description="Merge PDF files online free. Combine multiple PDFs into one document instantly. No upload, no sign-up, unlimited pages. Fast PDF merger tool."
+  heading="Merge PDF Files"
+  category="PDF Tools"
+>
+  <div id="merge-app">
+    <!-- Upload Zone -->
+    <div id="upload-zone" class="upload-zone p-12 text-center cursor-pointer">
+      <div class="flex flex-col items-center gap-4">
+        <svg class="w-12 h-12 text-neutral-500" viewBox="0 0 48 48" fill="none">
+          <path d="M24 32V16m0 0l-6 6m6-6l6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <rect x="8" y="8" width="32" height="32" rx="4" stroke="currentColor" stroke-width="2"/>
+        </svg>
+        <p class="body-md text-neutral-600">Drag & drop PDF files here, or <span class="text-blue-600 font-medium">browse</span></p>
+        <p class="body-sm text-neutral-500">Select 2 or more PDF files to merge</p>
+      </div>
+      <input type="file" id="file-input" accept="application/pdf" multiple class="hidden" />
+    </div>
+
+    <!-- File List / Reorder -->
+    <div id="file-list-section" class="hidden mt-6">
+      <p class="body-sm text-neutral-600 font-medium mb-2">Files to merge (drag to reorder):</p>
+      <div id="file-list" class="flex flex-col gap-2"></div>
+      <button id="merge-btn" class="btn-primary mt-6">
+        Merge PDFs
+      </button>
+    </div>
+
+    <!-- Loading -->
+    <div id="loading" class="hidden mt-6 text-center">
+      <div class="inline-flex items-center gap-3">
+        <svg class="animate-spin w-5 h-5 text-[var(--color-primary)]" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" class="opacity-25"/>
+          <path d="M4 12a8 8 0 018-8" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+        <span class="body-sm text-neutral-600">Merging PDFs...</span>
+      </div>
+    </div>
+
+    <!-- Result -->
+    <div id="result" class="hidden mt-8">
+      <h2 class="display-sm text-neutral-900 mb-4">Merged PDF Ready</h2>
+      <div class="flex items-center justify-between p-4 bg-neutral-50 rounded-lg">
+        <div>
+          <p class="body-sm text-neutral-900 font-medium">merged.pdf</p>
+          <p id="result-info" class="caption-mono text-neutral-500"></p>
+        </div>
+        <a id="download-btn" class="btn-primary text-sm no-underline" style="padding: 6px 16px;" download="merged.pdf">Download PDF</a>
+      </div>
+    </div>
+  </div>
+
+  <div slot="info">
+    <section class="bg-white dark:bg-neutral-900 rounded-xl p-6 md:p-8 shadow-level-3 dark:border dark:border-neutral-800 mt-6">
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100">How to Use Merge PDF Tool</h2>
+      <ol class="list-decimal list-inside space-y-2 mt-4 body-md text-neutral-700 dark:text-neutral-300">
+        <li>Upload PDF files " Drag & drop two or more PDF files or click to browse.</li>
+        <li>Review the order " Files are listed in the sequence they will be merged.</li>
+        <li>Merge and download " Click "Merge PDFs" and download your combined document instantly.</li>
+      </ol>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">Features</h2>
+      <ul class="list-disc list-inside space-y-2 mt-4 body-md text-neutral-700 dark:text-neutral-300">
+        <li>Combine unlimited PDFs " Merge as many files as you need in one session.</li>
+        <li>Simple file ordering " Upload files in your preferred sequence for perfect organization.</li>
+        <li>Preserves original quality " Pages retain formatting, fonts, and images.</li>
+        <li>No file size limits " Merge large PDFs without restrictions.</li>
+        <li>100% secure " Files are processed entirely in your browser with no server uploads.</li>
+      </ul>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">Why Use Our PDF Merger</h2>
+      <p class="body-md text-neutral-700 dark:text-neutral-300 mt-4">Our free merge PDF online tool lets you combine multiple PDF files into a single document hassle-free. Perfect for merging invoices, reports, contracts, or scanned documents into one organized file. All processing happens in your browser " no uploads, no sign-ups, and no file size limits.</p>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">FAQs</h2>
+      <div class="space-y-4 mt-4">
+        <div>
+          <h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Is the PDF merger really free?</h3>
+          <p class="body-md text-neutral-700 dark:text-neutral-300">Yes, completely free with no limits on the number of files or pages.</p>
+        </div>
+        <div>
+          <h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">How many PDFs can I merge at once?</h3>
+          <p class="body-md text-neutral-700 dark:text-neutral-300">There's no limit " merge as many PDF files as you need.</p>
+        </div>
+        <div>
+          <h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Are my files uploaded to a server?</h3>
+          <p class="body-md text-neutral-700 dark:text-neutral-300">No, all processing happens locally in your browser. Your files stay private.</p>
+        </div>
+        <div>
+          <h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Will the merged PDF retain quality?</h3>
+          <p class="body-md text-neutral-700 dark:text-neutral-300">Yes, all pages keep their original formatting, fonts, and image quality.</p>
+        </div>
+        <div>
+          <h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Can I reorder pages before merging?</h3>
+          <p class="body-md text-neutral-700 dark:text-neutral-300">Yes, upload files in your desired order for the correct page sequence.</p>
+        </div>
+        <div>
+          <h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Is there a file size limit?</h3>
+          <p class="body-md text-neutral-700 dark:text-neutral-300">No, you can merge PDFs of any size without restrictions.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-white dark:bg-neutral-900 rounded-xl p-6 md:p-8 shadow-level-3 dark:border dark:border-neutral-800 mt-6">
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100">Related Tools</h2>
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mt-4">
+        <a href="/pdf/split-pdf" class="btn-secondary text-center no-underline text-sm">Split PDF</a>
+        <a href="/pdf/pdf-to-image" class="btn-secondary text-center no-underline text-sm">PDF to Image</a>
+        <a href="/pdf/rotate-pdf" class="btn-secondary text-center no-underline text-sm">Rotate PDF</a>
+        <a href="/pdf/jpg-to-pdf" class="btn-secondary text-center no-underline text-sm">JPG to PDF</a>
+      </div>
+    </section>
+  </div>
+</ToolLayout>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Is the PDF merger really free?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, completely free with no limits on the number of files or pages."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How many PDFs can I merge at once?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "There is no limit. Merge as many PDF files as you need."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Are my files uploaded to a server?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No, all processing happens locally in your browser. Your files stay private."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Will the merged PDF retain quality?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, all pages keep their original formatting, fonts, and image quality."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I reorder pages before merging?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, upload files in your desired order for the correct page sequence."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is there a file size limit?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No, you can merge PDFs of any size without restrictions."
+      }
+    }
+  ]
+}
+</script>
+
+<script>
+  import { PDFDocument } from 'pdf-lib';
+
+  const uploadZone = document.getElementById('upload-zone')!;
+  const fileInput = document.getElementById('file-input') as HTMLInputElement;
+  const fileListSection = document.getElementById('file-list-section')!;
+  const fileList = document.getElementById('file-list')!;
+  const mergeBtn = document.getElementById('merge-btn')!;
+  const loading = document.getElementById('loading')!;
+  const result = document.getElementById('result')!;
+  const resultInfo = document.getElementById('result-info')!;
+  const downloadBtn = document.getElementById('download-btn') as HTMLAnchorElement;
+
+  let files: File[] = [];
+
+  uploadZone.addEventListener('click', () => fileInput.click());
+  uploadZone.addEventListener('dragover', (e) => { e.preventDefault(); uploadZone.classList.add('dragover'); });
+  uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('dragover'));
+  uploadZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    uploadZone.classList.remove('dragover');
+    if (e.dataTransfer?.files) handleFiles(Array.from(e.dataTransfer.files));
+  });
+  fileInput.addEventListener('change', () => { if (fileInput.files) handleFiles(Array.from(fileInput.files)); });
+
+  function handleFiles(newFiles: File[]) {
+    files = newFiles.filter(f => f.type === 'application/pdf');
+    if (files.length >= 2) {
+      fileListSection.classList.remove('hidden');
+      renderFileList();
+    }
+  }
+
+  function renderFileList() {
+    fileList.innerHTML = files.map((f, i) => `
+      <div class="flex items-center gap-3 p-[var(--spacing-sm)] bg-neutral-50 rounded-md">
+        <span class="caption-mono text-neutral-500 w-6">${i + 1}.</span>
+        <span class="body-sm text-neutral-900 flex-1">${f.name}</span>
+        <span class="caption-mono text-neutral-500">${formatBytes(f.size)}</span>
+      </div>
+    `).join('');
+  }
+
+  mergeBtn.addEventListener('click', async () => {
+    if (files.length < 2) return;
+    loading.classList.remove('hidden');
+    result.classList.add('hidden');
+
+    try {
+      const mergedPdf = await PDFDocument.create();
+
+      for (const file of files) {
+        const arrayBuffer = await file.arrayBuffer();
+        const pdf = await PDFDocument.load(arrayBuffer);
+        const pages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
+        pages.forEach(page => mergedPdf.addPage(page));
+      }
+
+      const mergedBytes = await mergedPdf.save();
+      const blob = new Blob([mergedBytes], { type: 'application/pdf' });
+      const url = URL.createObjectURL(blob);
+
+      resultInfo.textContent = `${mergedPdf.getPageCount()} pages  ${formatBytes(blob.size)}`;
+      downloadBtn.href = url;
+
+      loading.classList.add('hidden');
+      result.classList.remove('hidden');
+    } catch (err) {
+      loading.classList.add('hidden');
+      alert(`Error: ${(err as Error).message}`);
+    }
+  });
+
+  function formatBytes(bytes: number): string {
+    if (bytes === 0) return '0 B';
+    const k = 1024;
+    const sizes = ['B', 'KB', 'MB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+  }
+</script>
+
+
+

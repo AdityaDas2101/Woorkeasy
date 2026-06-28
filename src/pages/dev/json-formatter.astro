@@ -1,0 +1,316 @@
+﻿---
+/**
+ * JSON Formatter Tool
+ * Format, validate, and minify JSON with syntax highlighting.
+ */
+import ToolLayout from '../../components/ToolLayout.astro';
+---
+
+<ToolLayout
+  title="JSON Formatter"
+  metaTitle="JSON Formatter Online Free - Format Validate JSON | Woorkeasy"
+  description="Format and validate JSON online free. Beautify, minify, and validate JSON with error detection. No upload, instant browser-based JSON tool."
+  heading="JSON Formatter"
+  category="Dev Tools"
+>
+  <div id="json-app" class="flex flex-col gap-6">
+    <!-- Input -->
+    <div>
+      <div class="flex items-center justify-between mb-2">
+        <label for="json-input" class="body-sm font-medium text-neutral-700 dark:text-neutral-300">Input JSON:</label>
+        <div class="flex items-center gap-3">
+          <button id="paste-btn" class="text-sm text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 underline">Paste</button>
+          <button id="sample-btn" class="text-sm text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 underline">Load Sample</button>
+          <button id="clear-btn" class="text-sm text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 underline">Clear</button>
+        </div>
+      </div>
+      <textarea
+        id="json-input"
+        class="w-full min-h-[200px] p-4 border border-neutral-200 dark:border-neutral-700 rounded-lg font-mono text-sm text-neutral-900 dark:text-neutral-100 bg-white dark:bg-neutral-900 resize-y focus:outline-none focus:border-neutral-900 dark:focus:border-neutral-400"
+        placeholder='Paste your JSON here... e.g., {"name": "John", "age": 30}'
+        spellcheck="false"
+      ></textarea>
+    </div>
+
+    <!-- Actions -->
+    <div class="flex flex-wrap items-center gap-3">
+      <button id="format-btn" class="btn-primary">Format (Pretty)</button>
+      <button id="minify-btn" class="btn-secondary">Minify</button>
+      <button id="validate-btn" class="btn-secondary">Validate</button>
+
+      <div class="ml-auto flex items-center gap-2">
+        <label for="indent-select" class="body-sm text-neutral-600 dark:text-neutral-400">Indent:</label>
+        <select id="indent-select" class="px-3 py-1.5 border border-neutral-200 dark:border-neutral-700 rounded-md text-sm bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 focus:outline-none focus:border-neutral-900">
+          <option value="2" selected>2 spaces</option>
+          <option value="4">4 spaces</option>
+          <option value="tab">Tab</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Status/Error -->
+    <div id="status-bar" class="hidden p-3 rounded-lg border text-sm flex items-center gap-2">
+      <span id="status-icon"></span>
+      <span id="status-msg"></span>
+    </div>
+
+    <!-- Output -->
+    <div id="output-group" class="hidden">
+      <div class="flex items-center justify-between mb-2">
+        <label class="body-sm font-medium text-neutral-700 dark:text-neutral-300">Output:</label>
+        <div class="flex items-center gap-3">
+          <span id="output-stats" class="caption-mono text-neutral-500"></span>
+          <button id="copy-btn" class="text-sm text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 underline">Copy</button>
+          <button id="download-btn" class="text-sm text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 underline">Download</button>
+        </div>
+      </div>
+      <pre
+        id="json-output"
+        class="w-full max-h-[400px] overflow-auto p-4 border border-neutral-200 dark:border-neutral-700 rounded-lg font-mono text-sm bg-neutral-50 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 whitespace-pre-wrap break-all"
+      ></pre>
+    </div>
+
+    <!-- Tree View -->
+    <details class="group">
+      <summary class="body-sm font-medium text-neutral-700 dark:text-neutral-300 cursor-pointer hover:text-neutral-900 dark:hover:text-neutral-100">
+        " JSON Stats
+      </summary>
+      <div id="json-stats" class="mt-3 p-4 bg-neutral-50 dark:bg-neutral-800 rounded-lg border border-neutral-200 dark:border-neutral-700 grid grid-cols-2 md:grid-cols-4 gap-4">
+      </div>
+    </details>
+  </div>
+
+  <div slot="info">
+    <section class="bg-white dark:bg-neutral-900 rounded-xl p-6 md:p-8 shadow-level-3 dark:border dark:border-neutral-800 mt-6">
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100">How to Use JSON Formatter</h2>
+      <ol class="list-decimal list-inside space-y-2 mt-4 body-md text-neutral-700 dark:text-neutral-300">
+        <li>Paste or type your JSON data into the input area.</li>
+        <li>Choose your action: Format (pretty-print), Minify (compress), or Validate (check for errors). Select your preferred indentation.</li>
+        <li>View the formatted output with detailed JSON stats including key counts, objects, arrays, and nesting depth.</li>
+      </ol>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">Features</h2>
+      <ul class="list-disc list-inside space-y-2 mt-4 body-md text-neutral-700 dark:text-neutral-300">
+        <li><strong>Pretty-Print</strong> - formats JSON with customizable indentation (2 spaces, 4 spaces, or tab) for readability.</li>
+        <li><strong>Minify</strong> - compresses JSON by removing all whitespace for production use.</li>
+        <li><strong>Validation</strong> - detects JSON syntax errors and shows exact error locations for quick debugging.</li>
+        <li><strong>JSON Stats</strong> - displays key counts, object counts, array counts, and nesting depth for data analysis.</li>
+      </ul>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">Why Use Our JSON Formatter</h2>
+      <p class="body-md text-neutral-700 dark:text-neutral-300 mt-4">Working with JSON data requires proper formatting for debugging, validation for error checking, and minification for production. Our all-in-one JSON tool gives developers everything they need in a single browser-based interface. No data leaves your machine, making it safe for sensitive configuration files and API responses. The built-in JSON stats provide instant insight into your data structure's complexity.</p>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">FAQs</h2>
+      <div class="space-y-4 mt-4">
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">What size JSON can I format?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">There is no hard limit. The tool processes JSON in your browser's memory, so performance depends on your device. For very large JSON files (10MB+), formatting may take a moment.</p></div>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Does it support JSON5 or comments?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">No, this tool validates strict JSON as defined by the ECMAScript specification. Comments, trailing commas, and single-quoted strings are not valid JSON and will be flagged as errors.</p></div>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Can I download the formatted JSON?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">Yes, use the "Download" button to save the formatted or minified output as a .json file. You can also copy the result to your clipboard with one click.</p></div>
+      </div>
+    </section>
+
+    <!-- Related Tools -->
+    <section class="bg-white dark:bg-neutral-900 rounded-xl p-6 md:p-8 shadow-level-3 dark:border dark:border-neutral-800 mt-6">
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100">Related Tools</h2>
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mt-4">
+        <a href="/dev/base64/" class="px-4 py-3 bg-neutral-100 dark:bg-neutral-800 rounded-lg body-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors text-center">Base64 Encode Decode</a>
+        <a href="/dev/url-encode/" class="px-4 py-3 bg-neutral-100 dark:bg-neutral-800 rounded-lg body-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors text-center">URL Encode Decode</a>
+      </div>
+    </section>
+  </div>
+</ToolLayout>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What size JSON can I format?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "There is no hard limit. The tool processes JSON in your browser's memory, so performance depends on your device. For very large JSON files (10MB+), formatting may take a moment."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does it support JSON5 or comments?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No, this tool validates strict JSON as defined by the ECMAScript specification. Comments, trailing commas, and single-quoted strings are not valid JSON."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I download the formatted JSON?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, use the Download button to save the formatted or minified output as a .json file. You can also copy the result to your clipboard with one click."
+        }
+      }
+    ]
+  }
+  </script>
+
+<script>
+  const jsonInput = document.getElementById('json-input') as HTMLTextAreaElement;
+  const formatBtn = document.getElementById('format-btn') as HTMLButtonElement;
+  const minifyBtn = document.getElementById('minify-btn') as HTMLButtonElement;
+  const validateBtn = document.getElementById('validate-btn') as HTMLButtonElement;
+  const indentSelect = document.getElementById('indent-select') as HTMLSelectElement;
+  const statusBar = document.getElementById('status-bar')!;
+  const statusIcon = document.getElementById('status-icon')!;
+  const statusMsg = document.getElementById('status-msg')!;
+  const outputGroup = document.getElementById('output-group')!;
+  const jsonOutput = document.getElementById('json-output')!;
+  const outputStats = document.getElementById('output-stats')!;
+  const copyBtn = document.getElementById('copy-btn')!;
+  const downloadBtn = document.getElementById('download-btn')!;
+  const pasteBtn = document.getElementById('paste-btn')!;
+  const sampleBtn = document.getElementById('sample-btn')!;
+  const clearBtn = document.getElementById('clear-btn')!;
+  const jsonStats = document.getElementById('json-stats')!;
+
+  function getIndent(): string | number {
+    const val = indentSelect.value;
+    return val === 'tab' ? '\t' : parseInt(val);
+  }
+
+  function showStatus(type: 'success' | 'error', msg: string) {
+    statusBar.classList.remove('hidden', 'bg-green-50', 'dark:bg-green-950', 'border-green-200', 'dark:border-green-800', 'bg-red-50', 'dark:bg-red-950', 'border-red-200', 'dark:border-red-800');
+    if (type === 'success') {
+      statusBar.classList.add('bg-green-50', 'dark:bg-green-950', 'border-green-200', 'dark:border-green-800');
+      statusIcon.textContent = '';
+    } else {
+      statusBar.classList.add('bg-red-50', 'dark:bg-red-950', 'border-red-200', 'dark:border-red-800');
+      statusIcon.textContent = '';
+    }
+    statusMsg.textContent = msg;
+  }
+
+  function hideStatus() { statusBar.classList.add('hidden'); }
+
+  // Format
+  formatBtn.addEventListener('click', () => {
+    const input = jsonInput.value.trim();
+    if (!input) { alert('Please enter JSON.'); return; }
+    try {
+      const parsed = JSON.parse(input);
+      const formatted = JSON.stringify(parsed, null, getIndent());
+      jsonOutput.textContent = formatted;
+      outputGroup.classList.remove('hidden');
+      showStatus('success', 'Valid JSON " formatted successfully.');
+      outputStats.textContent = `${formatted.length} chars`;
+      computeStats(parsed);
+    } catch (err: any) {
+      outputGroup.classList.add('hidden');
+      showStatus('error', `Invalid JSON: ${err.message}`);
+    }
+  });
+
+  // Minify
+  minifyBtn.addEventListener('click', () => {
+    const input = jsonInput.value.trim();
+    if (!input) { alert('Please enter JSON.'); return; }
+    try {
+      const parsed = JSON.parse(input);
+      const minified = JSON.stringify(parsed);
+      jsonOutput.textContent = minified;
+      outputGroup.classList.remove('hidden');
+      showStatus('success', `Minified: ${input.length} ' ${minified.length} chars (${Math.round((1 - minified.length / input.length) * 100)}% smaller)`);
+      outputStats.textContent = `${minified.length} chars`;
+      computeStats(parsed);
+    } catch (err: any) {
+      outputGroup.classList.add('hidden');
+      showStatus('error', `Invalid JSON: ${err.message}`);
+    }
+  });
+
+  // Validate
+  validateBtn.addEventListener('click', () => {
+    const input = jsonInput.value.trim();
+    if (!input) { alert('Please enter JSON.'); return; }
+    try {
+      const parsed = JSON.parse(input);
+      outputGroup.classList.add('hidden');
+      showStatus('success', 'Valid JSON "');
+      computeStats(parsed);
+    } catch (err: any) {
+      outputGroup.classList.add('hidden');
+      showStatus('error', `Invalid JSON: ${err.message}`);
+    }
+  });
+
+  // Copy
+  copyBtn.addEventListener('click', () => {
+    navigator.clipboard.writeText(jsonOutput.textContent || '');
+    copyBtn.textContent = 'Copied!';
+    setTimeout(() => { copyBtn.textContent = 'Copy'; }, 2000);
+  });
+
+  // Download
+  downloadBtn.addEventListener('click', () => {
+    const content = jsonOutput.textContent || '';
+    const blob = new Blob([content], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'formatted.json'; a.click();
+    URL.revokeObjectURL(url);
+  });
+
+  // Paste
+  pasteBtn.addEventListener('click', async () => {
+    try {
+      const text = await navigator.clipboard.readText();
+      jsonInput.value = text;
+    } catch {
+      alert('Unable to read clipboard. Please paste manually.');
+    }
+  });
+
+  // Sample
+  sampleBtn.addEventListener('click', () => {
+    jsonInput.value = JSON.stringify({
+      name: "Woorkeasy",
+      version: "1.0.0",
+      tools: ["compress", "crop", "rotate", "watermark"],
+      config: { theme: "dark", language: "en" },
+      stats: { users: 12500, tools_count: 20 }
+    }, null, 2);
+  });
+
+  // Clear
+  clearBtn.addEventListener('click', () => {
+    jsonInput.value = '';
+    outputGroup.classList.add('hidden');
+    hideStatus();
+    jsonStats.innerHTML = '';
+  });
+
+  // Stats
+  function computeStats(obj: any) {
+    let keys = 0, values = 0, arrays = 0, objects = 0, maxDepth = 0;
+    function walk(item: any, depth: number) {
+      if (depth > maxDepth) maxDepth = depth;
+      if (Array.isArray(item)) {
+        arrays++;
+        item.forEach(v => walk(v, depth + 1));
+      } else if (item && typeof item === 'object') {
+        objects++;
+        const entries = Object.entries(item);
+        keys += entries.length;
+        entries.forEach(([, v]) => { values++; walk(v, depth + 1); });
+      }
+    }
+    walk(obj, 0);
+    jsonStats.innerHTML = `
+      <div class="text-center"><p class="text-lg font-semibold text-neutral-900 dark:text-neutral-100">${keys}</p><p class="caption-mono text-neutral-500">Keys</p></div>
+      <div class="text-center"><p class="text-lg font-semibold text-neutral-900 dark:text-neutral-100">${objects}</p><p class="caption-mono text-neutral-500">Objects</p></div>
+      <div class="text-center"><p class="text-lg font-semibold text-neutral-900 dark:text-neutral-100">${arrays}</p><p class="caption-mono text-neutral-500">Arrays</p></div>
+      <div class="text-center"><p class="text-lg font-semibold text-neutral-900 dark:text-neutral-100">${maxDepth}</p><p class="caption-mono text-neutral-500">Max Depth</p></div>
+    `;
+  }
+</script>
+
+
+

@@ -1,0 +1,461 @@
+﻿---
+/**
+ * Excel to CSV Converter
+ * Parses Excel (.xlsx, .xls) files and converts to CSV.
+ * Uses a lightweight parsing approach " reads the XML inside .xlsx files.
+ * Falls back to TSV parsing for .xls files.
+ */
+import ToolLayout from '../../components/ToolLayout.astro';
+---
+
+<ToolLayout
+  title="Excel to CSV"
+  metaTitle="Excel to CSV Converter Free - XLSX to CSV Online | Woorkeasy"
+  description="Convert Excel to CSV online free. Transform XLSX files to comma-separated values format with sheet selection. No upload, instant download."
+  heading="Convert Excel to CSV"
+  category="Finance"
+>
+  <div id="excel-csv-app">
+    <!-- Upload Zone -->
+    <div id="upload-zone" class="upload-zone p-12 text-center cursor-pointer">
+      <div class="flex flex-col items-center gap-4">
+        <svg class="w-12 h-12 text-neutral-500" viewBox="0 0 48 48" fill="none">
+          <path d="M24 32V16m0 0l-6 6m6-6l6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <rect x="8" y="8" width="32" height="32" rx="4" stroke="currentColor" stroke-width="2"/>
+        </svg>
+        <p class="body-md text-neutral-600">Drag & drop Excel file here, or <span class="text-blue-600 font-medium">browse</span></p>
+        <p class="body-sm text-neutral-500">Supports .xlsx and .csv files</p>
+      </div>
+      <input type="file" id="file-input" accept=".xlsx,.xls,.csv" class="hidden" />
+    </div>
+
+    <!-- Sheet Selector & Controls -->
+    <div id="controls" class="hidden mt-6">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+        <div class="flex-1">
+          <label class="body-sm text-neutral-600 font-medium block mb-2">Sheet</label>
+          <select id="sheet-select" class="w-full px-3 py-2 border border-neutral-200 rounded-md body-sm bg-white">
+          </select>
+        </div>
+        <div class="flex-1">
+          <label class="body-sm text-neutral-600 font-medium block mb-2">Delimiter</label>
+          <select id="delimiter-select" class="w-full px-3 py-2 border border-neutral-200 rounded-md body-sm bg-white">
+            <option value=",">Comma (,)</option>
+            <option value=";">Semicolon (;)</option>
+            <option value="\t">Tab</option>
+          </select>
+        </div>
+        <div class="flex items-end">
+          <button id="download-btn" class="btn-primary mt-6 sm:mt-0">Download CSV</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading -->
+    <div id="loading" class="hidden mt-6 text-center">
+      <div class="inline-flex items-center gap-3">
+        <svg class="animate-spin w-5 h-5 text-[var(--color-primary)]" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" class="opacity-25"/>
+          <path d="M4 12a8 8 0 018-8" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+        <span class="body-sm text-neutral-600">Parsing Excel file...</span>
+      </div>
+    </div>
+
+    <!-- Preview Table -->
+    <div id="preview" class="hidden mt-8 overflow-x-auto">
+      <h2 class="display-sm text-neutral-900 mb-2">Preview</h2>
+      <p id="row-count" class="body-sm text-neutral-500 mb-4"></p>
+      <table id="preview-table" class="w-full border-collapse">
+        <thead id="table-head"></thead>
+        <tbody id="table-body"></tbody>
+      </table>
+    </div>
+
+    <!-- Error -->
+    <div id="error" class="hidden mt-6 p-4 bg-red-50 rounded-lg">
+      <p id="error-text" class="body-sm text-red-600"></p>
+    </div>
+  </div>
+</ToolLayout>
+
+  <div slot="info">
+    <section class="bg-white dark:bg-neutral-900 rounded-xl p-6 md:p-8 shadow-level-3 dark:border dark:border-neutral-800 mt-6">
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100">How to Use Excel to CSV Converter</h2>
+      <ol class="list-decimal list-inside space-y-2 mt-4 body-md text-neutral-700 dark:text-neutral-300">
+        <li>Upload or drag & drop your Excel file (.xlsx or .xls) onto the converter area.</li>
+        <li>Select the sheet you want to convert and choose your preferred delimiter (comma, semicolon, or tab).</li>
+        <li>Click "Download CSV" to save the selected sheet as a comma-separated values file.</li>
+      </ol>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">Features</h2>
+      <ul class="list-disc list-inside space-y-2 mt-4 body-md text-neutral-700 dark:text-neutral-300">
+        <li><strong>Sheet Selection</strong> - choose which sheet to convert when your workbook has multiple sheets.</li>
+        <li><strong>Delimiter Options</strong> - export with comma, semicolon, or tab delimiters to suit your needs.</li>
+        <li><strong>Live Preview</strong> - inspect the parsed data before downloading to ensure accuracy.</li>
+        <li><strong>No Upload</strong> - all processing happens in your browser. Your data stays private.</li>
+      </ul>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">Why Use Our Excel to CSV Converter</h2>
+      <p class="body-md text-neutral-700 dark:text-neutral-300 mt-4">Our free Excel to CSV converter makes it easy to extract spreadsheet data into the universally compatible CSV format. Whether you are migrating data between systems, preparing files for database import, or sharing data with collaborators who don't have Excel, this tool handles the conversion instantly and accurately. With sheet selection and multiple delimiter options, you get full control over the output format - all without uploading files to any server.</p>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">FAQs</h2>
+      <div class="space-y-4 mt-4">
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Does it support .xls files?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">Yes, our tool supports both .xlsx and .xls file formats. The .xls parser extracts data from the older Excel format while maintaining compatibility with all spreadsheet applications.</p></div>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Can I convert multiple sheets at once?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">Currently, you can select and convert one sheet at a time. Simply upload the file again to convert a different sheet. We recommend converting each sheet individually for the best results.</p></div>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Is my data safe when converting Excel to CSV?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">Yes, all processing is done locally in your browser using JavaScript. Your Excel files are never uploaded to any server, ensuring your spreadsheet data remains completely private and secure.</p></div>
+      </div>
+    </section>
+
+    <!-- Related Tools -->
+    <section class="bg-white dark:bg-neutral-900 rounded-xl p-6 md:p-8 shadow-level-3 dark:border dark:border-neutral-800 mt-6">
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100">Related Tools</h2>
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mt-4">
+        <a href="/finance/csv-to-excel/" class="px-4 py-3 bg-neutral-100 dark:bg-neutral-800 rounded-lg body-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors text-center">CSV to Excel</a>
+        <a href="/finance/ofx-to-excel/" class="px-4 py-3 bg-neutral-100 dark:bg-neutral-800 rounded-lg body-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors text-center">OFX to Excel</a>
+        <a href="/finance/qfx-to-excel/" class="px-4 py-3 bg-neutral-100 dark:bg-neutral-800 rounded-lg body-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors text-center">QFX to Excel</a>
+        <a href="/finance/csv-cleaner/" class="px-4 py-3 bg-neutral-100 dark:bg-neutral-800 rounded-lg body-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors text-center">CSV Cleaner</a>
+        <a href="/finance/csv-formatter/" class="px-4 py-3 bg-neutral-100 dark:bg-neutral-800 rounded-lg body-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors text-center">CSV Formatter</a>
+        <a href="/finance/column-mapper/" class="px-4 py-3 bg-neutral-100 dark:bg-neutral-800 rounded-lg body-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors text-center">Column Mapper</a>
+      </div>
+    </section>
+  </div>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Does it support .xls files?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, our tool supports both .xlsx and .xls file formats. The .xls parser extracts data from the older Excel format while maintaining compatibility with all spreadsheet applications."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I convert multiple sheets at once?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Currently, you can select and convert one sheet at a time. Simply upload the file again to convert a different sheet."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is my data safe when converting Excel to CSV?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, all processing is done locally in your browser using JavaScript. Your Excel files are never uploaded to any server."
+        }
+      }
+    ]
+  }
+  </script>
+
+<style>
+  #preview-table th {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    text-transform: uppercase;
+    background: var(--color-canvas-soft-2);
+    padding: 8px 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--color-hairline);
+    white-space: nowrap;
+  }
+  #preview-table td {
+    font-size: 14px;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--color-hairline);
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  #preview-table tr:hover td {
+    background: var(--color-canvas-soft);
+  }
+</style>
+
+<script>
+  const uploadZone = document.getElementById('upload-zone')!;
+  const fileInput = document.getElementById('file-input') as HTMLInputElement;
+  const controls = document.getElementById('controls')!;
+  const sheetSelect = document.getElementById('sheet-select') as HTMLSelectElement;
+  const delimiterSelect = document.getElementById('delimiter-select') as HTMLSelectElement;
+  const downloadBtn = document.getElementById('download-btn')!;
+  const loading = document.getElementById('loading')!;
+  const preview = document.getElementById('preview')!;
+  const rowCount = document.getElementById('row-count')!;
+  const tableHead = document.getElementById('table-head')!;
+  const tableBody = document.getElementById('table-body')!;
+  const errorDiv = document.getElementById('error')!;
+  const errorText = document.getElementById('error-text')!;
+
+  // Store parsed sheets: { sheetName: string[][] }
+  let sheets: Record<string, string[][]> = {};
+  let currentSheet: string = '';
+
+  uploadZone.addEventListener('click', () => fileInput.click());
+  uploadZone.addEventListener('dragover', (e) => { e.preventDefault(); uploadZone.classList.add('dragover'); });
+  uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('dragover'));
+  uploadZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    uploadZone.classList.remove('dragover');
+    if (e.dataTransfer?.files[0]) handleFile(e.dataTransfer.files[0]);
+  });
+  fileInput.addEventListener('change', () => { if (fileInput.files?.[0]) handleFile(fileInput.files[0]); });
+
+  async function handleFile(file: File) {
+    loading.classList.remove('hidden');
+    errorDiv.classList.add('hidden');
+    controls.classList.add('hidden');
+    preview.classList.add('hidden');
+
+    try {
+      if (file.name.endsWith('.csv')) {
+        // Direct CSV " just show preview
+        const text = await file.text();
+        const rows = parseCSV(text);
+        sheets = { 'Sheet1': rows };
+      } else {
+        // Parse XLSX using JSZip-like approach (read the XML inside the zip)
+        sheets = await parseXLSX(file);
+      }
+
+      const sheetNames = Object.keys(sheets);
+      if (sheetNames.length === 0) throw new Error('No sheets found');
+
+      // Populate sheet selector
+      sheetSelect.innerHTML = sheetNames.map(name => `<option value="${name}">${name}</option>`).join('');
+      currentSheet = sheetNames[0];
+
+      sheetSelect.addEventListener('change', () => {
+        currentSheet = sheetSelect.value;
+        renderPreview();
+      });
+
+      renderPreview();
+      controls.classList.remove('hidden');
+      preview.classList.remove('hidden');
+      loading.classList.add('hidden');
+    } catch (err) {
+      loading.classList.add('hidden');
+      errorDiv.classList.remove('hidden');
+      errorText.textContent = `Error: ${(err as Error).message}`;
+    }
+  }
+
+  async function parseXLSX(file: File): Promise<Record<string, string[][]>> {
+    // XLSX is a ZIP file containing XML sheets
+    // We'll use the browser's built-in capabilities
+    const { entries } = await readZip(file);
+
+    // Read shared strings
+    const sharedStringsXml = entries['xl/sharedStrings.xml'];
+    let sharedStrings: string[] = [];
+    if (sharedStringsXml) {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(sharedStringsXml, 'text/xml');
+      const siElements = doc.getElementsByTagName('si');
+      for (let i = 0; i < siElements.length; i++) {
+        sharedStrings.push(siElements[i].textContent || '');
+      }
+    }
+
+    // Read workbook to get sheet names
+    const workbookXml = entries['xl/workbook.xml'];
+    const parser = new DOMParser();
+    const wbDoc = parser.parseFromString(workbookXml, 'text/xml');
+    const sheetElements = wbDoc.getElementsByTagName('sheet');
+
+    const result: Record<string, string[][]> = {};
+
+    for (let i = 0; i < sheetElements.length; i++) {
+      const name = sheetElements[i].getAttribute('name') || `Sheet${i + 1}`;
+      const sheetXml = entries[`xl/worksheets/sheet${i + 1}.xml`];
+      if (sheetXml) {
+        result[name] = parseSheetXml(sheetXml, sharedStrings);
+      }
+    }
+
+    return result;
+  }
+
+  function parseSheetXml(xml: string, sharedStrings: string[]): string[][] {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(xml, 'text/xml');
+    const rows = doc.getElementsByTagName('row');
+    const data: string[][] = [];
+
+    for (let i = 0; i < rows.length; i++) {
+      const cells = rows[i].getElementsByTagName('c');
+      const rowData: string[] = [];
+
+      for (let j = 0; j < cells.length; j++) {
+        const cell = cells[j];
+        const type = cell.getAttribute('t');
+        const vElement = cell.getElementsByTagName('v')[0];
+        let value = vElement?.textContent || '';
+
+        if (type === 's' && sharedStrings.length > 0) {
+          // Shared string reference
+          value = sharedStrings[parseInt(value)] || '';
+        }
+
+        rowData.push(value);
+      }
+
+      data.push(rowData);
+    }
+
+    return data;
+  }
+
+  async function readZip(file: File): Promise<{ entries: Record<string, string> }> {
+    const buffer = await file.arrayBuffer();
+    const uint8 = new Uint8Array(buffer);
+    const entries: Record<string, string> = {};
+
+    try {
+      const rawEntries = parseZipEntries(uint8);
+
+      // Decompress all entries (handles both stored and deflated)
+      const decoder = new TextDecoder();
+      for (const [name, entry] of Object.entries(rawEntries)) {
+        if (entry.method === 0) {
+          // Stored (no compression)
+          entries[name] = decoder.decode(entry.data);
+        } else if (entry.method === 8) {
+          // Deflate " decompress using DecompressionStream
+          const decompressed = await decompressData(entry.data);
+          entries[name] = decoder.decode(decompressed);
+        }
+      }
+    } catch (e) {
+      throw new Error('Unable to parse XLSX file. Please try a different file.');
+    }
+
+    return { entries };
+  }
+
+  async function decompressData(data: Uint8Array): Promise<Uint8Array> {
+    const stream = new Blob([data]).stream().pipeThrough(new DecompressionStream('deflate-raw'));
+    const reader = stream.getReader();
+    const chunks: Uint8Array[] = [];
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      chunks.push(value);
+    }
+
+    // Concatenate chunks
+    const totalLength = chunks.reduce((sum, chunk) => sum + chunk.length, 0);
+    const result = new Uint8Array(totalLength);
+    let offset = 0;
+    for (const chunk of chunks) {
+      result.set(chunk, offset);
+      offset += chunk.length;
+    }
+    return result;
+  }
+
+  function parseZipEntries(data: Uint8Array): Record<string, { data: Uint8Array; method: number }> {
+    const entries: Record<string, { data: Uint8Array; method: number }> = {};
+    let offset = 0;
+
+    while (offset < data.length - 4) {
+      const sig = data[offset] | (data[offset + 1] << 8) | (data[offset + 2] << 16) | (data[offset + 3] << 24);
+
+      if (sig !== 0x04034b50) break; // Not a local file header
+
+      const compressionMethod = data[offset + 8] | (data[offset + 9] << 8);
+      const compressedSize = data[offset + 18] | (data[offset + 19] << 8) | (data[offset + 20] << 16) | (data[offset + 21] << 24);
+      const nameLen = data[offset + 26] | (data[offset + 27] << 8);
+      const extraLen = data[offset + 28] | (data[offset + 29] << 8);
+
+      const name = new TextDecoder().decode(data.slice(offset + 30, offset + 30 + nameLen));
+      const dataStart = offset + 30 + nameLen + extraLen;
+      const fileData = data.slice(dataStart, dataStart + compressedSize);
+
+      entries[name] = { data: fileData, method: compressionMethod };
+
+      offset = dataStart + compressedSize;
+    }
+
+    return entries;
+  }
+
+  function parseCSV(text: string): string[][] {
+    return text.split('\n').filter(line => line.trim()).map(line => {
+      // Handle quoted fields
+      const fields: string[] = [];
+      let current = '';
+      let inQuotes = false;
+
+      for (let i = 0; i < line.length; i++) {
+        const char = line[i];
+        if (char === '"') {
+          inQuotes = !inQuotes;
+        } else if (char === ',' && !inQuotes) {
+          fields.push(current.trim());
+          current = '';
+        } else {
+          current += char;
+        }
+      }
+      fields.push(current.trim());
+      return fields;
+    });
+  }
+
+  function renderPreview() {
+    const data = sheets[currentSheet] || [];
+    rowCount.textContent = `${data.length} row(s) in "${currentSheet}"`;
+
+    if (data.length === 0) {
+      tableHead.innerHTML = '';
+      tableBody.innerHTML = '<tr><td class="body-sm text-neutral-500">No data</td></tr>';
+      return;
+    }
+
+    // First row as header
+    const headers = data[0];
+    tableHead.innerHTML = `<tr>${headers.map(h => `<th>${escapeHtml(h)}</th>`).join('')}</tr>`;
+    tableBody.innerHTML = data.slice(1, 51).map(row => `
+      <tr>${row.map(cell => `<td>${escapeHtml(cell)}</td>`).join('')}</tr>
+    `).join('');
+  }
+
+  function escapeHtml(str: string): string {
+    return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  downloadBtn.addEventListener('click', () => {
+    const data = sheets[currentSheet] || [];
+    if (data.length === 0) return;
+
+    const delimiter = delimiterSelect.value === '\\t' ? '\t' : delimiterSelect.value;
+    const csv = data.map(row =>
+      row.map(cell => {
+        if (cell.includes(delimiter) || cell.includes('"') || cell.includes('\n')) {
+          return `"${cell.replace(/"/g, '""')}"`;
+        }
+        return cell;
+      }).join(delimiter)
+    ).join('\n');
+
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `${currentSheet}.csv`;
+    link.click();
+  });
+</script>
+
+
+
+

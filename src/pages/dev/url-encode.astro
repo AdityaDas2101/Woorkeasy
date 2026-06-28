@@ -1,0 +1,245 @@
+﻿---
+/**
+ * URL Encode/Decode Tool
+ * Encode or decode URL strings (percent-encoding).
+ */
+import ToolLayout from '../../components/ToolLayout.astro';
+---
+
+<ToolLayout
+  title="URL Encode/Decode"
+  metaTitle="URL Encode Decode Free - Online URL Converter | Woorkeasy"
+  description="URL encode and decode online free. Convert text to percent-encoded URL format and back. No upload, instant browser-based tool."
+  heading="URL Encode / Decode"
+  category="Dev Tools"
+>
+  <div id="url-app" class="flex flex-col gap-6">
+    <!-- Mode Tabs -->
+    <div class="flex gap-2 border-b border-neutral-200 dark:border-neutral-700 pb-0">
+      <button id="tab-encode" class="px-4 py-2 body-sm font-medium text-neutral-900 dark:text-neutral-100 border-b-2 border-neutral-900 dark:border-neutral-100 -mb-px transition-colors">Encode</button>
+      <button id="tab-decode" class="px-4 py-2 body-sm font-medium text-neutral-500 border-b-2 border-transparent -mb-px hover:text-neutral-700 dark:hover:text-neutral-300 transition-colors">Decode</button>
+    </div>
+
+    <!-- Encode Panel -->
+    <div id="encode-panel">
+      <div class="flex flex-col gap-4">
+        <div>
+          <label class="body-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2 block">Input string:</label>
+          <textarea
+            id="encode-input"
+            class="w-full min-h-[120px] p-4 border border-neutral-200 dark:border-neutral-700 rounded-lg font-mono text-sm text-neutral-900 dark:text-neutral-100 bg-white dark:bg-neutral-900 resize-y focus:outline-none focus:border-neutral-900 dark:focus:border-neutral-400"
+            placeholder="Enter text or URL to encode... e.g., Hello World! or https://example.com/path?q=test value"
+          ></textarea>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-4">
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="radio" name="encode-mode" value="component" checked class="accent-neutral-900" />
+            <span class="body-sm text-neutral-700 dark:text-neutral-300">encodeURIComponent</span>
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="radio" name="encode-mode" value="uri" class="accent-neutral-900" />
+            <span class="body-sm text-neutral-700 dark:text-neutral-300">encodeURI (preserves URL structure)</span>
+          </label>
+        </div>
+
+        <button id="encode-btn" class="btn-primary self-start">Encode</button>
+
+        <div id="encode-output-group" class="hidden">
+          <div class="flex items-center justify-between mb-2">
+            <span class="body-sm font-medium text-neutral-700 dark:text-neutral-300">Encoded:</span>
+            <button id="copy-encode-btn" class="text-sm text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 underline">Copy</button>
+          </div>
+          <textarea
+            id="encode-output"
+            class="w-full min-h-[100px] p-4 border border-neutral-200 dark:border-neutral-700 rounded-lg font-mono text-sm text-neutral-900 dark:text-neutral-100 bg-neutral-50 dark:bg-neutral-800 resize-y focus:outline-none"
+            readonly
+          ></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- Decode Panel -->
+    <div id="decode-panel" class="hidden">
+      <div class="flex flex-col gap-4">
+        <div>
+          <label class="body-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2 block">Encoded string:</label>
+          <textarea
+            id="decode-input"
+            class="w-full min-h-[120px] p-4 border border-neutral-200 dark:border-neutral-700 rounded-lg font-mono text-sm text-neutral-900 dark:text-neutral-100 bg-white dark:bg-neutral-900 resize-y focus:outline-none focus:border-neutral-900 dark:focus:border-neutral-400"
+            placeholder="Paste URL-encoded string... e.g., Hello%20World%21"
+          ></textarea>
+        </div>
+
+        <button id="decode-btn" class="btn-primary self-start">Decode</button>
+
+        <div id="decode-output-group" class="hidden">
+          <div class="flex items-center justify-between mb-2">
+            <span class="body-sm font-medium text-neutral-700 dark:text-neutral-300">Decoded:</span>
+            <button id="copy-decode-btn" class="text-sm text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 underline">Copy</button>
+          </div>
+          <textarea
+            id="decode-output"
+            class="w-full min-h-[100px] p-4 border border-neutral-200 dark:border-neutral-700 rounded-lg font-mono text-sm text-neutral-900 dark:text-neutral-100 bg-neutral-50 dark:bg-neutral-800 resize-y focus:outline-none"
+            readonly
+          ></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div slot="info">
+    <section class="bg-white dark:bg-neutral-900 rounded-xl p-6 md:p-8 shadow-level-3 dark:border dark:border-neutral-800 mt-6">
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100">How to Use URL Encode Decode</h2>
+      <ol class="list-decimal list-inside space-y-2 mt-4 body-md text-neutral-700 dark:text-neutral-300">
+        <li>Select Encode or Decode mode using the tabs.</li>
+        <li>For encoding, enter your text or URL and choose between encodeURIComponent (for query params) or encodeURI (preserves URL structure). For decoding, paste an encoded string.</li>
+        <li>Click the action button or type live to see instant results. Copy the output with one click.</li>
+      </ol>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">Features</h2>
+      <ul class="list-disc list-inside space-y-2 mt-4 body-md text-neutral-700 dark:text-neutral-300">
+        <li><strong>Dual Encoding Modes</strong> - encodeURIComponent for query parameters, encodeURI for full URLs.</li>
+        <li><strong>Live Encoding</strong> - results update in real time as you type.</li>
+        <li><strong>Decode Support</strong> - convert percent-encoded strings back to readable text.</li>
+        <li><strong>Copy to Clipboard</strong> - instantly copy results with a single click.</li>
+      </ul>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">Why Use Our URL Encode Decode Tool</h2>
+      <p class="body-md text-neutral-700 dark:text-neutral-300 mt-4">URL encoding (percent-encoding) is essential for safely including special characters in URLs. Our tool makes it easy to encode query parameters, path segments, and full URLs. With both encodeURIComponent and encodeURI modes, developers can choose the exact behavior needed. The live encoding feature shows results as you type, making it perfect for quick testing and debugging.</p>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">FAQs</h2>
+      <div class="space-y-4 mt-4">
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">What's the difference between encodeURI and encodeURIComponent?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">encodeURI preserves URL structure characters (: / ? # [ ] @ ! $ & ' ( ) * + , ; =), while encodeURIComponent encodes almost everything. Use encodeURIComponent for query parameter values.</p></div>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Why do spaces become %20?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">Spaces are not allowed in URLs. Percent-encoding replaces them with %20 to ensure safe transmission. Modern browsers handle this automatically, but manual encoding is needed for API calls and URL construction.</p></div>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Is my data sent to a server?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">No, everything runs in your browser using JavaScript. Your text never leaves your device, making it completely safe for sensitive strings, API keys, and tokens.</p></div>
+      </div>
+    </section>
+
+    <!-- Related Tools -->
+    <section class="bg-white dark:bg-neutral-900 rounded-xl p-6 md:p-8 shadow-level-3 dark:border dark:border-neutral-800 mt-6">
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100">Related Tools</h2>
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mt-4">
+        <a href="/dev/base64/" class="px-4 py-3 bg-neutral-100 dark:bg-neutral-800 rounded-lg body-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors text-center">Base64 Encode Decode</a>
+        <a href="/dev/json-formatter/" class="px-4 py-3 bg-neutral-100 dark:bg-neutral-800 rounded-lg body-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors text-center">JSON Formatter</a>
+      </div>
+    </section>
+  </div>
+</ToolLayout>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What's the difference between encodeURI and encodeURIComponent?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "encodeURI preserves URL structure characters (: / ? # [ ] @ ! $ & ' ( ) * + , ; =), while encodeURIComponent encodes almost everything. Use encodeURIComponent for query parameter values."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Why do spaces become %20?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Spaces are not allowed in URLs. Percent-encoding replaces them with %20 to ensure safe transmission. Modern browsers handle this automatically."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is my data sent to a server?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No, everything runs in your browser using JavaScript. Your text never leaves your device, making it completely safe."
+        }
+      }
+    ]
+  }
+  </script>
+
+<script>
+  const tabEncode = document.getElementById('tab-encode')!;
+  const tabDecode = document.getElementById('tab-decode')!;
+  const encodePanel = document.getElementById('encode-panel')!;
+  const decodePanel = document.getElementById('decode-panel')!;
+
+  tabEncode.addEventListener('click', () => {
+    tabEncode.classList.add('text-neutral-900', 'dark:text-neutral-100', 'border-neutral-900', 'dark:border-neutral-100');
+    tabEncode.classList.remove('text-neutral-500', 'border-transparent');
+    tabDecode.classList.add('text-neutral-500', 'border-transparent');
+    tabDecode.classList.remove('text-neutral-900', 'dark:text-neutral-100', 'border-neutral-900', 'dark:border-neutral-100');
+    encodePanel.classList.remove('hidden');
+    decodePanel.classList.add('hidden');
+  });
+
+  tabDecode.addEventListener('click', () => {
+    tabDecode.classList.add('text-neutral-900', 'dark:text-neutral-100', 'border-neutral-900', 'dark:border-neutral-100');
+    tabDecode.classList.remove('text-neutral-500', 'border-transparent');
+    tabEncode.classList.add('text-neutral-500', 'border-transparent');
+    tabEncode.classList.remove('text-neutral-900', 'dark:text-neutral-100', 'border-neutral-900', 'dark:border-neutral-100');
+    decodePanel.classList.remove('hidden');
+    encodePanel.classList.add('hidden');
+  });
+
+  // Encode
+  const encodeInput = document.getElementById('encode-input') as HTMLTextAreaElement;
+  const encodeBtn = document.getElementById('encode-btn') as HTMLButtonElement;
+  const encodeOutputGroup = document.getElementById('encode-output-group')!;
+  const encodeOutput = document.getElementById('encode-output') as HTMLTextAreaElement;
+  const copyEncodeBtn = document.getElementById('copy-encode-btn')!;
+
+  encodeBtn.addEventListener('click', () => {
+    const text = encodeInput.value;
+    if (!text) { alert('Please enter text to encode.'); return; }
+    const mode = (document.querySelector('input[name="encode-mode"]:checked') as HTMLInputElement)?.value;
+    encodeOutput.value = mode === 'uri' ? encodeURI(text) : encodeURIComponent(text);
+    encodeOutputGroup.classList.remove('hidden');
+  });
+
+  copyEncodeBtn.addEventListener('click', () => {
+    navigator.clipboard.writeText(encodeOutput.value);
+    copyEncodeBtn.textContent = 'Copied!';
+    setTimeout(() => { copyEncodeBtn.textContent = 'Copy'; }, 2000);
+  });
+
+  // Decode
+  const decodeInput = document.getElementById('decode-input') as HTMLTextAreaElement;
+  const decodeBtn = document.getElementById('decode-btn') as HTMLButtonElement;
+  const decodeOutputGroup = document.getElementById('decode-output-group')!;
+  const decodeOutput = document.getElementById('decode-output') as HTMLTextAreaElement;
+  const copyDecodeBtn = document.getElementById('copy-decode-btn')!;
+
+  decodeBtn.addEventListener('click', () => {
+    const text = decodeInput.value;
+    if (!text) { alert('Please paste an encoded string.'); return; }
+    try {
+      decodeOutput.value = decodeURIComponent(text);
+      decodeOutputGroup.classList.remove('hidden');
+    } catch {
+      alert('Invalid URL-encoded string. Check your input.');
+    }
+  });
+
+  copyDecodeBtn.addEventListener('click', () => {
+    navigator.clipboard.writeText(decodeOutput.value);
+    copyDecodeBtn.textContent = 'Copied!';
+    setTimeout(() => { copyDecodeBtn.textContent = 'Copy'; }, 2000);
+  });
+
+  // Live encode as you type (optional enhancement)
+  encodeInput.addEventListener('input', () => {
+    if (encodeOutputGroup.classList.contains('hidden')) return;
+    const mode = (document.querySelector('input[name="encode-mode"]:checked') as HTMLInputElement)?.value;
+    encodeOutput.value = mode === 'uri' ? encodeURI(encodeInput.value) : encodeURIComponent(encodeInput.value);
+  });
+
+  decodeInput.addEventListener('input', () => {
+    if (decodeOutputGroup.classList.contains('hidden')) return;
+    try { decodeOutput.value = decodeURIComponent(decodeInput.value); } catch {}
+  });
+</script>
+
+

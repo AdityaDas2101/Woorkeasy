@@ -1,0 +1,389 @@
+---
+/**
+ * PDF Statement to Excel Converter
+ * Extracts transactions from PDF bank statements using PDF.js.
+ * Generates CSV output for analysis in spreadsheet software.
+ * 100% client-side in the browser.
+ */
+import ToolLayout from '../../components/ToolLayout.astro';
+---
+
+<ToolLayout
+  title="PDF Statement to Excel"
+  metaTitle="PDF Bank Statement to Excel Free - Parse PDF to XLSX Online | Woorkeasy"
+  description="Convert PDF bank statements to Excel online free. Extract transactions from PDF statements. Browser-based PDF parser, no upload, 100% secure."
+  heading="Convert PDF Statement to Excel"
+  category="Finance"
+>
+  <div id="pdf-app">
+    <!-- Upload Zone -->
+    <div id="upload-zone" class="upload-zone p-12 text-center cursor-pointer">
+      <div class="flex flex-col items-center gap-4">
+        <svg class="w-12 h-12 text-neutral-500" viewBox="0 0 48 48" fill="none">
+          <path d="M24 32V16m0 0l-6 6m6-6l6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <rect x="8" y="8" width="32" height="32" rx="4" stroke="currentColor" stroke-width="2"/>
+        </svg>
+        <p class="body-md text-neutral-600">Drag & drop PDF statement here, or <span class="text-blue-600 font-medium">browse</span></p>
+        <p class="body-sm text-neutral-500">Supports .pdf files from banks & credit card companies</p>
+      </div>
+      <input type="file" id="file-input" accept=".pdf" class="hidden" />
+    </div>
+
+    <!-- Loading -->
+    <div id="loading" class="hidden mt-6 flex items-center gap-3 p-4 bg-blue-50 rounded-lg">
+      <svg class="animate-spin h-5 w-5 text-blue-600" viewBox="0 0 24 24" fill="none">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+      </svg>
+      <p id="loading-text" class="body-sm text-blue-600">Processing PDF, please wait...</p>
+    </div>
+
+    <!-- Controls -->
+    <div id="controls" class="hidden mt-6">
+      <div class="flex items-center gap-4">
+        <button id="download-csv" class="btn-primary">Download CSV</button>
+      </div>
+    </div>
+
+    <!-- Preview Table -->
+    <div id="preview" class="hidden mt-8 overflow-x-auto">
+      <h2 class="display-sm text-neutral-900 mb-4">Transaction Preview</h2>
+      <p id="summary" class="body-sm text-neutral-600 mb-4"></p>
+      <table id="preview-table" class="w-full border-collapse">
+        <thead id="table-head"></thead>
+        <tbody id="table-body"></tbody>
+      </table>
+    </div>
+
+    <!-- Unparseable Text -->
+    <div id="unparseable-section" class="hidden mt-8">
+      <button id="unparseable-toggle" class="flex items-center gap-2 body-sm text-neutral-600 hover:text-neutral-900 transition-colors">
+        <svg id="unparseable-chevron" class="w-4 h-4 transition-transform" viewBox="0 0 24 24" fill="none">
+          <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span>Unparseable Text (<span id="unparseable-count">0</span> lines)</span>
+      </button>
+      <pre id="unparseable-content" class="hidden mt-3 p-4 bg-neutral-100 dark:bg-neutral-800 rounded-lg text-xs text-neutral-600 dark:text-neutral-400 overflow-x-auto max-h-64 whitespace-pre-wrap"></pre>
+    </div>
+
+    <!-- Error -->
+    <div id="error" class="hidden mt-6 p-4 bg-red-50 rounded-lg">
+      <p id="error-text" class="body-sm text-red-600"></p>
+    </div>
+  </div>
+</ToolLayout>
+
+  <div slot="info">
+    <section class="bg-white dark:bg-neutral-900 rounded-xl p-6 md:p-8 shadow-level-3 dark:border dark:border-neutral-800 mt-6">
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100">How to Use PDF Statement to Excel Converter</h2>
+      <ol class="list-decimal list-inside space-y-2 mt-4 body-md text-neutral-700 dark:text-neutral-300">
+        <li>Upload or drag & drop your PDF bank or credit card statement onto the converter.</li>
+        <li>Review the extracted transactions with dates, descriptions, and amounts in the preview table.</li>
+        <li>Download as CSV for analysis in Excel or Google Sheets.</li>
+      </ol>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">Features</h2>
+      <ul class="list-disc list-inside space-y-2 mt-4 body-md text-neutral-700 dark:text-neutral-300">
+        <li><strong>PDF Text Extraction</strong> - uses PDF.js to extract text content directly in your browser.</li>
+        <li><strong>Smart Transaction Parsing</strong> - recognizes common bank statement date and amount patterns.</li>
+        <li><strong>Transaction Preview</strong> - review extracted entries before downloading.</li>
+        <li><strong>Private & Secure</strong> - all processing happens in your browser. No data upload required.</li>
+      </ul>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">Why Use Our PDF Statement to Excel Converter</h2>
+      <p class="body-md text-neutral-700 dark:text-neutral-300 mt-4">Manually typing transactions from paper or PDF statements is tedious and error-prone. Our converter uses intelligent pattern matching to identify dates, descriptions, and amounts from your PDF bank or credit card statements. It handles multiple common formats used by banks worldwide. Best of all, everything runs locally in your browser - your sensitive financial data never leaves your computer.</p>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">FAQs</h2>
+      <div class="space-y-4 mt-4">
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">What PDFs are supported?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">The converter works best with text-based PDF bank and credit card statements. Scanned/image-based PDFs require OCR and are not supported. If your statement is a scanned document, look for a "printable" or "text" version from your bank.</p></div>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">How accurate is the parsing?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">Accuracy depends on the PDF format used by your bank. Common formats with dates followed by descriptions and amounts are parsed reliably. The preview lets you review and verify all extracted transactions before downloading.</p></div>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Is my data secure?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">Absolutely. All processing is done locally in your browser using PDF.js. Your PDF financial data never leaves your device, ensuring complete privacy and security.</p></div>
+      </div>
+    </section>
+
+    <!-- Related Tools -->
+    <section class="bg-white dark:bg-neutral-900 rounded-xl p-6 md:p-8 shadow-level-3 dark:border dark:border-neutral-800 mt-6">
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100">Related Tools</h2>
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mt-4">
+        <a href="/finance/csv-to-excel/" class="px-4 py-3 bg-neutral-100 dark:bg-neutral-800 rounded-lg body-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors text-center">CSV to Excel</a>
+        <a href="/finance/csv-cleaner/" class="px-4 py-3 bg-neutral-100 dark:bg-neutral-800 rounded-lg body-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors text-center">CSV Cleaner</a>
+        <a href="/finance/column-mapper/" class="px-4 py-3 bg-neutral-100 dark:bg-neutral-800 rounded-lg body-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors text-center">Column Mapper</a>
+        <a href="/finance/bank-statement-parser/" class="px-4 py-3 bg-neutral-100 dark:bg-neutral-800 rounded-lg body-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors text-center">Bank Statement Parser</a>
+        <a href="/finance/ofx-to-excel/" class="px-4 py-3 bg-neutral-100 dark:bg-neutral-800 rounded-lg body-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors text-center">OFX to Excel</a>
+      </div>
+    </section>
+  </div>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What PDFs are supported?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The converter works best with text-based PDF bank and credit card statements. Scanned/image-based PDFs require OCR and are not supported."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How accurate is the parsing?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Accuracy depends on the PDF format used by your bank. Common formats with dates followed by descriptions and amounts are parsed reliably. The preview lets you review and verify all extracted transactions before downloading."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is my data secure?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Absolutely. All processing is done locally in your browser using PDF.js. Your PDF financial data never leaves your device, ensuring complete privacy and security."
+        }
+      }
+    ]
+  }
+  </script>
+
+<style>
+  #preview-table th {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    text-transform: uppercase;
+    background: var(--color-canvas-soft-2);
+    padding: 8px 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--color-hairline);
+  }
+  #preview-table td {
+    font-size: 14px;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--color-hairline);
+  }
+  #preview-table tr:hover td {
+    background: var(--color-canvas-soft);
+  }
+</style>
+
+<script>
+  const uploadZone = document.getElementById('upload-zone')!;
+  const fileInput = document.getElementById('file-input') as HTMLInputElement;
+  const loading = document.getElementById('loading')!;
+  const loadingText = document.getElementById('loading-text')!;
+  const controls = document.getElementById('controls')!;
+  const downloadCSVBtn = document.getElementById('download-csv')!;
+  const preview = document.getElementById('preview')!;
+  const summary = document.getElementById('summary')!;
+  const tableHead = document.getElementById('table-head')!;
+  const tableBody = document.getElementById('table-body')!;
+  const errorDiv = document.getElementById('error')!;
+  const errorText = document.getElementById('error-text')!;
+  const unparseableSection = document.getElementById('unparseable-section')!;
+  const unparseableToggle = document.getElementById('unparseable-toggle')!;
+  const unparseableChevron = document.getElementById('unparseable-chevron')!;
+  const unparseableCount = document.getElementById('unparseable-count')!;
+  const unparseableContent = document.getElementById('unparseable-content')!;
+
+  interface Transaction {
+    date: string;
+    description: string;
+    amount: string;
+  }
+
+  let transactions: Transaction[] = [];
+  let unparseableLines: string[] = [];
+
+  // Upload zone event listeners
+  uploadZone.addEventListener('click', () => fileInput.click());
+  uploadZone.addEventListener('dragover', (e) => { e.preventDefault(); uploadZone.classList.add('dragover'); });
+  uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('dragover'));
+  uploadZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    uploadZone.classList.remove('dragover');
+    if (e.dataTransfer?.files[0]) handleFile(e.dataTransfer.files[0]);
+  });
+  fileInput.addEventListener('change', () => { if (fileInput.files?.[0]) handleFile(fileInput.files[0]); });
+
+  // Unparseable toggle
+  unparseableToggle.addEventListener('click', () => {
+    const isHidden = unparseableContent.classList.contains('hidden');
+    unparseableContent.classList.toggle('hidden');
+    unparseableChevron.style.transform = isHidden ? 'rotate(90deg)' : '';
+  });
+
+  async function loadPDFJS(): Promise<any> {
+    return new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+      script.onload = () => resolve((window as any).pdfjsLib);
+      script.onerror = reject;
+      document.head.appendChild(script);
+    });
+  }
+
+  async function handleFile(file: File) {
+    if (!file.name.toLowerCase().endsWith('.pdf')) {
+      showError('Please select a PDF file.');
+      return;
+    }
+
+    try {
+      loading.classList.remove('hidden');
+      uploadZone.classList.add('hidden');
+      controls.classList.add('hidden');
+      preview.classList.add('hidden');
+      errorDiv.classList.add('hidden');
+      unparseableSection.classList.add('hidden');
+
+      loadingText.textContent = 'Loading PDF.js library...';
+      const pdfjsLib = await loadPDFJS();
+      pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+      loadingText.textContent = 'Reading PDF file...';
+      const arrayBuffer = await file.arrayBuffer();
+
+      loadingText.textContent = 'Extracting text from PDF...';
+      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+
+      let fullText = '';
+      for (let i = 1; i <= pdf.numPages; i++) {
+        const page = await pdf.getPage(i);
+        const content = await page.getTextContent();
+        fullText += content.items.map((item: any) => item.str).join(' ') + '\n';
+      }
+
+      loadingText.textContent = 'Parsing transactions...';
+      parseTransactions(fullText);
+
+      if (transactions.length === 0) {
+        throw new Error('No transactions could be parsed from the PDF. The unparseable text section below shows what was extracted for manual review.');
+      }
+
+      renderTable();
+      controls.classList.remove('hidden');
+      preview.classList.remove('hidden');
+      errorDiv.classList.add('hidden');
+      summary.textContent = `Found ${transactions.length} transaction(s)`;
+      loading.classList.add('hidden');
+
+      if (unparseableLines.length > 0) {
+        unparseableCount.textContent = String(unparseableLines.length);
+        unparseableContent.textContent = unparseableLines.join('\n');
+        unparseableSection.classList.remove('hidden');
+      }
+    } catch (err) {
+      loading.classList.add('hidden');
+      showError((err as Error).message);
+      uploadZone.classList.remove('hidden');
+    }
+  }
+
+  function parseTransactions(text: string) {
+    transactions = [];
+    unparseableLines = [];
+
+    const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+
+    // Date patterns: MM/DD/YYYY, MM/DD/YY, YYYY-MM-DD, DD/MM/YYYY, DD Mon YYYY
+    const datePatterns = [
+      /\b\d{1,2}\/\d{1,2}\/\d{2,4}\b/,    // MM/DD/YYYY or DD/MM/YYYY
+      /\b\d{4}-\d{2}-\d{2}\b/,              // YYYY-MM-DD
+      /\b\d{1,2}\s+(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\s+\d{2,4}\b/i, // DD Mon YYYY
+    ];
+
+    // Amount patterns: $XXX.XX, XXX.XX, (XXX.XX) for negative, -XXX.XX
+    const amountPattern = /\$?\s*-?\d{1,3}(?:,\d{3})*(?:\.\d{2})?\s*$|\$?\s*-?\d+\.\d{2}\b|\(\$\d+\.\d{2}\)|-\d+\.\d{2}/;
+
+    for (const line of lines) {
+      let parsed = false;
+
+      for (const dateRegex of datePatterns) {
+        const dateMatch = line.match(dateRegex);
+        if (!dateMatch) continue;
+
+        const dateStr = dateMatch[0];
+        const afterDate = line.substring(dateMatch.index! + dateMatch[0].length).trim();
+
+        // Look for amount at the end
+        const amountMatch = afterDate.match(amountPattern);
+        if (amountMatch) {
+          let amountStr = amountMatch[0].trim();
+          const descEnd = amountMatch.index!;
+          let description = afterDate.substring(0, descEnd).trim();
+
+          // Try to split on multiple spaces for tabular formats
+          const parts = afterDate.split(/\s{2,}/);
+          if (parts.length >= 2) {
+            const possibleAmount = parts[parts.length - 1];
+            if (amountPattern.test(possibleAmount)) {
+              description = parts.slice(0, -1).join(' ').trim();
+              amountStr = possibleAmount;
+            }
+          }
+
+          if (description && amountStr) {
+            amountStr = amountStr.replace(/[$,]/g, '').replace(/^\(|\)$/g, '');
+            if (amountStr.startsWith('-') || amountStr.startsWith('(')) {
+              amountStr = '-' + amountStr.replace(/^[-(]|\)$/g, '');
+            }
+            amountStr = amountStr.replace(/^--/, '-');
+
+            const parsedAmount = parseFloat(amountStr);
+            if (!isNaN(parsedAmount)) {
+              transactions.push({
+                date: dateStr,
+                description: description.replace(/\s+/g, ' '),
+                amount: parsedAmount.toFixed(2),
+              });
+              parsed = true;
+              break;
+            }
+          }
+        }
+      }
+
+      if (!parsed) {
+        unparseableLines.push(line);
+      }
+    }
+  }
+
+  function renderTable() {
+    const headers = ['Date', 'Description', 'Amount'];
+    tableHead.innerHTML = `<tr>${headers.map(h => `<th>${h}</th>`).join('')}</tr>`;
+    tableBody.innerHTML = transactions.slice(0, 200).map(t => `
+      <tr>
+        <td>${t.date}</td>
+        <td>${t.description}</td>
+        <td class="${parseFloat(t.amount) < 0 ? 'text-red-600' : 'text-blue-600'}">${t.amount}</td>
+      </tr>
+    `).join('');
+  }
+
+  function showError(msg: string) {
+    errorDiv.classList.remove('hidden');
+    errorText.textContent = msg;
+  }
+
+  function toCSV(): string {
+    const headers = 'Date,Description,Amount';
+    const rows = transactions.map(t =>
+      `"${t.date}","${t.description.replace(/"/g, '""')}","${t.amount}"`
+    );
+    return [headers, ...rows].join('\n');
+  }
+
+  function downloadFile(content: string, filename: string, mime: string) {
+    const blob = new Blob([content], { type: mime });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = filename;
+    link.click();
+  }
+
+  downloadCSVBtn.addEventListener('click', () => {
+    downloadFile(toCSV(), 'pdf-statement-transactions.csv', 'text/csv');
+  });
+</script>

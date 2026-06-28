@@ -1,0 +1,48 @@
+---
+/**
+ * StickyAd.astro — Sticky mobile footer ad
+ * Fixed to bottom of viewport on mobile devices only.
+ * Includes a close button so users can dismiss it.
+ */
+const client = 'ca-pub-YOUR_PUBLISHER_ID';
+const slot = 'YOUR_AD_SLOT_ID';
+---
+
+<aside
+  id="sticky-ad"
+  class="fixed bottom-0 left-0 right-0 z-40 bg-white dark:bg-neutral-950 border-t border-neutral-200 dark:border-neutral-800 shadow-[0_-2px_12px_rgba(0,0,0,0.08)] md:hidden"
+  aria-label="Advertisement"
+>
+  <button
+    id="sticky-ad-close"
+    class="absolute -top-5 right-2 flex items-center justify-center w-5 h-5 bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-t-md text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300 text-xs leading-none cursor-pointer"
+    aria-label="Close ad"
+  >
+    &times;
+  </button>
+  <div class="flex justify-center py-1">
+    <ins
+      class="adsbygoogle"
+      style="width: 320px; height: 50px; display: inline-block;"
+      data-ad-client={client}
+      data-ad-slot={slot}
+      data-ad-format="horizontal"
+    ></ins>
+  </div>
+</aside>
+
+<script>
+  const stickyAd = document.getElementById('sticky-ad');
+  const closeBtn = document.getElementById('sticky-ad-close');
+
+  closeBtn?.addEventListener('click', () => {
+    stickyAd?.remove();
+    // Remember dismissal for this session
+    sessionStorage.setItem('sticky-ad-dismissed', 'true');
+  });
+
+  // Dismiss if user already closed it this session
+  if (sessionStorage.getItem('sticky-ad-dismissed') === 'true') {
+    stickyAd?.remove();
+  }
+</script>

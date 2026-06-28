@@ -1,0 +1,370 @@
+---
+/**
+ * Homepage — Woorkeasy
+ * Hero section with brand gradient, tool category grid, and contact CTA.
+ */
+import Layout from '../layouts/Layout.astro';
+import ToolCard from '../components/ToolCard.astro';
+
+const tools = [
+  // ─── Image: Convert ───
+  { title: 'JPG to PNG', description: 'Convert JPG images to lossless PNG format.', href: '/image/jpg-to-png', icon: '�', category: 'Image' },
+  { title: 'PNG to JPG', description: 'Convert PNG images to compressed JPG with adjustable quality.', href: '/image/png-to-jpg', icon: '🔄', category: 'Image' },
+  { title: 'JPG/PNG to WebP', description: 'Convert JPG/PNG to WebP for smaller web-optimized files.', href: '/image/to-webp', icon: '⚡', category: 'Image' },
+  { title: 'WebP to JPG/PNG', description: 'Convert WebP images to JPG, PNG, or PDF. Batch supported.', href: '/image/webp-converter', icon: '�', category: 'Image' },
+  { title: 'HEIC to JPG', description: 'Convert Apple HEIC photos to universal JPG format.', href: '/image/heic-to-jpg', icon: '�', category: 'Image' },
+  // ─── Image: Edit ───
+  { title: 'Compress Image', description: 'Reduce image file size with adjustable quality slider.', href: '/image/compress', icon: '�️', category: 'Image' },
+  { title: 'Crop Image', description: 'Crop images to exact dimensions with preset aspect ratios.', href: '/image/crop', icon: '✂️', category: 'Image' },
+  { title: 'Rotate & Flip', description: 'Rotate images by any angle or flip horizontally/vertically.', href: '/image/rotate', icon: '�', category: 'Image' },
+  { title: 'Add Watermark', description: 'Add text or image watermarks with adjustable opacity and position.', href: '/image/watermark', icon: '�', category: 'Image' },
+  { title: 'Remove Background', description: 'AI-powered background removal using TensorFlow.js.', href: '/image/background-remover', icon: '�️', category: 'Image' },
+  // ─── PDF Tools ───
+  { title: 'JPG to PDF', description: 'Convert images to PDF documents with page size options.', href: '/pdf/jpg-to-pdf', icon: '📄', category: 'PDF' },
+  { title: 'PDF to Image', description: 'Convert PDF pages to high-quality JPG or PNG images.', href: '/pdf/pdf-to-image', icon: '🖼️', category: 'PDF' },
+  { title: 'Merge PDF', description: 'Combine multiple PDF files into a single document.', href: '/pdf/merge-pdf', icon: '📎', category: 'PDF' },
+  { title: 'Split PDF', description: 'Extract pages from a PDF into separate files.', href: '/pdf/split-pdf', icon: '✂️', category: 'PDF' },
+  { title: 'Rotate PDF', description: 'Rotate PDF pages by 90°, 180°, or 270°.', href: '/pdf/rotate-pdf', icon: '🔄', category: 'PDF' },
+  // ─── Finance Tools ───
+  { title: 'OFX to Excel', description: 'Convert OFX bank statement files to Excel spreadsheets.', href: '/finance/ofx-to-excel', icon: '🏦', category: 'Finance' },
+  { title: 'QFX to Excel', description: 'Convert QFX/Quicken financial files to Excel format.', href: '/finance/qfx-to-excel', icon: '💳', category: 'Finance' },
+  { title: 'Excel to CSV', description: 'Convert Excel spreadsheets to CSV format with sheet selection.', href: '/finance/excel-to-csv', icon: '📊', category: 'Finance' },
+  { title: 'CSV to Excel', description: 'Convert CSV files to proper Excel .xlsx spreadsheets.', href: '/finance/csv-to-excel', icon: '📊', category: 'Finance' },
+  { title: 'CSV Cleaner', description: 'Remove duplicates, fix headers, and trim whitespace in CSV files.', href: '/finance/csv-cleaner', icon: '🧹', category: 'Finance' },
+  { title: 'CSV Formatter', description: 'Format dates, clean currency symbols, and reorder CSV columns.', href: '/finance/csv-formatter', icon: '📐', category: 'Finance' },
+  { title: 'Transaction Deduplicator', description: 'Find and remove duplicate bank transactions from CSV files.', href: '/finance/transaction-deduplicator', icon: '🔍', category: 'Finance' },
+  { title: 'Column Mapper', description: 'Map bank-specific CSV columns to a standard format.', href: '/finance/column-mapper', icon: '🗺️', category: 'Finance' },
+  { title: 'PDF Statement to Excel', description: 'Extract transactions from PDF bank statements to Excel.', href: '/finance/pdf-statement-to-excel', icon: '📄', category: 'Finance' },
+  { title: 'Bank Statement Parser', description: 'Auto-detect and parse QFX, OFX, CSV, and PDF bank statements.', href: '/finance/bank-statement-parser', icon: '🏦', category: 'Finance' },
+  // ─── Dev Tools ───
+  { title: 'Base64 Encode/Decode', description: 'Encode text or files to Base64, or decode Base64 strings.', href: '/dev/base64', icon: '🔐', category: 'Dev' },
+  { title: 'URL Encode/Decode', description: 'Encode or decode URL strings with percent-encoding.', href: '/dev/url-encode', icon: '🔗', category: 'Dev' },
+  { title: 'JSON Formatter', description: 'Format, validate, and minify JSON with error detection.', href: '/dev/json-formatter', icon: '{ }', category: 'Dev' },
+  // ─── Utility ───
+  { title: 'Character Counter', description: 'Count characters, words, sentences, and get keyword density.', href: '/utility/character-counter', icon: '🔢', category: 'Utility' },
+  { title: 'Web to Image / PDF', description: 'Capture any webpage or HTML as a JPG, PNG, or PDF screenshot.', href: '/utility/web-to-image', icon: '🌐', category: 'Utility' },
+];
+
+const websiteJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'Woorkeasy',
+  url: 'https://woorkeasy.com',
+  description: '30+ free online tools for images, PDFs, and finance. All browser-based, no upload needed.',
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: {
+      '@type': 'EntryPoint',
+      urlTemplate: 'https://woorkeasy.com?q={search_term_string}',
+    },
+    'query-input': 'required name=search_term_string',
+  },
+};
+
+const organizationJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'Woorkeasy',
+  url: 'https://woorkeasy.com',
+  email: 'woorkeasy@gmail.com',
+  description: '30+ free online tools for images, PDFs, and finance.',
+};
+
+const faqJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'Is Woorkeasy really free?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Yes, Woorkeasy is 100% free. All tools are free to use with no subscriptions, no hidden fees, and no account required.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Do you upload my files to a server?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'No. Every tool runs entirely in your browser using client-side processing. Your files never leave your device, and nothing is uploaded to any server.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'What kind of tools does Woorkeasy offer?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Woorkeasy offers 30+ free online tools across image editing (compress, crop, rotate, watermark, background remover, format conversion), PDF manipulation (merge, split, convert, rotate), finance file conversion (OFX, QFX, Excel, CSV), CSV cleaning and formatting, PDF statement parsing, and bank statement auto-detection, and developer utilities (Base64, URL encode/decode, JSON formatter).',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Can I request a new tool?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Absolutely. You can request a new tool by clicking "Request a Tool" on the homepage or emailing woorkeasy@gmail.com. We build tools based on user requests.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Does Woorkeasy work on mobile devices?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Yes, all tools are fully responsive and work on mobile phones, tablets, and desktop browsers. The interface adapts to your screen size for a smooth experience on any device.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Is there a file size limit?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'No, there are no artificial file size limits. Since all processing happens locally in your browser, the practical limit depends on your device memory. Most tools handle files up to 50MB without issues.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'How do I convert JPG to PNG?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Visit our JPG to PNG converter tool, upload your JPG files, and click "Convert All to PNG". The conversion happens instantly in your browser and you can download the PNG files immediately. No upload or sign-up required.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'How do I merge PDF files?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Use our Merge PDF tool. Upload multiple PDF files, arrange them in your preferred order using the drag-and-drop interface, and click "Merge PDFs". The combined PDF is generated in your browser for instant download.',
+      },
+    },
+  ],
+};
+---
+
+<Layout
+  title="Free Online Tools: Image, PDF & Finance Tools | Woorkeasy"
+  description="30+ free online tools for images, PDFs, finance, and developers. Convert, compress, merge, and edit files in your browser. No sign-up, no upload, 100% free."
+  jsonLd={[websiteJsonLd, organizationJsonLd, faqJsonLd]}
+>
+  <!-- Hero Section -->
+  <section class="relative overflow-hidden bg-white dark:bg-neutral-950">
+    <!-- Gradient Background -->
+    <div class="absolute inset-0 opacity-15 dark:opacity-10 brand-gradient" aria-hidden="true"></div>
+
+    <div class="relative max-w-5xl mx-auto px-6 py-24 md:py-32 text-center">
+      <!-- Eyebrow Badge -->
+      <div class="inline-flex items-center gap-2 bg-neutral-50 dark:bg-neutral-900 rounded-full px-3 py-1 mb-6 shadow-level-1">
+        <span class="caption-mono text-neutral-500" data-i18n="hero.badge">100% Free • No Sign-up • Browser-based</span>
+      </div>
+
+      <!-- Main Heading -->
+      <h1 class="display-xl text-neutral-900 dark:text-neutral-100 max-w-3xl mx-auto" data-i18n="hero.title">
+        All Tools, Zero Hassle.
+      </h1>
+
+      <!-- Subtitle -->
+      <p class="body-lg text-neutral-600 dark:text-neutral-400 mt-4 max-w-2xl mx-auto" data-i18n="hero.subtitle">
+        Free online tools for images, PDFs, and finance. We even add tools on your request.
+      </p>
+
+      <!-- CTA Buttons -->
+      <div class="flex flex-wrap items-center justify-center gap-4 mt-8">
+        <a href="#tools" class="btn-primary no-underline" data-i18n="hero.browseTools">Browse Tools</a>
+        <button data-request-tool class="btn-secondary no-underline cursor-pointer" data-i18n="hero.requestTool">Request a Tool</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Trust Strip -->
+  <section class="bg-white dark:bg-neutral-950 border-y border-neutral-200 dark:border-neutral-800 py-6">
+    <div class="max-w-5xl mx-auto px-6">
+      <div class="flex flex-wrap items-center justify-center gap-8 text-center">
+        <div class="flex items-center gap-2">
+          <span class="text-lg">🔒</span>
+          <span class="body-sm text-neutral-600 dark:text-neutral-400" data-i18n="trust.privacy">Files never leave your browser</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-lg">⚡</span>
+          <span class="body-sm text-neutral-600 dark:text-neutral-400" data-i18n="trust.instant">Instant processing</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-lg">♾️</span>
+          <span class="body-sm text-neutral-600 dark:text-neutral-400" data-i18n="trust.noLimits">No file limits</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-lg">📱</span>
+          <span class="body-sm text-neutral-600 dark:text-neutral-400" data-i18n="trust.mobile">Works on mobile</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Information Section (SEO - internal links high in DOM) -->
+  <section class="border-t border-neutral-200 dark:border-neutral-800">
+    <div class="max-w-5xl mx-auto px-6 py-8">
+      <div class="flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-center">
+        <span class="caption-mono text-neutral-400 uppercase tracking-wider text-xs">Learn More</span>
+        <a href="/about/" class="body-sm text-neutral-600 dark:text-neutral-400 no-underline hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors">About Us</a>
+        <a href="/privacy/" class="body-sm text-neutral-600 dark:text-neutral-400 no-underline hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors">Privacy Policy</a>
+        <a href="/terms/" class="body-sm text-neutral-600 dark:text-neutral-400 no-underline hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors">Terms &amp; Conditions</a>
+        <a href="/contact/" class="body-sm text-neutral-600 dark:text-neutral-400 no-underline hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors">Contact Us</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tools Grid -->
+  <section id="tools" class="max-w-5xl mx-auto px-6 py-16 md:py-24">
+    <div class="text-center mb-10">
+      <span class="caption-mono text-neutral-500 uppercase" data-i18n="tools.eyebrow">All Tools</span>
+      <h2 class="display-lg text-neutral-900 dark:text-neutral-100 mt-2" data-i18n="tools.heading">Pick a tool, get it done.</h2>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      {tools.map(tool => (
+        <ToolCard
+          title={tool.title}
+          description={tool.description}
+          href={tool.href}
+          icon={tool.icon}
+          category={tool.category}
+        />
+      ))}
+    </div>
+  </section>
+
+  <!-- Privacy Section (Dark polarity-flip band) -->
+  <section class="bg-neutral-900 dark:bg-neutral-800 text-white py-20 md:py-28">
+    <div class="max-w-5xl mx-auto px-6 text-center">
+      <span class="caption-mono text-neutral-400 uppercase" data-i18n="privacy.eyebrow">Privacy First</span>
+      <h2 class="display-lg text-white mt-2" data-i18n="privacy.heading">Your files stay with you.</h2>
+      <p class="body-lg text-neutral-400 mt-4 max-w-2xl mx-auto" data-i18n="privacy.text">
+        Every tool runs entirely in your browser. Your files are never uploaded to any server.
+        No accounts, no tracking, no data collection.
+      </p>
+    </div>
+  </section>
+
+  <!-- Image Tools Section -->
+  <section class="max-w-5xl mx-auto px-6 py-16 md:py-20">
+    <div class="text-center mb-10">
+      <span class="caption-mono text-neutral-500 uppercase">Image Tools</span>
+      <h2 class="display-md text-neutral-900 dark:text-neutral-100 mt-2">Free Online Image Tools</h2>
+      <p class="body-md text-neutral-600 dark:text-neutral-400 mt-2 max-w-3xl mx-auto">
+        Edit, convert, and optimize images online for free. Our image tools support JPG, PNG, WebP, HEIC, and more. Compress images to reduce file size, remove backgrounds with AI, crop and resize photos, add watermarks, and convert between formats all without uploading files to any server. Whether you are a blogger, designer, or business owner, these browser-based image editors help you prepare web-ready visuals in seconds.
+      </p>
+    </div>
+  </section>
+
+  <!-- PDF Tools Section -->
+  <section class="bg-neutral-100 dark:bg-neutral-900 py-16 md:py-20">
+    <div class="max-w-5xl mx-auto px-6 text-center">
+      <span class="caption-mono text-neutral-500 uppercase">PDF Tools</span>
+      <h2 class="display-md text-neutral-900 dark:text-neutral-100 mt-2">Free Online PDF Tools</h2>
+      <p class="body-md text-neutral-600 dark:text-neutral-400 mt-2 max-w-3xl mx-auto">
+        Work with PDF documents directly in your browser. Merge multiple PDFs into one file, split large PDFs into separate pages, convert JPG images to PDF documents, rotate pages, and extract PDF pages as images. All PDF tools process files client-side, so your documents never leave your device. Fast, secure, and completely free no software installation required.
+      </p>
+    </div>
+  </section>
+
+  <!-- Finance Tools Section -->
+  <section class="max-w-5xl mx-auto px-6 py-16 md:py-20">
+    <div class="text-center mb-10">
+      <span class="caption-mono text-neutral-500 uppercase">Finance Tools</span>
+      <h2 class="display-md text-neutral-900 dark:text-neutral-100 mt-2">Free Online Finance Tools</h2>
+      <p class="body-md text-neutral-600 dark:text-neutral-400 mt-2 max-w-3xl mx-auto">
+        Convert financial data files with ease. Our finance tools let you convert OFX and QFX bank statements to Excel spreadsheets, transform Excel files to CSV format, convert CSV data back to Excel, clean and format CSV data, remove duplicate transactions, map bank columns to standard formats, and extract transactions from PDF bank statements. Perfect for accountants, bookkeepers, and anyone managing personal finances. Process sensitive financial documents securely in your browser with no data upload.
+      </p>
+    </div>
+  </section>
+
+  <!-- Why Use Online Tools Section -->
+  <section class="bg-neutral-100 dark:bg-neutral-900 py-16 md:py-20">
+    <div class="max-w-5xl mx-auto px-6 text-center">
+      <span class="caption-mono text-neutral-500 uppercase">Why Woorkeasy</span>
+      <h2 class="display-md text-neutral-900 dark:text-neutral-100 mt-2">Why Use Free Online Tools?</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-10 text-left">
+        <div class="bg-white dark:bg-neutral-800 rounded-xl p-6 shadow-level-2">
+          <h3 class="body-lg font-semibold text-neutral-900 dark:text-neutral-100">100% Free, No Sign-Up</h3>
+          <p class="body-sm text-neutral-600 dark:text-neutral-400 mt-2">Every tool on Woorkeasy is completely free to use. No subscriptions, no hidden fees, no account required.</p>
+        </div>
+        <div class="bg-white dark:bg-neutral-800 rounded-xl p-6 shadow-level-2">
+          <h3 class="body-lg font-semibold text-neutral-900 dark:text-neutral-100">Browser-Based and Fast</h3>
+          <p class="body-sm text-neutral-600 dark:text-neutral-400 mt-2">All tools run directly in your browser with instant processing. No downloads, no installations, no waiting.</p>
+        </div>
+        <div class="bg-white dark:bg-neutral-800 rounded-xl p-6 shadow-level-2">
+          <h3 class="body-lg font-semibold text-neutral-900 dark:text-neutral-100">Privacy and Security</h3>
+          <p class="body-sm text-neutral-600 dark:text-neutral-400 mt-2">Your files are processed client-side and never uploaded to any server. Your data stays on your device, always.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section class="max-w-3xl mx-auto px-6 py-16 md:py-20">
+    <div class="text-center mb-10">
+      <span class="caption-mono text-neutral-500 uppercase">FAQs</span>
+      <h2 class="display-md text-neutral-900 dark:text-neutral-100 mt-2">Frequently Asked Questions</h2>
+    </div>
+    <div class="space-y-4">
+      <details class="group bg-white dark:bg-neutral-900 rounded-xl p-5 shadow-level-1 open:shadow-level-2 transition-shadow">
+        <summary class="body-lg font-semibold text-neutral-900 dark:text-neutral-100 cursor-pointer list-none flex items-center justify-between">
+          Is Woorkeasy really free?
+          <svg class="w-5 h-5 text-neutral-500 group-open:rotate-180 transition-transform" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </summary>
+        <p class="body-md text-neutral-600 dark:text-neutral-400 mt-3">Yes, Woorkeasy is 100% free. All tools are free to use with no subscriptions, no hidden fees, and no account required.</p>
+      </details>
+      <details class="group bg-white dark:bg-neutral-900 rounded-xl p-5 shadow-level-1 open:shadow-level-2 transition-shadow">
+        <summary class="body-lg font-semibold text-neutral-900 dark:text-neutral-100 cursor-pointer list-none flex items-center justify-between">
+          Do you upload my files to a server?
+          <svg class="w-5 h-5 text-neutral-500 group-open:rotate-180 transition-transform" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </summary>
+        <p class="body-md text-neutral-600 dark:text-neutral-400 mt-3">No. Every tool runs entirely in your browser using client-side processing. Your files never leave your device, and nothing is uploaded to any server.</p>
+      </details>
+      <details class="group bg-white dark:bg-neutral-900 rounded-xl p-5 shadow-level-1 open:shadow-level-2 transition-shadow">
+        <summary class="body-lg font-semibold text-neutral-900 dark:text-neutral-100 cursor-pointer list-none flex items-center justify-between">
+          What tools does Woorkeasy offer?
+          <svg class="w-5 h-5 text-neutral-500 group-open:rotate-180 transition-transform" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </summary>
+        <p class="body-md text-neutral-600 dark:text-neutral-400 mt-3">Woorkeasy offers 30+ free online tools for images (compress, crop, rotate, watermark, background remover, format conversion), PDFs (merge, split, convert, rotate), finance (OFX, QFX, Excel, CSV conversion, CSV cleaning, PDF parsing), and developers (Base64, URL encode/decode, JSON formatter).</p>
+      </details>
+      <details class="group bg-white dark:bg-neutral-900 rounded-xl p-5 shadow-level-1 open:shadow-level-2 transition-shadow">
+        <summary class="body-lg font-semibold text-neutral-900 dark:text-neutral-100 cursor-pointer list-none flex items-center justify-between">
+          Can I request a new tool?
+          <svg class="w-5 h-5 text-neutral-500 group-open:rotate-180 transition-transform" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </summary>
+        <p class="body-md text-neutral-600 dark:text-neutral-400 mt-3">Absolutely. Click "Request a Tool" on this page or email woorkeasy@gmail.com. We build tools based on user requests.</p>
+      </details>
+      <details class="group bg-white dark:bg-neutral-900 rounded-xl p-5 shadow-level-1 open:shadow-level-2 transition-shadow">
+        <summary class="body-lg font-semibold text-neutral-900 dark:text-neutral-100 cursor-pointer list-none flex items-center justify-between">
+          Does Woorkeasy work on mobile?
+          <svg class="w-5 h-5 text-neutral-500 group-open:rotate-180 transition-transform" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </summary>
+        <p class="body-md text-neutral-600 dark:text-neutral-400 mt-3">Yes. All tools are fully responsive and work on mobile phones, tablets, and desktops. The interface adapts to any screen size.</p>
+      </details>
+      <details class="group bg-white dark:bg-neutral-900 rounded-xl p-5 shadow-level-1 open:shadow-level-2 transition-shadow">
+        <summary class="body-lg font-semibold text-neutral-900 dark:text-neutral-100 cursor-pointer list-none flex items-center justify-between">
+          Is there a file size limit?
+          <svg class="w-5 h-5 text-neutral-500 group-open:rotate-180 transition-transform" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </summary>
+        <p class="body-md text-neutral-600 dark:text-neutral-400 mt-3">No artificial limits. Since everything runs locally in your browser, the practical limit depends on your device memory. Most tools handle files up to 50MB easily.</p>
+      </details>
+    </div>
+  </section>
+
+  <!-- Request / Contact Section -->
+  <section class="max-w-5xl mx-auto px-6 py-16 md:py-24 text-center">
+    <span class="caption-mono text-neutral-500 uppercase" data-i18n="contact.eyebrow">Need Something Else?</span>
+    <h2 class="display-md text-neutral-900 dark:text-neutral-100 mt-2" data-i18n="contact.heading">Request a tool.</h2>
+    <p class="body-md text-neutral-600 dark:text-neutral-400 mt-2 max-w-xl mx-auto" data-i18n="contact.text">
+      We build tools on request. Need a converter, optimizer, or formatter? Let us know.
+    </p>
+    <button
+      data-request-tool
+      class="btn-primary inline-block mt-6 no-underline cursor-pointer"
+    >
+      woorkeasy@gmail.com
+    </button>
+  </section>
+</Layout>
+

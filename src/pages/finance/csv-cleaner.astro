@@ -1,0 +1,496 @@
+---
+/**
+ * CSV Cleaner Tool
+ * Cleans CSV files by trimming whitespace, removing empty rows,
+ * fixing headers, and removing duplicates. 100% browser-based.
+ */
+import ToolLayout from '../../components/ToolLayout.astro';
+---
+
+<ToolLayout
+  title="CSV Cleaner"
+  metaTitle="CSV Cleaner Free - Remove Duplicates, Fix Headers Online | Woorkeasy"
+  description="Clean CSV files online free. Remove duplicates, fix headers, trim whitespace. No upload, browser-based CSV cleaner for finance data."
+  heading="CSV Cleaner"
+  category="Finance"
+>
+  <div id="csv-cleaner-app">
+    <!-- Upload Zone -->
+    <div id="upload-zone" class="upload-zone p-12 text-center cursor-pointer">
+      <div class="flex flex-col items-center gap-4">
+        <svg class="w-12 h-12 text-neutral-500" viewBox="0 0 48 48" fill="none">
+          <path d="M24 32V16m0 0l-6 6m6-6l6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <rect x="8" y="8" width="32" height="32" rx="4" stroke="currentColor" stroke-width="2"/>
+        </svg>
+        <p class="body-md text-neutral-600">Drag & drop CSV file here, or <span class="text-blue-600 font-medium">browse</span></p>
+        <p class="body-sm text-neutral-500">Supports .csv files</p>
+      </div>
+      <input type="file" id="file-input" accept=".csv" class="hidden" />
+    </div>
+
+    <!-- Options Panel -->
+    <div id="options" class="hidden mt-6 p-4 bg-neutral-50 dark:bg-neutral-800 rounded-lg border border-neutral-200 dark:border-neutral-700">
+      <h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100 mb-3">Cleaning Options</h3>
+      <div class="flex flex-col gap-3">
+        <label class="flex items-center gap-2 cursor-pointer">
+          <input type="checkbox" id="opt-trim" checked class="accent-neutral-900" />
+          <span class="body-sm text-neutral-700 dark:text-neutral-300">Trim whitespace from cells</span>
+        </label>
+        <label class="flex items-center gap-2 cursor-pointer">
+          <input type="checkbox" id="opt-remove-empty" checked class="accent-neutral-900" />
+          <span class="body-sm text-neutral-700 dark:text-neutral-300">Remove empty rows</span>
+        </label>
+        <label class="flex items-center gap-2 cursor-pointer">
+          <input type="checkbox" id="opt-fix-headers" checked class="accent-neutral-900" />
+          <span class="body-sm text-neutral-700 dark:text-neutral-300">Fix headers (capitalize, replace underscores/spaces)</span>
+        </label>
+        <label class="flex items-center gap-2 cursor-pointer">
+          <input type="checkbox" id="opt-dedupe" checked class="accent-neutral-900" />
+          <span class="body-sm text-neutral-700 dark:text-neutral-300">Remove exact duplicate rows</span>
+        </label>
+        <div id="dedupe-column-group" class="flex items-center gap-3 ml-6">
+          <span class="body-sm text-neutral-700 dark:text-neutral-300">Match column for dedupe:</span>
+          <select id="opt-dedupe-column" class="px-3 py-1.5 border border-neutral-200 dark:border-neutral-700 rounded-md text-sm bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 focus:outline-none focus:border-neutral-900">
+            <option value="">All columns (exact row match)</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- File Info & Stats -->
+    <div id="file-info" class="hidden mt-6">
+      <div class="flex items-center gap-3 p-4 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg mb-4">
+        <div class="flex-1 min-w-0">
+          <p id="file-name" class="body-sm font-medium text-neutral-900 dark:text-neutral-100 truncate"></p>
+          <p id="file-stats" class="caption-mono text-neutral-500"></p>
+        </div>
+        <button id="clear-btn" class="text-neutral-400 hover:text-red-500 transition-colors text-lg leading-none">&times;</button>
+      </div>
+
+      <!-- Stats -->
+      <div id="stats-panel" class="hidden p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg mb-4">
+        <p id="stats-text" class="body-sm text-blue-700 dark:text-blue-300"></p>
+      </div>
+    </div>
+
+    <!-- Preview -->
+    <div id="preview" class="hidden mt-6">
+      <div class="flex items-center gap-4 mb-4">
+        <h2 class="display-sm text-neutral-900 dark:text-neutral-100">Preview</h2>
+        <div class="flex items-center gap-2">
+          <button id="view-original" class="btn-secondary text-sm px-3 py-1">Original</button>
+          <button id="view-cleaned" class="btn-primary text-sm px-3 py-1">Cleaned</button>
+        </div>
+      </div>
+      <div id="preview-container" class="overflow-x-auto border border-neutral-200 dark:border-neutral-700 rounded-lg max-h-[400px] overflow-y-auto">
+        <table id="preview-table" class="w-full border-collapse"></table>
+      </div>
+    </div>
+
+    <!-- Controls -->
+    <div id="controls" class="hidden mt-6">
+      <div class="flex items-center gap-4">
+        <button id="download-btn" class="btn-primary">Download Cleaned CSV</button>
+      </div>
+    </div>
+
+    <!-- Error -->
+    <div id="error" class="hidden mt-6 p-4 bg-red-50 rounded-lg">
+      <p id="error-text" class="body-sm text-red-600"></p>
+    </div>
+  </div>
+</ToolLayout>
+
+  <div slot="info">
+    <section class="bg-white dark:bg-neutral-900 rounded-xl p-6 md:p-8 shadow-level-3 dark:border dark:border-neutral-800 mt-6">
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100">How to Use CSV Cleaner</h2>
+      <ol class="list-decimal list-inside space-y-2 mt-4 body-md text-neutral-700 dark:text-neutral-300">
+        <li>Upload or drag & drop your CSV file onto the cleaner area.</li>
+        <li>Select the cleaning options: trim whitespace, remove empty rows, fix headers, and remove duplicates.</li>
+        <li>Review the preview and download your cleaned CSV file.</li>
+      </ol>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">Features</h2>
+      <ul class="list-disc list-inside space-y-2 mt-4 body-md text-neutral-700 dark:text-neutral-300">
+        <li><strong>Trim Whitespace</strong> - removes leading and trailing spaces from all cells automatically.</li>
+        <li><strong>Remove Duplicates</strong> - eliminates exact duplicate rows or duplicates by a specific column.</li>
+        <li><strong>Fix Headers</strong> - capitalizes header names and replaces underscores with spaces.</li>
+        <li><strong>100% Private</strong> - all processing is done locally in your browser. Your data never leaves your device.</li>
+      </ul>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">Why Use Our CSV Cleaner</h2>
+      <p class="body-md text-neutral-700 dark:text-neutral-300 mt-4">Messy CSV data can wreak havoc on your spreadsheets and database imports. Whether you are cleaning financial transaction exports, CRM data dumps, or survey results, our CSV cleaner handles the tedious cleaning work in seconds. No more manually trimming cells, hunting for duplicates, or reformatting headers. With full control over which cleaning operations to apply and an instant preview, you can transform raw CSV files into clean, analysis-ready data without uploading anything to a server.</p>
+
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100 mt-8">FAQs</h2>
+      <div class="space-y-4 mt-4">
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">How does the CSV cleaner work?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">The CSV cleaner reads your file in the browser, parses it into rows and columns, then applies the selected cleaning operations - trimming whitespace, removing empty rows, fixing header formatting, and deduplicating rows. You can preview the changes before downloading.</p></div>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Can I remove duplicates from specific columns?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">Yes, when you enable the remove duplicates option, you can choose to match on all columns (exact row match) or select a specific column to deduplicate by. This is useful when you want to keep only the first occurrence of each unique value in a particular field.</p></div>
+        <div><h3 class="body-md font-semibold text-neutral-900 dark:text-neutral-100">Is my data secure?</h3><p class="body-md text-neutral-700 dark:text-neutral-300">Absolutely. All processing is done locally in your browser. Your CSV data never leaves your device, ensuring complete privacy and security for your sensitive information.</p></div>
+      </div>
+    </section>
+
+    <!-- Related Tools -->
+    <section class="bg-white dark:bg-neutral-900 rounded-xl p-6 md:p-8 shadow-level-3 dark:border dark:border-neutral-800 mt-6">
+      <h2 class="display-sm text-neutral-900 dark:text-neutral-100">Related Tools</h2>
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mt-4">
+        <a href="/finance/csv-to-excel/" class="px-4 py-3 bg-neutral-100 dark:bg-neutral-800 rounded-lg body-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors text-center">CSV to Excel</a>
+        <a href="/finance/csv-formatter/" class="px-4 py-3 bg-neutral-100 dark:bg-neutral-800 rounded-lg body-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors text-center">CSV Formatter</a>
+        <a href="/finance/transaction-deduplicator/" class="px-4 py-3 bg-neutral-100 dark:bg-neutral-800 rounded-lg body-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors text-center">Transaction Deduplicator</a>
+        <a href="/finance/column-mapper/" class="px-4 py-3 bg-neutral-100 dark:bg-neutral-800 rounded-lg body-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors text-center">Column Mapper</a>
+        <a href="/finance/ofx-to-excel/" class="px-4 py-3 bg-neutral-100 dark:bg-neutral-800 rounded-lg body-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors text-center">OFX to Excel</a>
+        <a href="/finance/qfx-to-excel/" class="px-4 py-3 bg-neutral-100 dark:bg-neutral-800 rounded-lg body-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors text-center">QFX to Excel</a>
+      </div>
+    </section>
+  </div>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How does the CSV cleaner work?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The CSV cleaner reads your file in the browser, parses it into rows and columns, then applies the selected cleaning operations - trimming whitespace, removing empty rows, fixing header formatting, and deduplicating rows. You can preview the changes before downloading."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I remove duplicates from specific columns?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, when you enable the remove duplicates option, you can choose to match on all columns (exact row match) or select a specific column to deduplicate by. This is useful when you want to keep only the first occurrence of each unique value in a particular field."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is my data secure?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Absolutely. All processing is done locally in your browser. Your CSV data never leaves your device, ensuring complete privacy and security for your sensitive information."
+        }
+      }
+    ]
+  }
+  </script>
+
+<style>
+  #preview-table th {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    text-transform: uppercase;
+    background: var(--color-canvas-soft-2);
+    padding: 8px 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--color-hairline);
+  }
+  #preview-table td {
+    font-size: 14px;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--color-hairline);
+  }
+  #preview-table tr:hover td {
+    background: var(--color-canvas-soft);
+  }
+  .view-btn-active {
+    background: var(--color-neutral-900);
+    color: white;
+  }
+</style>
+
+<script>
+  const uploadZone = document.getElementById('upload-zone');
+  const fileInput = document.getElementById('file-input');
+  const optionsPanel = document.getElementById('options');
+  const dedupeColumnGroup = document.getElementById('dedupe-column-group');
+  const dedupeColumnSelect = document.getElementById('opt-dedupe-column');
+  const dedupeCheckbox = document.getElementById('opt-dedupe');
+  const fileInfo = document.getElementById('file-info');
+  const fileNameEl = document.getElementById('file-name');
+  const fileStats = document.getElementById('file-stats');
+  const statsPanel = document.getElementById('stats-panel');
+  const statsText = document.getElementById('stats-text');
+  const preview = document.getElementById('preview');
+  const previewTable = document.getElementById('preview-table');
+  const previewContainer = document.getElementById('preview-container');
+  const clearBtn = document.getElementById('clear-btn');
+  const controls = document.getElementById('controls');
+  const downloadBtn = document.getElementById('download-btn');
+  const errorDiv = document.getElementById('error');
+  const errorText = document.getElementById('error-text');
+  const viewOriginalBtn = document.getElementById('view-original');
+  const viewCleanedBtn = document.getElementById('view-cleaned');
+
+  let originalRows = [];
+  let cleanedRows = [];
+  let headers = [];
+  let currentView = 'cleaned';
+
+  uploadZone.addEventListener('click', () => fileInput.click());
+  uploadZone.addEventListener('dragover', (e) => { e.preventDefault(); uploadZone.classList.add('dragover'); });
+  uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('dragover'));
+  uploadZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    uploadZone.classList.remove('dragover');
+    if (e.dataTransfer && e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
+  });
+  fileInput.addEventListener('change', () => { if (fileInput.files && fileInput.files[0]) handleFile(fileInput.files[0]); });
+
+  function handleFile(file) {
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      try {
+        const text = e.target.result;
+        const parsed = parseCSV(text);
+        if (parsed.length < 1) throw new Error('No data found in CSV file.');
+        headers = parsed[0];
+        originalRows = parsed.slice(1);
+        fileNameEl.textContent = file.name;
+        processAndRender();
+        optionsPanel.classList.remove('hidden');
+        fileInfo.classList.remove('hidden');
+        preview.classList.remove('hidden');
+        controls.classList.remove('hidden');
+        uploadZone.classList.add('hidden');
+        errorDiv.classList.add('hidden');
+      } catch (err) {
+        showError(err.message);
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  function parseCSV(text) {
+    const rows = [];
+    let current = '';
+    let inQuotes = false;
+    let row = [];
+    for (let i = 0; i < text.length; i++) {
+      const char = text[i];
+      const next = text[i + 1];
+      if (char === '"') {
+        if (inQuotes && next === '"') {
+          current += '"';
+          i++;
+        } else {
+          inQuotes = !inQuotes;
+        }
+      } else if (char === ',' && !inQuotes) {
+        row.push(current);
+        current = '';
+      } else if ((char === '\n' || (char === '\r' && next === '\n')) && !inQuotes) {
+        row.push(current);
+        current = '';
+        rows.push(row);
+        row = [];
+        if (char === '\r') i++;
+      } else {
+        current += char;
+      }
+    }
+    row.push(current);
+    if (row.some(cell => cell.trim() !== '')) rows.push(row);
+    return rows;
+  }
+
+  function processAndRender() {
+    const optTrim = document.getElementById('opt-trim').checked;
+    const optRemoveEmpty = document.getElementById('opt-remove-empty').checked;
+    const optFixHeaders = document.getElementById('opt-fix-headers').checked;
+    const optDedupe = document.getElementById('opt-dedupe').checked;
+    const dedupeCol = dedupeColumnSelect.value;
+
+    let rows = originalRows.map(r => [...r]);
+
+    if (optTrim) {
+      rows = rows.map(r => r.map(c => c.trim()));
+    }
+
+    if (optRemoveEmpty) {
+      rows = rows.filter(r => r.some(c => c !== ''));
+    }
+
+    let h = [...headers];
+    if (optFixHeaders) {
+      h = h.map(hdr => {
+        let s = hdr.trim();
+        s = s.replace(/[_\-]/g, ' ');
+        s = s.replace(/\s+/g, ' ');
+        s = s.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ');
+        return s;
+      });
+    }
+
+    const beforeDedupe = rows.length;
+    let duplicatesFound = 0;
+    if (optDedupe) {
+      const seen = new Set();
+      const deduped = [];
+      for (const row of rows) {
+        let key;
+        if (dedupeCol && dedupeCol !== '') {
+          const colIdx = parseInt(dedupeCol, 10);
+          key = row[colIdx] !== undefined ? row[colIdx] : '';
+        } else {
+          key = row.join('||');
+        }
+        if (seen.has(key)) {
+          duplicatesFound++;
+        } else {
+          seen.add(key);
+          deduped.push(row);
+        }
+      }
+      rows = deduped;
+    }
+
+    cleanedRows = rows;
+    fileStats.textContent = `${originalRows.length} data rows  ${h.length} columns`;
+
+    const totalDupes = duplicatesFound;
+    const totalRemoved = (originalRows.length - rows.length);
+    statsPanel.classList.remove('hidden');
+    statsText.textContent = `Rows before: ${originalRows.length}  |  Rows after: ${rows.length}  |  Empty rows removed: ${optRemoveEmpty ? 'yes' : 'no'}  |  Duplicates found: ${totalDupes}`;
+
+    // Populate column select
+    dedupeColumnSelect.innerHTML = '<option value="">All columns (exact row match)</option>';
+    h.forEach((col, idx) => {
+      const opt = document.createElement('option');
+      opt.value = String(idx);
+      opt.textContent = col;
+      dedupeColumnSelect.appendChild(opt);
+    });
+
+    renderPreview(currentView === 'original');
+  }
+
+  function renderPreview(showOriginal) {
+    let rows;
+    let h;
+    if (showOriginal) {
+      rows = originalRows;
+      h = headers;
+    } else {
+      rows = cleanedRows;
+      h = headers;
+      const fixHeaders = document.getElementById('opt-fix-headers').checked;
+      if (fixHeaders) {
+        h = h.map(hdr => {
+          let s = hdr.trim();
+          s = s.replace(/[_\-]/g, ' ');
+          s = s.replace(/\s+/g, ' ');
+          s = s.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ');
+          return s;
+        });
+      }
+    }
+
+    let html = '<thead><tr>';
+    h.forEach(cell => {
+      html += '<th>' + escapeHtml(cell) + '</th>';
+    });
+    html += '</tr></thead><tbody>';
+    const previewRows = rows.slice(0, 50);
+    previewRows.forEach(row => {
+      html += '<tr>';
+      for (let i = 0; i < h.length; i++) {
+        html += '<td>' + escapeHtml(row[i] || '') + '</td>';
+      }
+      html += '</tr>';
+    });
+    html += '</tbody>';
+    if (rows.length > 50) {
+      html += '<tfoot><tr><td colspan="' + h.length + '" class="px-3 py-2 text-center caption-mono text-neutral-500">... showing 50 of ' + rows.length + ' rows</td></tr></tfoot>';
+    }
+    previewTable.innerHTML = html;
+  }
+
+  viewOriginalBtn.addEventListener('click', function () {
+    currentView = 'original';
+    viewOriginalBtn.className = 'btn-primary text-sm px-3 py-1';
+    viewCleanedBtn.className = 'btn-secondary text-sm px-3 py-1';
+    renderPreview(true);
+  });
+
+  viewCleanedBtn.addEventListener('click', function () {
+    currentView = 'cleaned';
+    viewCleanedBtn.className = 'btn-primary text-sm px-3 py-1';
+    viewOriginalBtn.className = 'btn-secondary text-sm px-3 py-1';
+    renderPreview(false);
+  });
+
+  // Re-run when options change
+  document.querySelectorAll('#options input').forEach(el => {
+    el.addEventListener('change', function () {
+      if (originalRows.length > 0) processAndRender();
+    });
+  });
+  dedupeColumnSelect.addEventListener('change', function () {
+    if (originalRows.length > 0) processAndRender();
+  });
+
+  // Show/hide dedupe column select based on dedupe checkbox
+  dedupeCheckbox.addEventListener('change', function () {
+    if (this.checked) {
+      dedupeColumnGroup.classList.remove('hidden');
+    } else {
+      dedupeColumnGroup.classList.add('hidden');
+    }
+  });
+
+  clearBtn.addEventListener('click', function () {
+    originalRows = [];
+    cleanedRows = [];
+    headers = [];
+    fileInfo.classList.add('hidden');
+    optionsPanel.classList.add('hidden');
+    preview.classList.add('hidden');
+    controls.classList.add('hidden');
+    statsPanel.classList.add('hidden');
+    errorDiv.classList.add('hidden');
+    uploadZone.classList.remove('hidden');
+    previewTable.innerHTML = '';
+    fileInput.value = '';
+  });
+
+  downloadBtn.addEventListener('click', function () {
+    if (cleanedRows.length === 0) return;
+    let h = [...headers];
+    const fixHeaders = document.getElementById('opt-fix-headers').checked;
+    if (fixHeaders) {
+      h = h.map(hdr => {
+        let s = hdr.trim();
+        s = s.replace(/[_\-]/g, ' ');
+        s = s.replace(/\s+/g, ' ');
+        s = s.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ');
+        return s;
+      });
+    }
+    let csv = h.map(c => '"' + c.replace(/"/g, '""') + '"').join(',') + '\n';
+    cleanedRows.forEach(row => {
+      csv += h.map((_, i) => '"' + (row[i] || '').replace(/"/g, '""') + '"').join(',') + '\n';
+    });
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = (fileNameEl.textContent || 'data').replace(/\.csv$/i, '') + '-cleaned.csv';
+    link.click();
+    URL.revokeObjectURL(link.href);
+  });
+
+  function showError(msg) {
+    errorDiv.classList.remove('hidden');
+    errorText.textContent = msg;
+    optionsPanel.classList.add('hidden');
+    fileInfo.classList.add('hidden');
+    preview.classList.add('hidden');
+    controls.classList.add('hidden');
+    statsPanel.classList.add('hidden');
+  }
+
+  function escapeHtml(str) {
+    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+</script>
